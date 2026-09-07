@@ -12,6 +12,7 @@ import {
 import DoctorLayout from "../../components/doctor/DoctorLayout";
 import { getAssignedPatients } from "../../services/assignmentService";
 import { getAnomaly } from "../../services/anomalyService";
+import { getDoctorIdentity } from "../../utils/userUtils";
 
 function DoctorAnomaly({ keycloak }) {
 
@@ -26,12 +27,8 @@ function DoctorAnomaly({ keycloak }) {
 
             setLoading(true);
 
-            const doctorId = keycloak?.tokenParsed?.doctorId;
-
-            if (!doctorId) {
-                console.log("Doctor ID not found in token");
-                return;
-            }
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
 
             // Get ONLY this doctor's assigned patients
             const patientRes = await getAssignedPatients(doctorId);

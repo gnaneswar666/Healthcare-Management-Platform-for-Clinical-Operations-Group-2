@@ -19,6 +19,7 @@ import {
 import { getAssignedPatients } from "../../services/assignmentService";
 import { getDoctorAlerts } from "../../services/alertService";
 import DoctorLayout from "../../components/doctor/DoctorLayout";
+import { getDoctorIdentity } from "../../utils/userUtils";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,7 +44,8 @@ function Dashboard({ keycloak }) {
     async function loadDashboard() {
         try {
             setLoading(true);
-            const doctorId = keycloak.tokenParsed?.doctorId || "DOC101";
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
 
             const [patientRes, alertRes] = await Promise.allSettled([
                 getAssignedPatients(doctorId),

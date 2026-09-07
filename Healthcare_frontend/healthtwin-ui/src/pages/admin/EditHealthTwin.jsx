@@ -12,7 +12,8 @@ import {
 import {
     generateSimulatedDiabetesValues,
     generateSimulatedHeartValues,
-    simulateDiabetesData
+    simulateDiabetesData,
+    simulateHealthVitals
 } from "../../services/simulationService";
 
 import {
@@ -46,6 +47,7 @@ function EditHealthTwin() {
 
     const [simulatingDiabetes, setSimulatingDiabetes] = useState(false);
     const [simulatingHeart, setSimulatingHeart] = useState(false);
+    const [simulatingVitals, setSimulatingVitals] = useState(false);
 
     const [healthTwin, setHealthTwin] = useState({
         patientId: "",
@@ -92,7 +94,8 @@ function EditHealthTwin() {
     async function loadHealthTwin() {
         setLoading(true);
         try {
-            const data = await getHealthTwin(patientId);
+            const res = await getHealthTwin(patientId);
+            const data = res?.data || res;
 
             const heightNum = data.height ?? 175;
             const weightNum = data.weight ?? 70;
@@ -181,12 +184,54 @@ function EditHealthTwin() {
         loadHealthTwin();
     }, [patientId]);
 
+    function computeRiskScore(twinData, diseasesStr = diseasesText) {
+        let score = 0;
+        const hr = Number(twinData.heartRate) || 0;
+        if (hr > 0 && (hr < 60 || hr > 100)) score += 20;
+
+        const o2 = Number(twinData.oxygenLevel) || 0;
+        if (o2 > 0 && o2 < 95) score += 25;
+
+        const temp = Number(twinData.temperature) || 0;
+        if (temp >= 37.8) score += 20;
+
+        if (twinData.bloodPressure && typeof twinData.bloodPressure === "string") {
+            const parts = twinData.bloodPressure.split("/").map(s => Number(s.trim()));
+            if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                const [sys, dia] = parts;
+                if (sys >= 140 || dia >= 90) score += 20;
+                else if (sys < 90 || dia < 60) score += 15;
+            }
+        }
+
+        const h = Number(twinData.height) || 0;
+        const w = Number(twinData.weight) || 0;
+        if (h > 0 && w > 0) {
+            const bmiVal = w / Math.pow(h / 100, 2);
+            if (bmiVal >= 30 || bmiVal < 18.5) score += 15;
+        }
+
+        if (diseasesStr && diseasesStr.trim().length > 0) score += 20;
+
+        return Math.min(score, 100);
+    }
+
     function handleChange(e) {
         const { name, value, type } = e.target;
         const finalVal = type === "number" || (!isNaN(value) && value !== "" && name !== "bloodPressure" && name !== "bloodGroup")
             ? Number(value)
             : value;
-        setHealthTwin(prev => ({ ...prev, [name]: finalVal }));
+
+        setHealthTwin(prev => {
+            const next = { ...prev, [name]: finalVal };
+            const h = Number(next.height) || 0;
+            const w = Number(next.weight) || 0;
+            if ((name === "height" || name === "weight") && h > 0 && w > 0) {
+                next.bmi = Number((w / Math.pow(h / 100, 2)).toFixed(1));
+            }
+            next.riskScore = computeRiskScore(next);
+            return next;
+        });
     }
 
     // Auto calculate BMI from height & weight
@@ -196,6 +241,38 @@ function EditHealthTwin() {
         if (h > 0 && w > 0) {
             const computedBmi = Number((w / Math.pow(h / 100, 2)).toFixed(1));
             setHealthTwin(prev => ({ ...prev, bmi: computedBmi }));
+        }
+    }
+
+    async function handleSimulateVitals() {
+        setSimulatingVitals(true);
+        try {
+            try {
+                await simulateHealthVitals(patientId);
+            } catch (err) {
+                console.warn("Backend SIMULATION-SERVICE vitals notice:", err);
+            }
+
+            const randomHR = Math.floor(65 + Math.random() * 35);
+            const randomO2 = Math.floor(94 + Math.random() * 6);
+            const randomTemp = Number((36.4 + Math.random() * 1.6).toFixed(1));
+            const sys = Math.floor(115 + Math.random() * 30);
+            const dia = Math.floor(75 + Math.random() * 20);
+            const randomBP = `${sys}/${dia}`;
+
+            setHealthTwin(prev => {
+                const next = {
+                    ...prev,
+                    heartRate: randomHR,
+                    oxygenLevel: randomO2,
+                    temperature: randomTemp,
+                    bloodPressure: randomBP
+                };
+                next.riskScore = computeRiskScore(next);
+                return next;
+            });
+        } finally {
+            setSimulatingVitals(false);
         }
     }
 
@@ -209,10 +286,14 @@ function EditHealthTwin() {
             }
 
             const simData = generateSimulatedDiabetesValues();
-            setHealthTwin(prev => ({
-                ...prev,
-                ...simData
-            }));
+            setHealthTwin(prev => {
+                const next = {
+                    ...prev,
+                    ...simData
+                };
+                next.riskScore = computeRiskScore(next);
+                return next;
+            });
         } finally {
             setSimulatingDiabetes(false);
         }
@@ -222,10 +303,14 @@ function EditHealthTwin() {
         setSimulatingHeart(true);
         try {
             const simData = generateSimulatedHeartValues();
-            setHealthTwin(prev => ({
-                ...prev,
-                ...simData
-            }));
+            setHealthTwin(prev => {
+                const next = {
+                    ...prev,
+                    ...simData
+                };
+                next.riskScore = computeRiskScore(next);
+                return next;
+            });
         } finally {
             setSimulatingHeart(false);
         }
@@ -528,18 +613,29 @@ function EditHealthTwin() {
 
                         {/* Section 2.5 Card: Live Vital Signs Telemetry */}
                         <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 space-y-6 shadow-xs">
-                            <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                                <div className="w-10 h-10 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 shadow-xs">
-                                    <HeartPulse size={20} />
+                            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 shadow-xs">
+                                        <HeartPulse size={20} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-base font-bold text-slate-900 leading-snug">
+                                            Live Vital Signs Telemetry
+                                        </h3>
+                                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                            Configure real-time physiological vitals (Heart rate, SpO₂, Temperature & Blood pressure)
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="text-base font-bold text-slate-900 leading-snug">
-                                        Live Vital Signs Telemetry
-                                    </h3>
-                                    <p className="text-xs text-slate-500 font-medium mt-0.5">
-                                        Configure initial real-time physiological vitals (Heart rate, SpO₂, Temperature & Blood pressure)
-                                    </p>
-                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleSimulateVitals}
+                                    disabled={simulatingVitals}
+                                    className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm disabled:opacity-50"
+                                >
+                                    <Sparkles size={14} className={simulatingVitals ? "animate-spin" : ""} />
+                                    <span>{simulatingVitals ? "Simulating..." : "Simulate Live Vitals"}</span>
+                                </button>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

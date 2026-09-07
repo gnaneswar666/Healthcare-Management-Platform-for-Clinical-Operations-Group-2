@@ -39,6 +39,7 @@ import {
     getPendingCarePlans,
     getDashboardStats
 } from "../../services/carePlanService";
+import { getDoctorIdentity } from "../../utils/userUtils";
 
 const containerVariants = {
     hidden: { opacity: 0, y: 15 },
@@ -188,6 +189,9 @@ const CarePlans = ({ keycloak }) => {
             setError("");
             setSuccess("");
 
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
+
             if (isEditing) {
                 carePlan.goal = editForm.goal;
                 carePlan.medications = editForm.medications.split(",").map(s => s.trim()).filter(Boolean);
@@ -196,7 +200,7 @@ const CarePlans = ({ keycloak }) => {
                 carePlan.sleep = editForm.sleep;
             }
 
-            const response = await approveCarePlan(carePlan.id, "DOC101", doctorNotes);
+            const response = await approveCarePlan(carePlan.id, doctorId, doctorNotes);
             setCarePlan(response.data);
             setIsEditing(false);
             setSuccess("Care plan approved and saved successfully!");
@@ -215,7 +219,9 @@ const CarePlans = ({ keycloak }) => {
             setActionLoading(true);
             setError("");
             setSuccess("");
-            const response = await rejectCarePlan(carePlan.id, "DOC101", doctorNotes);
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
+            const response = await rejectCarePlan(carePlan.id, doctorId, doctorNotes);
             setCarePlan(response.data);
             setIsEditing(false);
             setSuccess("Revision requested for care plan.");
@@ -235,7 +241,7 @@ const CarePlans = ({ keycloak }) => {
     return (
         <DoctorLayout keycloak={keycloak}>
             <motion.div
-                className="page-card space-y-6"
+                className="space-y-8 sm:space-y-10"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"

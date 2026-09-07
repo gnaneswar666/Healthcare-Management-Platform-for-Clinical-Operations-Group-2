@@ -1,4 +1,4 @@
-package com.infosys.HealthTwin.kafka;
+﻿package com.infosys.HealthTwin.kafka;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -19,28 +19,29 @@ public class VitalConsumer {
     @KafkaListener(topics = "vital-events", groupId = "health-group")
     public void consume(VitalEvent event) {
 
-        System.out.println("Received Vital Event");
+        if (event == null || event.getPatientId() == null) {
+            System.err.println("Received null or invalid VitalEvent");
+            return;
+        }
 
-        System.out.println(event.getPatientId());
+        System.out.println("Received Kafka Vital Event for Patient: " + event.getPatientId());
 
-        HealthTwin twin =
-                repository.findByPatientId(event.getPatientId())
-                .orElseThrow(() ->
-                        new RuntimeException("Patient Not Found"));
+        HealthTwin twin = repository.findByPatientId(event.getPatientId())
+                .orElseGet(() -> {
+                    HealthTwin newTwin = new HealthTwin();
+                    newTwin.setPatientId(event.getPatientId());
+                    return newTwin;
+                });
 
         twin.setHeartRate(event.getHeartRate());
-
         twin.setTemperature(event.getTemperature());
-
         twin.setOxygenLevel(event.getOxygenLevel());
-
         twin.setBloodPressure(event.getBloodPressure());
-
         twin.setLastUpdated(event.getTimestamp());
 
         repository.save(twin);
 
-        System.out.println("Health Twin Updated");
+        System.out.println("Health Twin asynchronously updated via Kafka for Patient: " + event.getPatientId());
     }
 
 }

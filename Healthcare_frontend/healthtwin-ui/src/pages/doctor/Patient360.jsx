@@ -73,7 +73,10 @@ function DoctorPatient360() {
 
     useEffect(() => {
         loadData();
-        
+        const interval = setInterval(() => {
+            loadData();
+        }, 1000);
+        return () => clearInterval(interval);
     }, [patientId]);
     const calculateAge = (dob) => {
     if (!dob) return "—";
@@ -95,49 +98,64 @@ function DoctorPatient360() {
     return age;
 };
 
-const calculateRiskScore = (twin) => {
+    const calculateBMI = (height, weight) => {
+        const h = Number(height) / 100;
+        const w = Number(weight);
+        if (!h || h <= 0 || !w || w <= 0) return null;
+        return (w / (h * h)).toFixed(1);
+    };
 
-    if (!twin) return "—";
+    const bmiCategory = (bmiVal) => {
+        const v = Number(bmiVal);
+        if (!v || isNaN(v)) return "";
+        if (v < 18.5) return "Underweight";
+        if (v < 25) return "Normal";
+        if (v < 30) return "Overweight";
+        return "Obese";
+    };
 
-    let score = 0;
+    const calculateRiskScore = (twin) => {
+        if (!twin) return 0;
+        let score = 0;
 
-    if (twin.heartRate < 60 || twin.heartRate > 100)
-        score += 15;
+        const hr = Number(twin.heartRate) || 0;
+        if (hr > 0 && (hr < 60 || hr > 100)) score += 20;
 
-    if (twin.temperature >= 38)
-        score += 20;
+        const o2 = Number(twin.oxygenLevel) || 0;
+        if (o2 > 0 && o2 < 95) score += 25;
 
-    if (twin.oxygenLevel < 95)
-        score += 25;
+        const temp = Number(twin.temperature) || 0;
+        if (temp >= 37.8) score += 20;
 
-    if (twin.bloodPressure) {
+        if (twin.bloodPressure && typeof twin.bloodPressure === "string") {
+            const parts = twin.bloodPressure.split("/").map(s => Number(s.trim()));
+            if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                const [sys, dia] = parts;
+                if (sys >= 140 || dia >= 90) score += 20;
+                else if (sys < 90 || dia < 60) score += 15;
+            }
+        }
 
-        const [sys, dia] = twin.bloodPressure
-            .split("/")
-            .map(Number);
+        const h = Number(twin.height) || 0;
+        const w = Number(twin.weight) || 0;
+        if (h > 0 && w > 0) {
+            const bmiVal = w / Math.pow(h / 100, 2);
+            if (bmiVal >= 30 || bmiVal < 18.5) score += 15;
+        }
 
-        if (sys >= 140 || dia >= 90)
-            score += 20;
+        if (twin.chronicDiseases) {
+            const hasDiseases = Array.isArray(twin.chronicDiseases)
+                ? twin.chronicDiseases.length > 0
+                : typeof twin.chronicDiseases === "string" && twin.chronicDiseases.trim().length > 0;
+            if (hasDiseases) score += 20;
+        }
 
-        if (sys < 90 || dia < 60)
-            score += 15;
-    }
+        if (score > 0) return Math.min(score, 100);
+        if (twin.predictionRisk != null && Number(twin.predictionRisk) > 0) return Math.round(Number(twin.predictionRisk));
+        if (twin.riskScore != null && Number(twin.riskScore) > 0 && Number(twin.riskScore) !== 15) return Math.round(Number(twin.riskScore));
 
-    if (twin.height && twin.weight) {
-
-        const bmi =
-            twin.weight /
-            Math.pow(twin.height / 100, 2);
-
-        if (bmi >= 30 || bmi < 18.5)
-            score += 20;
-    }
-
-    if (twin.chronicDiseases?.length)
-        score += 20;
-
-    return Math.min(score, 100);
-};
+        return 0;
+    };
 
     if (!patient) {
         return (
@@ -257,11 +275,19 @@ const calculateRiskScore = (twin) => {
                             <div className="space-y-3 text-sm">
                                 <Row label="Height" value={healthTwin.height ? `${healthTwin.height} cm` : "—"} />
                                 <Row label="Weight" value={healthTwin.weight ? `${healthTwin.weight} kg` : "—"} />
+                                <Row
+                                    label="BMI"
+                                    value={
+                                        healthTwin.bmi || calculateBMI(healthTwin.height, healthTwin.weight)
+                                            ? `${healthTwin.bmi || calculateBMI(healthTwin.height, healthTwin.weight)} (${bmiCategory(healthTwin.bmi || calculateBMI(healthTwin.height, healthTwin.weight))})`
+                                            : "—"
+                                    }
+                                />
                                 <Row label="Blood Group" value={healthTwin.bloodGroup ?? "—"} />
                                 <div>
                                     <div className="text-slate-500 mb-1 text-xs uppercase tracking-wider font-semibold">Risk Score</div>
                                     <span className="badge badge--rose badge--dot">
-                                        {calculateRiskScore(healthTwin)}
+                                        {calculateRiskScore(healthTwin)}%
                                     </span>
                                 </div>
                             </div>

@@ -20,6 +20,7 @@ import {
 
 import { getHealthTwins } from "../../services/HealthTwinService";
 import { getAssignedPatients } from "../../services/assignmentService";
+import { getDoctorIdentity } from "../../utils/userUtils";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -48,7 +49,8 @@ function HealthTwins({ keycloak }) {
 
     const loadHealthTwins = useCallback(async () => {
         try {
-            const doctorId = keycloak.tokenParsed?.doctorId;
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
 
             // Assigned patients
             const patientRes = await getAssignedPatients(doctorId);
@@ -82,7 +84,7 @@ function HealthTwins({ keycloak }) {
         }, 0);
         const interval = setInterval(() => {
             loadHealthTwins();
-        }, 15000);
+        }, 1000);
         return () => {
             clearTimeout(initial);
             clearInterval(interval);
@@ -92,12 +94,6 @@ function HealthTwins({ keycloak }) {
     const calculateRiskScore = (twin) => {
         if (!twin) return 0;
 
-        // 1. Check explicit backend risk properties if available and > 0
-        if (twin.riskScore != null && Number(twin.riskScore) > 0) return Math.round(Number(twin.riskScore));
-        if (twin.predictionRisk != null && Number(twin.predictionRisk) > 0) return Math.round(Number(twin.predictionRisk));
-        if (twin.risk != null && Number(twin.risk) > 0) return Math.round(Number(twin.risk));
-
-        // 2. Dynamic Clinical Risk Calculation based on live vitals
         let score = 0;
 
         const hr = Number(twin.heartRate) || 0;
@@ -132,7 +128,12 @@ function HealthTwins({ keycloak }) {
             if (hasDiseases) score += 20;
         }
 
-        return Math.min(score, 100);
+        if (score > 0) return Math.min(score, 100);
+
+        if (twin.predictionRisk != null && Number(twin.predictionRisk) > 0) return Math.round(Number(twin.predictionRisk));
+        if (twin.riskScore != null && Number(twin.riskScore) > 0 && Number(twin.riskScore) !== 15) return Math.round(Number(twin.riskScore));
+
+        return 0;
     };
 
     const getStatus = (risk) => {

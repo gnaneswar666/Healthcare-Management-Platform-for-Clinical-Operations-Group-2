@@ -5,19 +5,23 @@ import { useNavigate } from "react-router-dom";
 import { Users as UsersIcon, Eye } from "lucide-react";
 import { getHealthTwins } from "../../services/healthTwinService";
 import { Search, Activity, AlertTriangle, HeartPulse, X } from "lucide-react";
+import { getDoctorIdentity } from "../../utils/userUtils";
+
 function Patients({ keycloak }) {
 
     const [patients, setPatients] = useState([]);
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
-const [healthTwins, setHealthTwins] = useState([]);
-   async function loadPatients() {
+    const [healthTwins, setHealthTwins] = useState([]);
 
-    try {
+    async function loadPatients() {
 
-        const doctorId = keycloak.tokenParsed.doctorId;
+        try {
 
-        const patientRes = await getAssignedPatients(doctorId);
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
+
+            const patientRes = await getAssignedPatients(doctorId);
 
         const twinRes = await getHealthTwins();
 

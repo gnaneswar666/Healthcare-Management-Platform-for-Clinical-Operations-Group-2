@@ -100,15 +100,15 @@ function Alerts({ keycloak }) {
                 </div>
 
                 <div className="relative mb-6">
-                    <Search
-                        size={18}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-                    />
+                    <div className="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center text-slate-400 pointer-events-none z-10">
+                        <Search size={18} className="text-slate-400" />
+                    </div>
                     <input
-                        className="input pl-11"
+                        className="input input-search"
                         placeholder="Search alerts by clinical message..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        style={{ paddingLeft: "2.75rem" }}
                     />
                 </div>
 

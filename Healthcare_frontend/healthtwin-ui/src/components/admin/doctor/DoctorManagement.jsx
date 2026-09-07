@@ -69,7 +69,8 @@ export default function DoctorManagement() {
   const totalDoctors = doctors.length;
   const activeDoctors = doctors.filter((d) => d.status === "ACTIVE").length;
   const departments = [...new Set(doctors.map((d) => d.department))].length;
-  const totalExperience = doctors.reduce((sum, d) => sum + d.experience, 0);
+  const totalExperience = doctors.reduce((sum, d) => sum + (Number(d.experience) || 0), 0);
+  const avgExperience = totalDoctors > 0 ? (totalExperience / totalDoctors).toFixed(1) : 0;
 
   const uniqueDepartments = [...new Set(doctors.map((d) => d.department))];
 
@@ -120,8 +121,8 @@ export default function DoctorManagement() {
         />
         <StatCard
           icon={<Briefcase size={22} />}
-          title="Experience"
-          value={`${totalExperience} Years`}
+          title="Avg Experience"
+          value={`${avgExperience} Years`}
           variant="amber"
         />
       </div>

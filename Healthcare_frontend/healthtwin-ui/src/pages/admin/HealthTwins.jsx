@@ -43,9 +43,9 @@ function HealthTwins() {
     const [lastUpdated, setLastUpdated] = useState(new Date());
     const navigate = useNavigate();
 
-    const loadHealthTwins = useCallback(async () => {
+    const loadHealthTwins = useCallback(async (isInitial = false) => {
         try {
-            setLoading(true);
+            if (isInitial) setLoading(true);
             const [twinRes, patientRes] = await Promise.allSettled([
                 getHealthTwins(),
                 getPatients()
@@ -70,15 +70,15 @@ function HealthTwins() {
             console.error("Failed to load health twins:", error);
             setHealthTwins([]);
         } finally {
-            setLoading(false);
+            if (isInitial) setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        loadHealthTwins();
+        loadHealthTwins(true);
         const interval = setInterval(() => {
-            loadHealthTwins();
-        }, 15000);
+            loadHealthTwins(false);
+        }, 1000);
 
         return () => clearInterval(interval);
     }, [loadHealthTwins]);
@@ -86,12 +86,6 @@ function HealthTwins() {
     const calculateRiskScore = (twin) => {
         if (!twin) return 0;
         
-        // 1. Check explicit backend risk properties if available and > 0
-        if (twin.riskScore != null && Number(twin.riskScore) > 0) return Math.round(Number(twin.riskScore));
-        if (twin.predictionRisk != null && Number(twin.predictionRisk) > 0) return Math.round(Number(twin.predictionRisk));
-        if (twin.risk != null && Number(twin.risk) > 0) return Math.round(Number(twin.risk));
-
-        // 2. Dynamic Clinical Risk Calculation based on live vitals
         let score = 0;
 
         const hr = Number(twin.heartRate) || 0;
@@ -126,7 +120,12 @@ function HealthTwins() {
             if (hasDiseases) score += 20;
         }
 
-        return Math.min(score, 100);
+        if (score > 0) return Math.min(score, 100);
+
+        if (twin.predictionRisk != null && Number(twin.predictionRisk) > 0) return Math.round(Number(twin.predictionRisk));
+        if (twin.riskScore != null && Number(twin.riskScore) > 0 && Number(twin.riskScore) !== 15) return Math.round(Number(twin.riskScore));
+
+        return 0;
     };
 
     const healthyCount = healthTwins.filter((t) => calculateRiskScore(t) < 30).length;

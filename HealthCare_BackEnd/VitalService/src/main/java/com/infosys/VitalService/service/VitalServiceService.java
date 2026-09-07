@@ -1,4 +1,4 @@
-package com.infosys.VitalService.service;
+﻿package com.infosys.VitalService.service;
 
 import java.time.Instant;
 import java.util.Comparator;
@@ -38,8 +38,8 @@ public class VitalServiceService {
         event.setTimestamp(saved.getTimestamp());
 
         try {
-           producer.publishVital(event);
-            System.out.println("Kafka message sent successfully");
+            producer.publishVital(event);
+            System.out.println("Kafka message sent successfully for patient " + saved.getPatientId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,7 +73,21 @@ public class VitalServiceService {
     public void publishVitals(VitalService vitals) {
 
         System.out.println("Publishing to Kafka : " + vitals);
+        VitalEvent event = new VitalEvent();
+        event.setPatientId(vitals.getPatientId());
+        event.setHeartRate(vitals.getHeartRate());
+        event.setTemperature(vitals.getTemperature());
+        event.setOxygenLevel(vitals.getOxygenLevel());
+        event.setBloodPressure(vitals.getBloodPressure());
+        event.setTimestamp(vitals.getTimestamp() != null ? vitals.getTimestamp() : Instant.now());
+
+        try {
+            producer.publishVital(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
     public List<VitalService> getAllVitals(){
 
         return repository.findAll();

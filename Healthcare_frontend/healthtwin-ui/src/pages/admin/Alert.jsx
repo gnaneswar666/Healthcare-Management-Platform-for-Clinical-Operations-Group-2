@@ -7,7 +7,8 @@ import {
     ShieldCheck,
     CheckCircle2,
     Search,
-    Eye
+    Eye,
+    X
 } from "lucide-react";
 
 function Alerts() {
@@ -18,7 +19,7 @@ function Alerts() {
     async function loadAlerts() {
         try {
             const res = await getAllAlerts();
-            setAlerts(res.data);
+            setAlerts(res.data || []);
         } catch (err) {
             console.log(err);
         }
@@ -26,22 +27,30 @@ function Alerts() {
 
     useEffect(() => {
         loadAlerts();
-        const interval = setInterval(loadAlerts, 5000);
+        const interval = setInterval(loadAlerts, 1000);
         return () => clearInterval(interval);
     }, []);
 
     async function acknowledge(id) {
         await acknowledgeAlert(id);
+        window.dispatchEvent(new Event("alertStatusChanged"));
         loadAlerts();
     }
 
-    const filtered = alerts.filter(a =>
-        (a.patientId || "").toLowerCase().includes(search.toLowerCase()) ||
-        (a.message || "").toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = alerts.filter(a => {
+        const q = search.toLowerCase().trim();
+        if (!q) return true;
+        return (
+            (a.patientId || "").toLowerCase().includes(q) ||
+            (a.doctorId || "").toLowerCase().includes(q) ||
+            (a.message || "").toLowerCase().includes(q) ||
+            (a.severity || "").toLowerCase().includes(q) ||
+            (a.status || "").toLowerCase().includes(q)
+        );
+    });
 
     const total = alerts.length;
-    const active = alerts.filter(a => a.active).length;
+    const active = alerts.filter(a => a.active || a.status === "NEW").length;
     const acknowledged = alerts.filter(a => a.status === "ACKNOWLEDGED").length;
     const resolved = alerts.filter(a => a.status === "RESOLVED").length;
 
@@ -85,7 +94,7 @@ function Alerts() {
                     </div>
                     <input
                         type="text"
-                        placeholder="Search Patient ID or message..."
+                        placeholder="Search by Patient ID, Doctor ID, severity, or message..."
                         value={search}
                         onChange={(e)=>setSearch(e.target.value)}
                         style={{ paddingLeft: "3.1rem", paddingTop: "12px", paddingBottom: "12px" }}
@@ -114,52 +123,60 @@ function Alerts() {
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map(alert=>(
-                                <tr key={alert.id}>
-                                    <td className="font-mono font-bold text-slate-900">{alert.patientId}</td>
-                                    <td>{alert.doctorId || "DOC101"}</td>
-                                    <td>{alert.message}</td>
-                                    <td>
-                                        <span className={`badge ${alert.severity==="CRITICAL" ? "badge--danger" : "badge--warning"}`}>
-                                            {alert.severity}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span className={`badge ${alert.status==="NEW" ? "badge--danger" : alert.status==="ACKNOWLEDGED" ? "badge--warning" : "badge--success"}`}>
-                                            {alert.status}
-                                        </span>
-                                    </td>
-                                    <td className="text-center">
-                                        <div className="flex justify-center items-center gap-2">
-                                            <button
-                                                onClick={() => navigate(`/admin/patient/${alert.patientId}`)}
-                                                style={{ background: "#2563eb", color: "#ffffff" }}
-                                                className="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
-                                            >
-                                                <Eye size={14} />
-                                                <span>View Patient</span>
-                                            </button>
-
-                                            {alert.status === "NEW" ? (
+                            {filtered.length > 0 ? (
+                                filtered.map(alert=>(
+                                    <tr key={alert.id}>
+                                        <td className="font-mono font-bold text-slate-900">{alert.patientId}</td>
+                                        <td>{alert.doctorId || "DOC101"}</td>
+                                        <td>{alert.message}</td>
+                                        <td>
+                                            <span className={`badge ${alert.severity==="CRITICAL" ? "badge--danger" : "badge--warning"}`}>
+                                                {alert.severity}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span className={`badge ${alert.status==="NEW" ? "badge--danger" : alert.status==="ACKNOWLEDGED" ? "badge--warning" : "badge--success"}`}>
+                                                {alert.status}
+                                            </span>
+                                        </td>
+                                        <td className="text-center">
+                                            <div className="flex justify-center items-center gap-2">
                                                 <button
-                                                    onClick={() => acknowledge(alert.id)}
-                                                    className="btn btn--success btn--sm flex items-center gap-1 cursor-pointer"
+                                                    onClick={() => navigate(`/admin/patient/${alert.patientId}`)}
+                                                    style={{ background: "#2563eb", color: "#ffffff" }}
+                                                    className="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
                                                 >
-                                                    <ShieldCheck size={14} />
-                                                    <span>Acknowledge</span>
+                                                    <Eye size={14} />
+                                                    <span>View Patient</span>
                                                 </button>
-                                            ) : alert.status === "ACKNOWLEDGED" ? (
-                                                <span className="badge badge--warning">Waiting</span>
-                                            ) : (
-                                                <span className="badge badge--success">
-                                                    <CheckCircle2 size={13} />
-                                                    Resolved
-                                                </span>
-                                            )}
-                                        </div>
+
+                                                {alert.status === "NEW" ? (
+                                                    <button
+                                                        onClick={() => acknowledge(alert.id)}
+                                                        className="btn btn--success btn--sm flex items-center gap-1 cursor-pointer"
+                                                    >
+                                                        <ShieldCheck size={14} />
+                                                        <span>Acknowledge</span>
+                                                    </button>
+                                                ) : alert.status === "ACKNOWLEDGED" ? (
+                                                    <span className="badge badge--warning">Waiting</span>
+                                                ) : (
+                                                    <span className="badge badge--success">
+                                                        <CheckCircle2 size={13} />
+                                                        Resolved
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={6} className="text-center py-10 text-slate-400 italic text-sm">
+                                        No alerts found matching "{search}".
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>

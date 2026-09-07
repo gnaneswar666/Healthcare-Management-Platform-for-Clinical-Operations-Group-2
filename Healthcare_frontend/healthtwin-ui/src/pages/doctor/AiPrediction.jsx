@@ -5,6 +5,7 @@ import { Brain, Search, Eye, HeartPulse, Activity, User, CalendarDays, AlertTria
 import AiPredictionModal from "../../components/admin/AiPredictionModal";
 import DoctorLayout from "../../components/doctor/DoctorLayout";
 import { getAssignedPatients } from "../../services/assignmentService";
+import { getDoctorIdentity } from "../../utils/userUtils";
 import { getHealthTwin, updateHealthTwin } from "../../services/HealthTwinService";
 import {
     simulateDiabetesData,
@@ -123,7 +124,8 @@ function AiPrediction({ keycloak }) {
 
         try {
 
-            const doctorId = keycloak.tokenParsed.doctorId;
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
 
             const res = await getAssignedPatients(doctorId);
 

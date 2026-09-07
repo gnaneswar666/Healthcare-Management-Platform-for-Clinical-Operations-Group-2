@@ -39,9 +39,9 @@ function PatientDetails() {
     const [consent, setConsent] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    async function loadData() {
+    async function loadData(isInitial = false) {
         try {
-            setLoading(true);
+            if (isInitial) setLoading(true);
             const patientData = await getPatient(patientId);
             setPatient(patientData);
 
@@ -61,12 +61,16 @@ function PatientDetails() {
         } catch (err) {
             console.error("Patient details error", err);
         } finally {
-            setLoading(false);
+            if (isInitial) setLoading(false);
         }
     }
 
     useEffect(() => {
-        loadData();
+        loadData(true);
+        const interval = setInterval(() => {
+            loadData(false);
+        }, 1000);
+        return () => clearInterval(interval);
     }, [patientId]);
 
     const calculateAge = (dob) => {
@@ -132,7 +136,8 @@ function PatientDetails() {
     const initials = `${patient.firstName?.[0] || ""}${patient.lastName?.[0] || ""}`.toUpperCase();
     const fullName = `${patient.firstName || ""} ${patient.lastName || ""}`.trim();
     const bmi = calculateBMI(healthTwin?.height, healthTwin?.weight);
-    const risk = healthTwin?.riskScore ?? calculateRiskScore(healthTwin);
+    const calculatedRisk = calculateRiskScore(healthTwin);
+    const risk = calculatedRisk > 0 ? calculatedRisk : (healthTwin?.riskScore ?? 0);
     const riskLabel = risk < 30 ? "Healthy" : risk < 70 ? "Warning" : "Critical";
     const riskBadgeClass = risk < 30 ? "badge--success" : risk < 70 ? "badge--warning" : "badge--danger";
     const riskBarColor = risk < 30
@@ -320,6 +325,84 @@ function PatientDetails() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    {/* Medical Details & Clinical History */}
+                    <div className="soft-card lg:col-span-2">
+                        <div className="flex items-center gap-3 mb-5">
+                            <div className="stat-card__icon" style={{ background: "rgba(139, 92, 246, 0.12)" }}>
+                                <Pill size={20} className="text-violet-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900">Medical Details & Clinical History</h3>
+                                <p className="text-xs text-slate-500">Known allergies, chronic conditions, and ongoing medications</p>
+                            </div>
+                        </div>
+
+                        {healthTwin ? (
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                                {/* Allergies */}
+                                <div className="rounded-xl border border-rose-100 bg-rose-50/40 p-4 space-y-2">
+                                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-rose-700 mb-2">
+                                        <AlertTriangle size={14} className="text-rose-500" />
+                                        <span>Allergies</span>
+                                    </div>
+                                    {healthTwin.allergies && healthTwin.allergies.length > 0 ? (
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {healthTwin.allergies.map((item, idx) => (
+                                                <span key={idx} className="badge badge--rose font-semibold">
+                                                    {item}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-slate-400 italic text-xs">No known allergies reported</p>
+                                    )}
+                                </div>
+
+                                {/* Chronic Diseases */}
+                                <div className="rounded-xl border border-amber-100 bg-amber-50/40 p-4 space-y-2">
+                                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-amber-700 mb-2">
+                                        <Activity size={14} className="text-amber-500" />
+                                        <span>Chronic Diseases</span>
+                                    </div>
+                                    {healthTwin.chronicDiseases && healthTwin.chronicDiseases.length > 0 ? (
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {healthTwin.chronicDiseases.map((item, idx) => (
+                                                <span key={idx} className="badge badge--amber font-semibold">
+                                                    {item}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-slate-400 italic text-xs">No chronic conditions reported</p>
+                                    )}
+                                </div>
+
+                                {/* Current Medications */}
+                                <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 space-y-2">
+                                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-blue-700 mb-2">
+                                        <Pill size={14} className="text-blue-500" />
+                                        <span>Current Medications</span>
+                                    </div>
+                                    {healthTwin.currentMedications && healthTwin.currentMedications.length > 0 ? (
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {healthTwin.currentMedications.map((item, idx) => (
+                                                <span key={idx} className="badge badge--brand font-semibold">
+                                                    {item}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-slate-400 italic text-xs">No current medications listed</p>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center">
+                                <p className="text-sm text-slate-500">No medical details or health twin profile found for this patient.</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* AI Model Parameters (Heart & Diabetes) */}

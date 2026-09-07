@@ -6,6 +6,7 @@ import {
     acknowledgeAlert
 } from "../../services/alertService";
 import { useNavigate } from "react-router-dom";
+import { getDoctorIdentity } from "../../utils/userUtils";
 
 function Alerts({ keycloak }) {
     const navigate = useNavigate();
@@ -14,7 +15,8 @@ function Alerts({ keycloak }) {
 
     async function loadAlerts() {
         try {
-            const doctorId = keycloak.tokenParsed.doctorId;
+            const doctorProfile = await getDoctorIdentity(keycloak);
+            const doctorId = doctorProfile?.doctorId || "DOC101";
             const res = await getDoctorAlerts(doctorId);
             setAlerts(res.data);
         } catch (err) {
@@ -25,6 +27,7 @@ function Alerts({ keycloak }) {
     async function acknowledge(id) {
         try {
             await acknowledgeAlert(id);
+            window.dispatchEvent(new Event("alertStatusChanged"));
             loadAlerts();
         } catch (err) {
             console.log(err);
@@ -37,10 +40,16 @@ function Alerts({ keycloak }) {
         return () => clearInterval(interval);
     }, []);
 
-    const filteredAlerts = alerts.filter(a =>
-        (a.patientId || "").toLowerCase().includes(search.toLowerCase()) ||
-        (a.message || "").toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredAlerts = alerts.filter(a => {
+        const q = search.toLowerCase().trim();
+        if (!q) return true;
+        return (
+            (a.patientId || "").toLowerCase().includes(q) ||
+            (a.message || "").toLowerCase().includes(q) ||
+            (a.severity || "").toLowerCase().includes(q) ||
+            (a.status || "").toLowerCase().includes(q)
+        );
+    });
 
     return (
         <DoctorLayout keycloak={keycloak}>

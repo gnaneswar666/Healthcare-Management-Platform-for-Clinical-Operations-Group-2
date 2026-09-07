@@ -69,7 +69,7 @@ function PatientHealthTwin() {
                     setLastUpdated(new Date());
                 })
                 .catch((error) => console.error("Failed to load health twin:", error));
-        }, 15000);
+        }, 1000);
         return () => {
             clearTimeout(initial);
             clearInterval(interval);
