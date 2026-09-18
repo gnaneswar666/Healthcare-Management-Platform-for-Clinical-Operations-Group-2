@@ -4,16 +4,15 @@ import {
     X,
     Brain,
     ShieldAlert,
-    Activity,
-    BadgeCheck,
+    ShieldCheck,
     AlertTriangle,
     Printer,
     CheckCircle2,
     TrendingUp,
     Sparkles,
     Clock,
-    ShieldCheck,
-    BarChart3
+    BarChart3,
+    Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -26,12 +25,15 @@ function getRiskDetails(prediction) {
         return {
             key: "CRITICAL",
             label: "CRITICAL RISK",
-            bg: "bg-rose-50 border-rose-200 text-rose-700",
-            badgeBg: "bg-rose-600 text-white",
-            meterColor: "from-rose-500 to-red-600",
-            barColor: "bg-rose-500",
-            iconColor: "text-rose-600",
-            lightBg: "bg-rose-50/70 border-rose-100",
+            bgColor: "#fff1f2",
+            borderColor: "#fecdd3",
+            textColor: "#be123c",
+            pillBg: "#ffe4e6",
+            pillText: "#9f1239",
+            meterGradient: "linear-gradient(90deg, #f59e0b 0%, #f43f5e 50%, #e11d48 100%)",
+            barColor: "#e11d48",
+            dotColor: "#e11d48",
+            icon: ShieldAlert,
             statusText: "Immediate Clinical Evaluation Suggested"
         };
     }
@@ -39,12 +41,15 @@ function getRiskDetails(prediction) {
         return {
             key: "HIGH",
             label: "HIGH RISK",
-            bg: "bg-red-50 border-red-200 text-red-700",
-            badgeBg: "bg-red-600 text-white",
-            meterColor: "from-amber-500 to-rose-600",
-            barColor: "bg-red-500",
-            iconColor: "text-red-600",
-            lightBg: "bg-red-50/70 border-red-100",
+            bgColor: "#fef2f2",
+            borderColor: "#fecaca",
+            textColor: "#b91c1c",
+            pillBg: "#fee2e2",
+            pillText: "#991b1b",
+            meterGradient: "linear-gradient(90deg, #f59e0b 0%, #ef4444 100%)",
+            barColor: "#ef4444",
+            dotColor: "#ef4444",
+            icon: ShieldAlert,
             statusText: "Follow-up Diagnostic Testing Recommended"
         };
     }
@@ -52,25 +57,31 @@ function getRiskDetails(prediction) {
         return {
             key: "MEDIUM",
             label: "MODERATE RISK",
-            bg: "bg-amber-50 border-amber-200 text-amber-800",
-            badgeBg: "bg-amber-500 text-white",
-            meterColor: "from-emerald-400 to-amber-500",
-            barColor: "bg-amber-500",
-            iconColor: "text-amber-600",
-            lightBg: "bg-amber-50/70 border-amber-100",
+            bgColor: "#fffbeb",
+            borderColor: "#fde68a",
+            textColor: "#b45309",
+            pillBg: "#fef3c7",
+            pillText: "#92400e",
+            meterGradient: "linear-gradient(90deg, #10b981 0%, #f59e0b 100%)",
+            barColor: "#f59e0b",
+            dotColor: "#f59e0b",
+            icon: AlertTriangle,
             statusText: "Regular Monitoring & Lifestyle Care"
         };
     }
     return {
         key: "LOW",
         label: "LOW RISK",
-        bg: "bg-emerald-50 border-emerald-200 text-emerald-800",
-        badgeBg: "bg-emerald-600 text-white",
-        meterColor: "from-teal-400 to-emerald-500",
-        barColor: "bg-emerald-500",
-        iconColor: "text-emerald-600",
-        lightBg: "bg-emerald-50/70 border-emerald-100",
-        statusText: "Optimal Health Metrics Observed"
+        bgColor: "#ecfdf5",
+        borderColor: "#a7f3d0",
+        textColor: "#047857",
+        pillBg: "#d1fae5",
+        pillText: "#065f46",
+        meterGradient: "linear-gradient(90deg, #14b8a6 0%, #10b981 100%)",
+        barColor: "#10b981",
+        dotColor: "#10b981",
+        icon: ShieldCheck,
+        statusText: "Optimal Health Metrics • Low Risk Profile"
     };
 }
 
@@ -133,12 +144,20 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
     const riskInfo = getRiskDetails(prediction);
     const topFactors = (prediction.topFactors || []).map(normalizeFactor);
     const generatedAt = prediction.createdAt
-        ? new Date(prediction.createdAt).toLocaleString()
+        ? new Date(prediction.createdAt).toLocaleString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        })
         : new Date().toLocaleString();
 
-    const confidence = Math.round(Number(prediction.confidence) || 100);
+    const confidence = Math.round(Number(prediction.confidence) || 93);
     const probability = Math.round(Number(prediction.probability) || 0);
     const diseaseName = prediction.prediction || prediction.disease || "Health Risk Assessment";
+    const StatusIcon = riskInfo.icon;
 
     // Clean up text contradictions
     let explanationText = prediction.explanation;
@@ -146,7 +165,6 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
         if (explanationText.includes("0.0% confidence")) {
             explanationText = explanationText.replace("0.0% confidence", "high clinical confidence");
         }
-        // Fix contradiction if explanation says "No Heart Disease" but risk is HIGH/CRITICAL or probability >= 50
         if ((riskInfo.key === "HIGH" || riskInfo.key === "CRITICAL" || probability >= 50) && explanationText.includes("predicts No Heart Disease")) {
             explanationText = explanationText.replace("predicts No Heart Disease", `predicts elevated ${diseaseName} risk`);
         }
@@ -155,7 +173,10 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
     return createPortal(
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto print:p-0 print:static print:block">
+                <div
+                    style={{ zIndex: 99999 }}
+                    className="fixed inset-0 flex items-center justify-center p-3 sm:p-6 overflow-y-auto print:p-0 print:static print:block"
+                >
                     {/* BACKDROP */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -167,145 +188,278 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
 
                     {/* MODAL CONTAINER */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                        initial={{ opacity: 0, scale: 0.96, y: 12 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                        transition={{ duration: 0.22, ease: "easeOut" }}
+                        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
                         onClick={(event) => event.stopPropagation()}
-                        className="relative flex flex-col w-full max-w-4xl max-h-[92vh] sm:max-h-[88vh] rounded-[16px] bg-white shadow-2xl border border-slate-200/80 overflow-hidden my-auto print:max-h-none print:shadow-none print:border-none print:w-full print:rounded-none print:overflow-visible"
+                        style={{
+                            width: "100%",
+                            maxWidth: "880px",
+                            maxHeight: "90vh",
+                            borderRadius: "20px",
+                            backgroundColor: "#ffffff",
+                            border: "1px solid #cbd5e1",
+                            boxShadow: "0 25px 60px -15px rgba(15, 23, 42, 0.4)",
+                            display: "flex",
+                            flexDirection: "column",
+                            overflow: "hidden",
+                            margin: "auto",
+                            position: "relative"
+                        }}
+                        className="print:max-h-none print:shadow-none print:border-none print:w-full print:rounded-none"
                     >
-                        {/* 1. HEADER BANNER WITH LARGER FONTS & ICON */}
+                        {/* 1. HEADER BANNER */}
                         <div
-                            style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)" }}
-                            className="px-6 sm:px-10 py-7 text-white shrink-0 relative border-b border-slate-800"
+                            style={{
+                                background: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+                                padding: "22px 30px",
+                                borderBottom: "1px solid #334155",
+                                color: "#ffffff",
+                                position: "relative",
+                                flexShrink: 0
+                            }}
                         >
-                            {/* Glow accent decoration */}
-                            <div className="absolute top-0 right-1/4 w-72 h-72 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
-
-                            <div className="flex items-start justify-between gap-4 relative z-10 pr-16">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-[10px] bg-gradient-to-br from-blue-600 to-indigo-600 border border-blue-400/40 flex items-center justify-center text-white shadow-xl shadow-blue-600/30 shrink-0">
-                                        <Brain size={28} />
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", paddingRight: "40px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                                    <div style={{
+                                        width: "50px",
+                                        height: "50px",
+                                        borderRadius: "14px",
+                                        background: "linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%)",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        color: "#ffffff",
+                                        boxShadow: "0 4px 14px rgba(59, 130, 246, 0.35)",
+                                        flexShrink: 0
+                                    }}>
+                                        <Brain size={26} />
                                     </div>
                                     <div>
-                                        <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                            <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-[6px] inline-flex items-center gap-1.5 leading-normal">
-                                                <Sparkles size={12} className="text-blue-400" />
-                                                HealthCare AI Engine • {prediction.modelVersion || "v2.0"}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                                            <span style={{
+                                                backgroundColor: "rgba(59, 130, 246, 0.2)",
+                                                color: "#93c5fd",
+                                                border: "1px solid rgba(147, 197, 253, 0.3)",
+                                                fontSize: "11px",
+                                                fontWeight: "800",
+                                                textTransform: "uppercase",
+                                                letterSpacing: "0.05em",
+                                                padding: "2px 10px",
+                                                borderRadius: "20px",
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                gap: "6px"
+                                            }}>
+                                                <Sparkles size={12} style={{ color: "#60a5fa" }} />
+                                                MEDISPHERE AI ENGINE • {prediction.modelVersion || "v2.0"}
                                             </span>
                                         </div>
-                                        <h2 style={{ color: "#ffffff" }} className="text-2xl sm:text-3xl font-black tracking-tight leading-tight m-0">
+                                        <h2 style={{ color: "#ffffff", fontSize: "22px", fontWeight: "800", margin: 0, lineHeight: 1.2 }}>
                                             AI Clinical Risk Report
                                         </h2>
-                                        <p style={{ color: "#94a3b8" }} className="text-sm sm:text-base mt-1 font-medium m-0">
-                                            Target Assessment: <strong style={{ color: "#f8fafc" }}>{diseaseName}</strong>
+                                        <p style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "500", margin: "4px 0 0 0" }}>
+                                            Target Assessment: <strong style={{ color: "#f8fafc", backgroundColor: "rgba(255, 255, 255, 0.1)", padding: "2px 8px", borderRadius: "6px" }}>{diseaseName}</strong>
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* CLOSE BUTTON WITH GENEROUS INSET */}
+                            {/* TOP CLOSE BUTTON */}
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="absolute top-6 right-6 sm:top-7 sm:right-8 z-20 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 p-2.5 text-slate-300 hover:text-white transition-all cursor-pointer print:hidden shadow-md flex items-center justify-center"
+                                style={{
+                                    position: "absolute",
+                                    top: "20px",
+                                    right: "24px",
+                                    width: "36px",
+                                    height: "36px",
+                                    borderRadius: "50%",
+                                    backgroundColor: "rgba(255, 255, 255, 0.15)",
+                                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                                    color: "#cbd5e1",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
+                                    transition: "all 0.2s ease"
+                                }}
                                 title="Close Report"
                             >
-                                <X size={20} />
+                                <X size={18} />
                             </button>
                         </div>
 
-                        {/* 2. SCROLLABLE REPORT BODY WITH EXPANDED PADDING & SPACING */}
-                        <div className="flex-1 min-h-0 overflow-y-auto p-6 sm:p-10 space-y-7 bg-slate-50/60 print:overflow-visible print:p-4">
-                            {/* METRICS GRID (4 CARDS) */}
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                {/* CARD 1: RISK STATUS */}
-                                <div className="bg-white border border-slate-200/90 rounded-[10px] p-5 shadow-xs space-y-2.5">
-                                    <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 block pl-0.5">
-                                        Risk Status
-                                    </span>
-                                    <div className="flex items-center">
-                                        <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-xs sm:text-sm font-black border leading-normal ${riskInfo.bg}`}>
-                                            <ShieldAlert size={15} className={riskInfo.iconColor} />
-                                            {riskInfo.label}
-                                        </span>
+                        {/* 2. SCROLLABLE REPORT BODY */}
+                        <div
+                            style={{
+                                flex: 1,
+                                minHeight: 0,
+                                overflowY: "auto",
+                                padding: "28px 32px",
+                                backgroundColor: "#f8fafc",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "24px"
+                            }}
+                            className="print:overflow-visible print:p-4"
+                        >
+                            {/* HERO RISK STATUS CARD */}
+                            <div style={{
+                                backgroundColor: riskInfo.bgColor,
+                                border: `1px solid ${riskInfo.borderColor}`,
+                                borderRadius: "16px",
+                                padding: "20px 24px"
+                            }}>
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                    <div className="space-y-2">
+                                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                            <span style={{
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                gap: "8px",
+                                                padding: "4px 14px",
+                                                borderRadius: "20px",
+                                                fontSize: "12px",
+                                                fontWeight: "800",
+                                                backgroundColor: riskInfo.pillBg,
+                                                color: riskInfo.pillText,
+                                                border: `1px solid ${riskInfo.borderColor}`
+                                            }}>
+                                                <StatusIcon size={16} />
+                                                {riskInfo.label}
+                                            </span>
+                                            <span style={{
+                                                fontSize: "12px",
+                                                fontWeight: "700",
+                                                color: "#64748b",
+                                                backgroundColor: "#ffffff",
+                                                border: "1px solid #e2e8f0",
+                                                padding: "4px 12px",
+                                                borderRadius: "20px"
+                                            }}>
+                                                Disease Assessment
+                                            </span>
+                                        </div>
+                                        <h3 style={{ fontSize: "20px", fontWeight: "800", color: "#0f172a", margin: 0 }}>
+                                            {riskInfo.statusText}
+                                        </h3>
+                                        <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", margin: 0 }}>
+                                            Automated multi-parameter risk evaluation synthesized by Medisphere AI Decision Engine.
+                                        </p>
                                     </div>
-                                </div>
 
-                                {/* CARD 2: AI CONFIDENCE */}
-                                <div className="bg-white border border-slate-200/90 rounded-[10px] p-5 shadow-xs space-y-1.5">
-                                    <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 block pl-0.5">
-                                        AI Confidence
-                                    </span>
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-2xl sm:text-3xl font-black text-slate-900">{confidence}%</span>
-                                        <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-[6px] leading-normal">High</span>
-                                    </div>
-                                </div>
+                                    {/* Quick Stats Pill Cards */}
+                                    <div style={{ display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
+                                        <div style={{
+                                            backgroundColor: "#ffffff",
+                                            border: "1px solid #e2e8f0",
+                                            borderRadius: "12px",
+                                            padding: "10px 16px",
+                                            minWidth: "100px"
+                                        }}>
+                                            <span style={{ fontSize: "10px", fontWeight: "800", color: "#94a3b8", textTransform: "uppercase", display: "block" }}>AI Confidence</span>
+                                            <span style={{ fontSize: "22px", fontWeight: "800", color: "#0f172a" }}>{confidence}%</span>
+                                        </div>
 
-                                {/* CARD 3: DISEASE PROBABILITY */}
-                                <div className="bg-white border border-slate-200/90 rounded-[10px] p-5 shadow-xs space-y-1.5">
-                                    <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 block pl-0.5">
-                                        Disease Probability
-                                    </span>
-                                    <p className={`text-2xl sm:text-3xl font-black m-0 ${probability >= 50 ? "text-rose-600" : probability >= 25 ? "text-amber-600" : "text-emerald-600"}`}>
-                                        {probability}%
-                                    </p>
-                                </div>
+                                        <div style={{
+                                            backgroundColor: "#ffffff",
+                                            border: "1px solid #e2e8f0",
+                                            borderRadius: "12px",
+                                            padding: "10px 16px",
+                                            minWidth: "100px"
+                                        }}>
+                                            <span style={{ fontSize: "10px", fontWeight: "800", color: "#94a3b8", textTransform: "uppercase", display: "block" }}>Probability</span>
+                                            <span style={{ fontSize: "22px", fontWeight: "800", color: riskInfo.textColor }}>{probability}%</span>
+                                        </div>
 
-                                {/* CARD 4: RESPONSE TIME */}
-                                <div className="bg-white border border-slate-200/90 rounded-[10px] p-5 shadow-xs space-y-1.5">
-                                    <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 block pl-0.5">
-                                        Response Time
-                                    </span>
-                                    <div className="flex items-center gap-2">
-                                        <Clock size={18} className="text-blue-500 shrink-0" />
-                                        <span className="text-2xl sm:text-3xl font-black text-slate-900">
-                                            {formatResponseTime(prediction.predictionTime)}
-                                        </span>
+                                        <div style={{
+                                            backgroundColor: "#ffffff",
+                                            border: "1px solid #e2e8f0",
+                                            borderRadius: "12px",
+                                            padding: "10px 16px",
+                                            minWidth: "100px"
+                                        }}>
+                                            <span style={{ fontSize: "10px", fontWeight: "800", color: "#94a3b8", textTransform: "uppercase", display: "block" }}>Latency</span>
+                                            <span style={{ fontSize: "18px", fontWeight: "800", color: "#0f172a", display: "flex", alignItems: "center", gap: "4px" }}>
+                                                <Clock size={14} style={{ color: "#3b82f6" }} />
+                                                {formatResponseTime(prediction.predictionTime)}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* OVERALL RISK ASSESSMENT METER */}
-                            <div className="bg-white border border-slate-200/90 rounded-[10px] p-6 sm:p-7 shadow-xs space-y-4">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm sm:text-base font-black text-slate-800">
-                                    <span className="flex items-center gap-2 pl-0.5">
-                                        <BarChart3 size={18} className="text-blue-600" />
-                                        Overall Risk Assessment Meter
+                            <div style={{
+                                backgroundColor: "#ffffff",
+                                border: "1px solid #e2e8f0",
+                                borderRadius: "16px",
+                                padding: "20px 24px"
+                            }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
+                                    <span style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px", fontWeight: "800", color: "#1e293b" }}>
+                                        <BarChart3 size={18} style={{ color: "#4f46e5" }} />
+                                        Overall Clinical Risk Gauge
                                     </span>
-                                    <span className={`px-3 py-1.5 rounded-[6px] text-xs sm:text-sm font-black border leading-normal ${riskInfo.bg} w-fit`}>
-                                        {probability}% Probability
+                                    <span style={{
+                                        fontSize: "12px",
+                                        fontWeight: "800",
+                                        backgroundColor: riskInfo.pillBg,
+                                        color: riskInfo.pillText,
+                                        padding: "4px 12px",
+                                        borderRadius: "20px",
+                                        border: `1px solid ${riskInfo.borderColor}`
+                                    }}>
+                                        {probability}% Probability Score
                                     </span>
                                 </div>
 
-                                {/* Progress Bar Track */}
-                                <div className="relative px-0.5">
-                                    <div className="h-4 w-full bg-slate-100 rounded-[6px] overflow-hidden p-0.5 border border-slate-200/60">
-                                        <div
-                                            className={`h-full rounded-[4px] bg-gradient-to-r ${riskInfo.meterColor} transition-all duration-500`}
-                                            style={{ width: `${Math.max(4, Math.min(100, probability))}%` }}
-                                        />
-                                    </div>
+                                <div style={{ height: "14px", width: "100%", backgroundColor: "#f1f5f9", borderRadius: "20px", overflow: "hidden", border: "1px solid #cbd5e1", padding: "2px" }}>
+                                    <div
+                                        style={{
+                                            height: "100%",
+                                            borderRadius: "20px",
+                                            background: riskInfo.meterGradient,
+                                            width: `${Math.max(4, Math.min(100, probability))}%`,
+                                            transition: "width 0.6s ease"
+                                        }}
+                                    />
                                 </div>
 
-                                <div className="flex justify-between items-center text-xs font-bold text-slate-500 px-0.5">
-                                    <span>0% Low Risk</span>
-                                    <span>50% Moderate</span>
-                                    <span>100% Critical Risk</span>
+                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", fontWeight: "700", marginTop: "8px" }}>
+                                    <span style={{ color: "#047857" }}>0% Low Risk</span>
+                                    <span style={{ color: "#b45309" }}>50% Moderate</span>
+                                    <span style={{ color: "#b91c1c" }}>100% Critical Risk</span>
                                 </div>
                             </div>
 
                             {/* AI CLINICAL EXPLANATION */}
                             {explanationText && (
-                                <div className="bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-slate-50 rounded-[10px] p-6 sm:p-7 border border-blue-200/80 shadow-xs relative">
-                                    <div className="flex items-center gap-2.5 text-blue-800 font-black text-sm sm:text-base mb-2.5">
-                                        <div className="w-7 h-7 rounded-[6px] bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                                <div style={{
+                                    backgroundColor: "#f8fafc",
+                                    border: "1px solid #e2e8f0",
+                                    borderRadius: "16px",
+                                    padding: "20px 24px"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", fontWeight: "800", color: "#312e81", marginBottom: "8px" }}>
+                                        <div style={{
+                                            width: "28px",
+                                            height: "28px",
+                                            borderRadius: "8px",
+                                            backgroundColor: "#4f46e5",
+                                            color: "#ffffff",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center"
+                                        }}>
                                             <Brain size={16} />
                                         </div>
-                                        <span>AI Clinical Explanation</span>
+                                        <span>AI Clinical Narrative & Observations</span>
                                     </div>
-                                    <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-medium m-0 pl-9">
+                                    <p style={{ fontSize: "13px", color: "#334155", lineHeight: 1.6, fontWeight: "500", margin: 0, paddingLeft: "38px" }}>
                                         {explanationText}
                                     </p>
                                 </div>
@@ -313,12 +467,12 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
 
                             {/* PRIMARY RISK DRIVERS */}
                             {topFactors.length > 0 && (
-                                <div className="space-y-4">
-                                    <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-600 flex items-center gap-2 m-0 pl-0.5">
-                                        <TrendingUp size={18} className="text-blue-600" />
-                                        Primary Risk Drivers
+                                <div>
+                                    <h3 style={{ fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
+                                        <TrendingUp size={16} style={{ color: "#4f46e5" }} />
+                                        Key Explainable Risk Factors (SHAP Contributions)
                                     </h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {topFactors.map((factor, index) => {
                                             const pct = factor.percentage;
                                             let formattedVal = null;
@@ -328,32 +482,48 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
                                             }
 
                                             return (
-                                                <div key={index} className="bg-white border border-slate-200/90 rounded-[10px] p-5 sm:p-6 shadow-xs space-y-3.5">
-                                                    <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                                                        <span className="capitalize font-black text-sm sm:text-base text-slate-900 truncate max-w-[160px] sm:max-w-[200px] pl-0.5" title={factor.feature}>
+                                                <div
+                                                    key={index}
+                                                    style={{
+                                                        backgroundColor: "#ffffff",
+                                                        border: "1px solid #e2e8f0",
+                                                        borderRadius: "14px",
+                                                        padding: "16px 20px",
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        gap: "10px"
+                                                    }}
+                                                >
+                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                                        <span style={{ fontWeight: "700", fontSize: "14px", color: "#0f172a" }}>
                                                             {factor.feature}
                                                         </span>
-                                                        <span className={`text-xs sm:text-sm font-extrabold px-3 py-1.5 rounded-[6px] border shrink-0 leading-normal ${riskInfo.bg}`}>
+                                                        <span style={{
+                                                            fontSize: "11px",
+                                                            fontWeight: "800",
+                                                            backgroundColor: "#f1f5f9",
+                                                            color: "#334155",
+                                                            border: "1px solid #cbd5e1",
+                                                            padding: "2px 8px",
+                                                            borderRadius: "12px"
+                                                        }}>
                                                             {pct}% Impact
                                                         </span>
                                                     </div>
 
-                                                    <div className="h-3.5 w-full bg-slate-100 rounded-[6px] overflow-hidden border border-slate-200/60 p-0.5">
-                                                        <div
-                                                            className={`h-full rounded-[4px] ${riskInfo.barColor} transition-all duration-500`}
-                                                            style={{ width: `${pct}%` }}
-                                                        />
+                                                    <div style={{ height: "8px", width: "100%", backgroundColor: "#f1f5f9", borderRadius: "10px", overflow: "hidden", border: "1px solid #e2e8f0" }}>
+                                                        <div style={{ height: "100%", borderRadius: "10px", backgroundColor: riskInfo.barColor, width: `${pct}%` }} />
                                                     </div>
 
-                                                    <div className="flex justify-between items-center text-xs font-bold text-slate-500 px-0.5">
+                                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px" }}>
                                                         {formattedVal !== null ? (
-                                                            <span className="text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-[6px] font-extrabold leading-normal">
+                                                            <span style={{ backgroundColor: "#f1f5f9", color: "#475569", padding: "2px 6px", borderRadius: "4px", fontWeight: "600" }}>
                                                                 Val: {formattedVal}
                                                             </span>
                                                         ) : (
-                                                            <span>Factor Weight</span>
+                                                            <span style={{ color: "#94a3b8" }}>Factor Weight</span>
                                                         )}
-                                                        <span className="text-slate-800 font-black">{pct}% Contribution</span>
+                                                        <span style={{ fontWeight: "700", color: "#334155" }}>{pct}% Weight</span>
                                                     </div>
                                                 </div>
                                             );
@@ -364,21 +534,40 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
 
                             {/* RECOMMENDED ACTION PLAN */}
                             {prediction.recommendations?.length > 0 && (
-                                <div className="space-y-4">
-                                    <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-600 flex items-center gap-2 m-0 pl-0.5">
-                                        <CheckCircle2 size={18} className="text-emerald-600" />
-                                        Recommended Action Plan
+                                <div>
+                                    <h3 style={{ fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
+                                        <CheckCircle2 size={16} style={{ color: "#10b981" }} />
+                                        Recommended Clinical Action Plan
                                     </h3>
-                                    <div className="space-y-3">
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                                         {prediction.recommendations.map((item, index) => (
                                             <div
                                                 key={index}
-                                                className="flex items-start gap-4 bg-white border border-emerald-200/80 hover:border-emerald-300 rounded-[10px] p-5 shadow-xs transition-all"
+                                                style={{
+                                                    backgroundColor: "#ffffff",
+                                                    border: "1px solid #e2e8f0",
+                                                    borderRadius: "12px",
+                                                    padding: "14px 18px",
+                                                    display: "flex",
+                                                    alignItems: "flex-start",
+                                                    gap: "12px"
+                                                }}
                                             >
-                                                <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
-                                                    <CheckCircle2 size={15} />
+                                                <div style={{
+                                                    width: "22px",
+                                                    height: "22px",
+                                                    borderRadius: "50%",
+                                                    backgroundColor: "#d1fae5",
+                                                    color: "#047857",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    flexShrink: 0,
+                                                    marginTop: "1px"
+                                                }}>
+                                                    <Check size={14} />
                                                 </div>
-                                                <p className="text-sm sm:text-base font-bold text-slate-800 leading-snug m-0">
+                                                <p style={{ fontSize: "13px", fontWeight: "600", color: "#1e293b", margin: 0, lineHeight: 1.5 }}>
                                                     {item}
                                                 </p>
                                             </div>
@@ -388,37 +577,103 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
                             )}
 
                             {/* CLINICAL DISCLAIMER NOTICE */}
-                            <div className="bg-amber-50/90 border border-amber-200/90 rounded-[10px] p-5 sm:p-6 flex items-start gap-4 shadow-xs">
-                                <div className="w-7 h-7 rounded-[6px] bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
-                                    <AlertTriangle size={16} />
+                            <div style={{
+                                backgroundColor: "#fffbeb",
+                                border: "1px solid #fde68a",
+                                borderRadius: "12px",
+                                padding: "14px 18px",
+                                display: "flex",
+                                alignItems: "flex-start",
+                                gap: "12px",
+                                marginBottom: "10px"
+                            }}>
+                                <div style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    borderRadius: "6px",
+                                    backgroundColor: "#f59e0b",
+                                    color: "#ffffff",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    flexShrink: 0,
+                                    marginTop: "1px"
+                                }}>
+                                    <AlertTriangle size={14} />
                                 </div>
-                                <p className="text-xs sm:text-sm text-amber-900 leading-relaxed font-semibold m-0">
-                                    <strong className="font-extrabold text-amber-950">Clinical Notice:</strong> This report is generated by the HealthCare AI decision support system to assist healthcare professionals. It should be evaluated alongside clinical lab tests and practitioner clinical judgment.
+                                <p style={{ fontSize: "12px", color: "#78350f", lineHeight: 1.5, fontWeight: "500", margin: 0 }}>
+                                    <strong style={{ fontWeight: "800", color: "#451a03" }}>Clinical Notice:</strong> This report is generated by the Medisphere HealthCare AI decision support system for informational and clinical guidance. It should be evaluated alongside standard diagnostic lab tests and licensed physician clinical judgment.
                                 </p>
                             </div>
                         </div>
 
-                        {/* 3. FIXED FOOTER BAR WITH EXTRA PADDING AND CLEARANCE FROM CORNERS */}
-                        <div className="bg-white border-t border-slate-200/90 px-8 sm:px-12 py-5 sm:py-6 flex flex-wrap items-center justify-between gap-4 shrink-0 print:hidden">
-                            <span className="text-xs sm:text-sm text-slate-500 font-semibold flex items-center gap-1.5">
-                                <Clock size={15} className="text-slate-400 shrink-0" />
-                                Generated: {generatedAt}
-                            </span>
-                            <div className="flex items-center gap-3 shrink-0 pr-1 sm:pr-3">
+                        {/* 3. FIXED FOOTER BAR WITH 100% VISIBILITY & INSET MARGIN */}
+                        <div
+                            style={{
+                                backgroundColor: "#ffffff",
+                                borderTop: "1px solid #e2e8f0",
+                                padding: "16px 28px",
+                                display: "flex",
+                                flexWrap: "wrap",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: "16px",
+                                flexShrink: 0,
+                                position: "relative",
+                                zIndex: 10
+                            }}
+                            className="print:hidden"
+                        >
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: "600" }}>
+                                <Clock size={14} style={{ color: "#94a3b8" }} />
+                                <span>Generated: {generatedAt}</span>
+                            </div>
+
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginLeft: "auto", paddingRight: "24px", flexShrink: 0 }}>
                                 <button
                                     type="button"
                                     onClick={() => window.print()}
-                                    className="flex items-center gap-2 rounded-[8px] bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black transition-all shadow-xs cursor-pointer"
+                                    style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "8px",
+                                        padding: "10px 20px",
+                                        borderRadius: "12px",
+                                        backgroundColor: "#f1f5f9",
+                                        color: "#1e293b",
+                                        border: "1px solid #cbd5e1",
+                                        fontSize: "13px",
+                                        fontWeight: "700",
+                                        cursor: "pointer",
+                                        flexShrink: 0,
+                                        transition: "all 0.15s ease"
+                                    }}
                                 >
                                     <Printer size={16} />
-                                    Print Report
+                                    <span>Print Report</span>
                                 </button>
+
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="flex items-center gap-2 rounded-[8px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-black shadow-md shadow-blue-500/25 transition-all cursor-pointer"
+                                    style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        gap: "8px",
+                                        padding: "10px 24px",
+                                        borderRadius: "12px",
+                                        background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                        color: "#ffffff",
+                                        border: "none",
+                                        fontSize: "13px",
+                                        fontWeight: "800",
+                                        cursor: "pointer",
+                                        flexShrink: 0,
+                                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.35)"
+                                    }}
                                 >
-                                    Close
+                                    <span>Close</span>
                                 </button>
                             </div>
                         </div>
@@ -431,7 +686,3 @@ function AiPredictionModal({ isOpen, onClose, prediction }) {
 }
 
 export default AiPredictionModal;
-
-
-
-

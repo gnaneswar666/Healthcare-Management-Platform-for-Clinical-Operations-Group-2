@@ -27,7 +27,7 @@ function Alerts() {
 
     useEffect(() => {
         loadAlerts();
-        const interval = setInterval(loadAlerts, 1000);
+        const interval = setInterval(loadAlerts, 15000);
         return () => clearInterval(interval);
     }, []);
 

@@ -258,164 +258,258 @@ export default function AssignPatientsModal({ doctor, onClose }) {
     .join("")
     .toUpperCase();
 
+  const rawDept = (doctor?.department || "").trim();
+  const rawSpec = (doctor?.specialization || "").trim();
+  const isSame = rawDept && rawSpec && rawDept.toLowerCase() === rawSpec.toLowerCase();
+
+  const displaySubtitle = (() => {
+    if (!rawDept && !rawSpec) return "Clinical Operations";
+    if (rawDept && rawSpec && !isSame) return `${rawDept} • ${rawSpec}`;
+    return rawDept || rawSpec;
+  })();
+
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-10 md:p-12 overflow-y-auto bg-slate-950/75 backdrop-blur-md">
-        {/* Backdrop overlay click */}
+      <div
+        style={{ zIndex: 99999 }}
+        className="fixed inset-0 flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto"
+      >
+        {/* Backdrop overlay */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0"
+          className="fixed inset-0 bg-slate-950/75 backdrop-blur-md"
         />
 
-        {/* Modal Window Container with Generous Outer Margin & Padding */}
+        {/* Modal Window Container */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.97, y: 14 }}
+          initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.97, y: 10 }}
-          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-5xl rounded-3xl bg-white shadow-2xl border border-slate-200/90 my-auto flex flex-col max-h-[85vh] overflow-hidden"
+          exit={{ opacity: 0, scale: 0.96, y: 12 }}
+          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "100%",
+            maxWidth: "920px",
+            maxHeight: "90vh",
+            borderRadius: "24px",
+            backgroundColor: "#ffffff",
+            border: "1px solid #cbd5e1",
+            boxShadow: "0 25px 60px -15px rgba(15, 23, 42, 0.4)",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            margin: "auto",
+            position: "relative",
+            zIndex: 10
+          }}
         >
-          {/* Header Banner - Executive Navy Gradient with Flex Close Button */}
-          <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 px-8 py-6 text-white shrink-0 border-b border-indigo-900/40">
-            <div className="flex items-center justify-between gap-6">
+          {/* Header Banner - Executive Midnight Slate Gradient */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+              padding: "22px 32px",
+              borderBottom: "1px solid #334155",
+              color: "#ffffff",
+              flexShrink: 0,
+              position: "relative"
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
               {/* Doctor Details */}
-              <div className="flex items-center gap-5 min-w-0 flex-1">
-                <div className="relative shrink-0">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-500 p-0.5 shadow-lg">
-                    <div className="w-full h-full rounded-[14px] bg-slate-900 flex items-center justify-center text-white font-black text-xl tracking-wider">
-                      {doctorInitials || <Stethoscope size={24} className="text-blue-400" />}
-                    </div>
-                  </div>
-                  <span className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-slate-900 bg-emerald-500" />
+              <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
+                <div style={{
+                  width: "52px",
+                  height: "52px",
+                  borderRadius: "14px",
+                  background: "linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#ffffff",
+                  fontWeight: "800",
+                  fontSize: "18px",
+                  boxShadow: "0 4px 14px rgba(59, 130, 246, 0.35)",
+                  flexShrink: 0
+                }}>
+                  {doctorInitials || <Stethoscope size={24} />}
                 </div>
 
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-500/20 border border-blue-400/40 px-2.5 py-0.5 text-[11px] font-extrabold text-blue-200 uppercase tracking-wider">
-                      <Sparkles size={12} className="text-blue-300" /> Patient Assignment Hub
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                    <span style={{
+                      backgroundColor: "rgba(59, 130, 246, 0.2)",
+                      color: "#93c5fd",
+                      border: "1px solid rgba(147, 197, 253, 0.3)",
+                      fontSize: "11px",
+                      fontWeight: "800",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      padding: "2px 10px",
+                      borderRadius: "20px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px"
+                    }}>
+                      <Sparkles size={12} style={{ color: "#60a5fa" }} /> PATIENT ASSIGNMENT HUB
                     </span>
-                    <span className="font-mono text-xs font-bold text-slate-200 bg-slate-800 px-2.5 py-0.5 rounded-lg border border-slate-700">
+                    <span style={{
+                      fontFamily: "monospace",
+                      fontSize: "11px",
+                      fontWeight: "700",
+                      color: "#cbd5e1",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      padding: "2px 8px",
+                      borderRadius: "6px"
+                    }}>
                       ID: {doctor.doctorId}
                     </span>
                   </div>
 
-                  <h2
-                    style={{ color: "#ffffff" }}
-                    className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight truncate !text-white"
-                  >
+                  <h2 style={{ color: "#ffffff", fontSize: "22px", fontWeight: "800", margin: 0, lineHeight: 1.2 }}>
                     Dr. {doctor.doctorName?.replace(/^Dr\.\s*/i, "")}
                   </h2>
-                  <p
-                    style={{ color: "#cbd5e1" }}
-                    className="text-xs sm:text-sm text-slate-300 font-semibold mt-1 flex items-center gap-2 truncate"
-                  >
-                    <Stethoscope size={14} className="text-blue-400 shrink-0" />
-                    <span className="truncate">{doctor.department || "Clinical Operations"}</span>
-                    {doctor.specialization && (
-                      <span className="text-slate-400 truncate">• {doctor.specialization}</span>
-                    )}
+                  <p style={{ color: "#94a3b8", fontSize: "12px", fontWeight: "500", margin: "4px 0 0 0", display: "flex", alignItems: "center", gap: "6px" }}>
+                    <Stethoscope size={13} style={{ color: "#60a5fa" }} />
+                    <span>{displaySubtitle}</span>
                   </p>
                 </div>
               </div>
 
               {/* Right Side Header Controls: Capacity Meter & Close Button */}
-              <div className="flex items-center gap-5 shrink-0">
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", flexShrink: 0 }}>
                 {/* Patient Capacity Load Meter */}
-                <div className="hidden sm:flex items-center gap-3.5 bg-slate-800/90 border border-slate-700/80 rounded-2xl p-3 px-4 shadow-inner">
-                  <div className="text-right">
-                    <p style={{ color: "#94a3b8" }} className="text-[10px] font-extrabold uppercase tracking-wider">
+                <div style={{
+                  backgroundColor: "rgba(15, 23, 42, 0.6)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  borderRadius: "14px",
+                  padding: "8px 14px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px"
+                }}>
+                  <div style={{ textAlign: "right" }}>
+                    <p style={{ color: "#94a3b8", fontSize: "10px", fontWeight: "800", textTransform: "uppercase", margin: 0 }}>
                       Assigned Load
                     </p>
-                    <p style={{ color: "#ffffff" }} className="text-base font-black text-white leading-none mt-1">
-                      {counts.assigned} <span className="text-xs text-slate-400 font-semibold">/ {counts.total} Patients</span>
+                    <p style={{ color: "#ffffff", fontSize: "15px", fontWeight: "800", margin: "2px 0 0 0" }}>
+                      {counts.assigned} <span style={{ fontSize: "11px", color: "#cbd5e1", fontWeight: "600" }}>/ {counts.total} Patients</span>
                     </p>
                   </div>
-                  <div className="relative w-11 h-11 flex items-center justify-center">
-                    <svg className="w-11 h-11 transform -rotate-90">
+                  <div style={{ position: "relative", width: "38px", height: "38px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg className="w-9 h-9 transform -rotate-90">
                       <circle
-                        cx="22"
-                        cy="22"
-                        r="16"
-                        stroke="currentColor"
-                        strokeWidth="3.5"
-                        className="text-slate-700"
+                        cx="18"
+                        cy="18"
+                        r="14"
+                        stroke="rgba(255, 255, 255, 0.15)"
+                        strokeWidth="3"
                         fill="transparent"
                       />
                       <circle
-                        cx="22"
-                        cy="22"
-                        r="16"
-                        stroke="currentColor"
-                        strokeWidth="3.5"
-                        className="text-blue-400"
+                        cx="18"
+                        cy="18"
+                        r="14"
+                        stroke="#60a5fa"
+                        strokeWidth="3"
                         fill="transparent"
-                        strokeDasharray={100}
-                        strokeDashoffset={100 - (100 * assignedPercentage) / 100}
+                        strokeDasharray={88}
+                        strokeDashoffset={88 - (88 * assignedPercentage) / 100}
                         strokeLinecap="round"
                       />
                     </svg>
-                    <span style={{ color: "#ffffff" }} className="absolute text-[10px] font-black text-white">
+                    <span style={{ position: "absolute", color: "#ffffff", fontSize: "10px", fontWeight: "800" }}>
                       {assignedPercentage}%
                     </span>
                   </div>
                 </div>
 
-                {/* Close Button - Cleanly positioned inside flex right container */}
+                {/* Close Button */}
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-slate-300 hover:text-white hover:bg-white/20 transition-all cursor-pointer active:scale-95 shadow-xs shrink-0"
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    color: "#cbd5e1",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    flexShrink: 0
+                  }}
                   aria-label="Close modal"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Search & Filter Toolbar with Generous Spacing */}
-          <div className="bg-slate-100/90 border-b border-slate-200 px-8 py-4 shrink-0">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              {/* Search Bar with Explicit Left Padding to Prevent Icon Collision */}
-              <div className="relative flex-1 max-w-md">
+          {/* Search & Filter Toolbar */}
+          <div style={{ backgroundColor: "#f8fafc", borderBottom: "1px solid #e2e8f0", padding: "14px 28px", flexShrink: 0 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+              {/* Search Bar */}
+              <div style={{ position: "relative", flex: 1, maxWidth: "420px" }}>
                 <Search
-                  size={18}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 z-10 pointer-events-none"
+                  size={16}
+                  style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }}
                 />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search patient by name, ID, or email..."
-                  style={{ paddingLeft: "2.75rem", paddingRight: "2.5rem" }}
-                  className="w-full h-11 bg-white border border-slate-300 rounded-xl text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-xs"
+                  style={{
+                    width: "100%",
+                    height: "40px",
+                    paddingLeft: "36px",
+                    paddingRight: "36px",
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    color: "#0f172a",
+                    outline: "none"
+                  }}
                 />
                 {search && (
                   <button
+                    type="button"
                     onClick={() => setSearch("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1 cursor-pointer z-10"
+                    style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8", background: "none", border: "none", cursor: "pointer" }}
                   >
-                    <X size={16} />
+                    <X size={15} />
                   </button>
                 )}
               </div>
 
               {/* Gender Filter Pills */}
-              <div className="flex items-center gap-2 overflow-x-auto">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1 shrink-0">
-                  <Filter size={13} /> Filter:
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <Filter size={12} /> Filter:
                 </span>
                 {["ALL", "MALE", "FEMALE"].map((gender) => (
                   <button
                     key={gender}
+                    type="button"
                     onClick={() => setGenderFilter(gender)}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
-                      genderFilter === gender
-                        ? "bg-blue-600 text-white shadow-xs"
-                        : "bg-white text-slate-600 hover:bg-slate-200 border border-slate-300"
-                    }`}
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "10px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                      backgroundColor: genderFilter === gender ? "#2563eb" : "#ffffff",
+                      color: genderFilter === gender ? "#ffffff" : "#475569",
+                      border: genderFilter === gender ? "none" : "1px solid #cbd5e1"
+                    }}
                   >
                     {gender === "ALL" ? "All Patients" : gender === "MALE" ? "Male" : "Female"}
                   </button>
@@ -427,6 +521,7 @@ export default function AssignPatientsModal({ doctor, onClose }) {
           {/* Mobile Tab Switcher */}
           <div className="flex lg:hidden border-b border-slate-200 bg-slate-200/80 p-2 gap-2 shrink-0">
             <button
+              type="button"
               onClick={() => setActiveTab("available")}
               className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 activeTab === "available"
@@ -439,6 +534,7 @@ export default function AssignPatientsModal({ doctor, onClose }) {
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab("assigned")}
               className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 activeTab === "assigned"
@@ -451,44 +547,44 @@ export default function AssignPatientsModal({ doctor, onClose }) {
             </button>
           </div>
 
-          {/* Main Dual-Column Transfer Content Area with Padded Container */}
-          <div className="flex-1 min-h-0 bg-slate-100/60 p-6 sm:p-8 overflow-hidden">
+          {/* Main Dual-Column Transfer Content Area */}
+          <div style={{ flex: 1, minHeight: 0, backgroundColor: "#f8fafc", padding: "20px 28px", overflow: "hidden" }}>
             {loading ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full">
                 <SkeletonColumn title="Available Patients" />
                 <SkeletonColumn title="Assigned Patients" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full min-h-0">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-full min-h-0">
                 {/* Left Transfer Column: Available Patients */}
                 <div
-                  className={`flex flex-col h-full rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden ${
-                    activeTab !== "available" ? "hidden lg:flex" : "flex"
-                  }`}
+                  style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "14px", overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}
+                  className={activeTab !== "available" ? "hidden lg:flex" : "flex"}
                 >
                   {/* Column Header */}
-                  <div className="flex items-center justify-between border-b border-blue-100 bg-blue-50/70 px-6 py-4 shrink-0">
-                    <div className="flex items-center gap-3">
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0", backgroundColor: "#eff6ff", padding: "12px 18px", flexShrink: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <button
+                        type="button"
                         onClick={toggleSelectAllAvailable}
                         disabled={filteredPatients.length === 0}
-                        className="text-slate-400 hover:text-blue-600 transition-colors disabled:opacity-30 cursor-pointer"
+                        style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer" }}
                         title="Select All Available"
                       >
                         {selectedAvailable.length > 0 &&
                         selectedAvailable.length === filteredPatients.length ? (
-                          <CheckSquare size={18} className="text-blue-600" />
+                          <CheckSquare size={17} style={{ color: "#2563eb" }} />
                         ) : (
-                          <Square size={18} />
+                          <Square size={17} />
                         )}
                       </button>
 
-                      <div className="flex items-center gap-2">
-                        <Users size={16} className="text-blue-600" />
-                        <h3 className="text-xs font-black uppercase tracking-wider text-blue-900">
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        <Users size={15} style={{ color: "#2563eb" }} />
+                        <h3 style={{ fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.04em", color: "#1e3a8a", margin: 0 }}>
                           Available Patients
                         </h3>
-                        <span className="text-xs font-black text-blue-700 bg-white border border-blue-200 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <span style={{ fontSize: "11px", fontWeight: "800", color: "#1d4ed8", backgroundColor: "#ffffff", border: "1px solid #bfdbfe", padding: "1px 8px", borderRadius: "12px" }}>
                           {filteredPatients.length}
                         </span>
                       </div>
@@ -501,12 +597,24 @@ export default function AssignPatientsModal({ doctor, onClose }) {
                         animate={{ opacity: 1, scale: 1 }}
                         disabled={actionLoading === "batch-assign"}
                         onClick={handleBatchAssign}
-                        className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95 disabled:opacity-50"
+                        style={{
+                          padding: "5px 12px",
+                          borderRadius: "8px",
+                          backgroundColor: "#2563eb",
+                          color: "#ffffff",
+                          border: "none",
+                          fontSize: "11px",
+                          fontWeight: "800",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px"
+                        }}
                       >
                         {actionLoading === "batch-assign" ? (
-                          <Loader2 size={14} className="animate-spin" />
+                          <Loader2 size={13} className="animate-spin" />
                         ) : (
-                          <UserPlus size={14} />
+                          <UserPlus size={13} />
                         )}
                         <span>Assign Selected ({selectedAvailable.length})</span>
                       </motion.button>
@@ -514,7 +622,7 @@ export default function AssignPatientsModal({ doctor, onClose }) {
                   </div>
 
                   {/* Patient Scroll List */}
-                  <div className="flex-1 overflow-y-auto p-5 space-y-3.5 min-h-0">
+                  <div style={{ flex: 1, overflowY: "auto", padding: "14px", display: "flex", flexDirection: "column", gap: "10px", minHeight: 0 }}>
                     {filteredPatients.length === 0 ? (
                       <EmptyColumn
                         icon={UserCircle2}
@@ -543,33 +651,33 @@ export default function AssignPatientsModal({ doctor, onClose }) {
 
                 {/* Right Transfer Column: Assigned Patients */}
                 <div
-                  className={`flex flex-col h-full rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden ${
-                    activeTab !== "assigned" ? "hidden lg:flex" : "flex"
-                  }`}
+                  style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "14px", overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}
+                  className={activeTab !== "assigned" ? "hidden lg:flex" : "flex"}
                 >
                   {/* Column Header */}
-                  <div className="flex items-center justify-between border-b border-emerald-100 bg-emerald-50/70 px-6 py-4 shrink-0">
-                    <div className="flex items-center gap-3">
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0", backgroundColor: "#ecfdf5", padding: "12px 18px", flexShrink: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <button
+                        type="button"
                         onClick={toggleSelectAllAssigned}
                         disabled={filteredAssigned.length === 0}
-                        className="text-slate-400 hover:text-amber-600 transition-colors disabled:opacity-30 cursor-pointer"
+                        style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer" }}
                         title="Select All Assigned"
                       >
                         {selectedAssigned.length > 0 &&
                         selectedAssigned.length === filteredAssigned.length ? (
-                          <CheckSquare size={18} className="text-amber-600" />
+                          <CheckSquare size={17} style={{ color: "#d97706" }} />
                         ) : (
-                          <Square size={18} />
+                          <Square size={17} />
                         )}
                       </button>
 
-                      <div className="flex items-center gap-2">
-                        <BadgeCheck size={16} className="text-emerald-600" />
-                        <h3 className="text-xs font-black uppercase tracking-wider text-emerald-900">
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        <BadgeCheck size={15} style={{ color: "#059669" }} />
+                        <h3 style={{ fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.04em", color: "#065f46", margin: 0 }}>
                           Assigned Patients
                         </h3>
-                        <span className="text-xs font-black text-emerald-700 bg-white border border-emerald-200 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <span style={{ fontSize: "11px", fontWeight: "800", color: "#047857", backgroundColor: "#ffffff", border: "1px solid #a7f3d0", padding: "1px 8px", borderRadius: "12px" }}>
                           {filteredAssigned.length}
                         </span>
                       </div>
@@ -582,12 +690,24 @@ export default function AssignPatientsModal({ doctor, onClose }) {
                         animate={{ opacity: 1, scale: 1 }}
                         disabled={actionLoading === "batch-remove"}
                         onClick={handleBatchRemove}
-                        className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95 disabled:opacity-50"
+                        style={{
+                          padding: "5px 12px",
+                          borderRadius: "8px",
+                          backgroundColor: "#f59e0b",
+                          color: "#ffffff",
+                          border: "none",
+                          fontSize: "11px",
+                          fontWeight: "800",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px"
+                        }}
                       >
                         {actionLoading === "batch-remove" ? (
-                          <Loader2 size={14} className="animate-spin" />
+                          <Loader2 size={13} className="animate-spin" />
                         ) : (
-                          <UserMinus size={14} />
+                          <UserMinus size={13} />
                         )}
                         <span>Remove Selected ({selectedAssigned.length})</span>
                       </motion.button>
@@ -595,7 +715,7 @@ export default function AssignPatientsModal({ doctor, onClose }) {
                   </div>
 
                   {/* Patient Scroll List */}
-                  <div className="flex-1 overflow-y-auto p-5 space-y-3.5 min-h-0">
+                  <div style={{ flex: 1, overflowY: "auto", padding: "14px", display: "flex", flexDirection: "column", gap: "10px", minHeight: 0 }}>
                     {filteredAssigned.length === 0 ? (
                       <EmptyColumn
                         icon={CheckCircle2}
@@ -625,29 +745,68 @@ export default function AssignPatientsModal({ doctor, onClose }) {
             )}
           </div>
 
-          {/* Footer Bar - Well Padded Bottom so Cancel/Done Buttons are Never Cut Off */}
-          <div className="flex flex-wrap items-center justify-between border-t border-slate-200 bg-white px-8 py-5 gap-4 shrink-0">
-            <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-600">
-              <ArrowRightLeft size={16} className="text-blue-600 shrink-0" />
+          {/* Fixed Footer Bar - Zero Button Truncation with Generous Inset */}
+          <div
+            style={{
+              backgroundColor: "#ffffff",
+              borderTop: "1px solid #e2e8f0",
+              padding: "16px 32px 18px 32px",
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "16px",
+              flexShrink: 0,
+              position: "relative",
+              zIndex: 10
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: "600", color: "#475569" }}>
+              <ArrowRightLeft size={15} style={{ color: "#2563eb", flexShrink: 0 }} />
               <span>
-                Total Registry: <span className="font-black text-slate-900">{counts.total}</span> | Assigned:{" "}
-                <span className="font-black text-emerald-600">{counts.assigned}</span> | Available:{" "}
-                <span className="font-black text-blue-600">{counts.available}</span>
+                Total Registry: <strong style={{ color: "#0f172a" }}>{counts.total}</strong> | Assigned:{" "}
+                <strong style={{ color: "#047857" }}>{counts.assigned}</strong> | Available:{" "}
+                <strong style={{ color: "#1d4ed8" }}>{counts.available}</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-4 ml-auto">
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginLeft: "auto", paddingRight: "16px", flexShrink: 0 }}>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all cursor-pointer shadow-2xs active:scale-95"
+                style={{
+                  padding: "9px 22px",
+                  borderRadius: "10px",
+                  backgroundColor: "#f1f5f9",
+                  color: "#334155",
+                  border: "1px solid #cbd5e1",
+                  fontSize: "12px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                  whiteSpace: "nowrap",
+                  transition: "all 0.15s ease"
+                }}
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-7 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-xs transition-all cursor-pointer shadow-md shadow-blue-500/20 active:scale-95"
+                style={{
+                  padding: "9px 28px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                  color: "#ffffff",
+                  border: "none",
+                  fontSize: "12px",
+                  fontWeight: "800",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                  whiteSpace: "nowrap",
+                  boxShadow: "0 4px 14px rgba(37, 99, 235, 0.35)",
+                  marginRight: "12px"
+                }}
               >
                 Done
               </button>
@@ -674,63 +833,81 @@ function PatientTransferCard({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 6 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.16 }}
-      className={`group flex items-center justify-between gap-3.5 p-4 rounded-2xl border transition-all duration-200 ${
-        isSelected
-          ? "border-blue-500 bg-blue-50/50 shadow-xs"
-          : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-xs"
-      }`}
+      transition={{ duration: 0.15 }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "12px",
+        padding: "12px 16px",
+        borderRadius: "12px",
+        backgroundColor: isSelected ? "#eff6ff" : "#ffffff",
+        border: isSelected ? "1px solid #3b82f6" : "1px solid #e2e8f0"
+      }}
     >
-      <div className="flex items-center gap-3.5 min-w-0 flex-1">
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0, flex: 1 }}>
         {/* Selection Checkbox */}
         <button
           type="button"
           onClick={onToggleSelect}
-          className="text-slate-400 hover:text-blue-600 transition-colors p-1 cursor-pointer shrink-0"
+          style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", padding: 0, flexShrink: 0 }}
         >
           {isSelected ? (
-            <CheckSquare size={18} className="text-blue-600" />
+            <CheckSquare size={17} style={{ color: "#2563eb" }} />
           ) : (
-            <Square size={18} />
+            <Square size={17} />
           )}
         </button>
 
         {/* Patient Avatar Badge */}
-        <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 font-black text-xs flex items-center justify-center shrink-0 shadow-2xs">
+        <div style={{
+          width: "36px",
+          height: "36px",
+          borderRadius: "10px",
+          backgroundColor: "#f1f5f9",
+          border: "1px solid #cbd5e1",
+          color: "#0f172a",
+          fontWeight: "800",
+          fontSize: "12px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0
+        }}>
           {initials}
         </div>
 
         {/* Patient Metadata */}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5 truncate">
-            <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm truncate">
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <h4 style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {patient.firstName} {patient.lastName}
             </h4>
-            {isAssigned && <BadgeCheck size={15} className="text-emerald-500 shrink-0" />}
+            {isAssigned && <BadgeCheck size={14} style={{ color: "#10b981", flexShrink: 0 }} />}
           </div>
 
-          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-500 font-medium">
-            <span className="font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 text-[10px]">
+          <div style={{ marginTop: "2px", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px", fontSize: "11px", color: "#64748b" }}>
+            <span style={{ fontFamily: "monospace", fontWeight: "700", color: "#334155", backgroundColor: "#f1f5f9", padding: "1px 6px", borderRadius: "4px", fontSize: "10px" }}>
               {patient.patientId}
             </span>
 
             {patient.gender && (
-              <span className="inline-flex items-center gap-0.5 text-slate-600">
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "2px", color: "#475569" }}>
                 {patient.gender === "Female" ? (
-                  <Venus size={12} className="text-rose-500" />
+                  <Venus size={11} style={{ color: "#f43f5e" }} />
                 ) : (
-                  <Mars size={12} className="text-blue-500" />
+                  <Mars size={11} style={{ color: "#3b82f6" }} />
                 )}
                 {patient.gender}
               </span>
             )}
 
             {patient.bloodGroup && (
-              <span className="inline-flex items-center gap-0.5 text-slate-600">
-                <Droplets size={11} className="text-rose-500" />
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "2px", color: "#475569" }}>
+                <Droplets size={10} style={{ color: "#f43f5e" }} />
                 {patient.bloodGroup}
               </span>
             )}
@@ -743,25 +920,36 @@ function PatientTransferCard({
         type="button"
         disabled={loading}
         onClick={onAction}
-        className={`px-3.5 py-2 rounded-xl font-extrabold text-xs transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-2xs active:scale-95 disabled:opacity-50 ${
-          isAssigned
-            ? "border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800"
-            : "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-        }`}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "5px",
+          padding: "7px 14px",
+          borderRadius: "10px",
+          fontSize: "11px",
+          fontWeight: "800",
+          cursor: "pointer",
+          flexShrink: 0,
+          backgroundColor: isAssigned ? "#fffbeb" : "#2563eb",
+          color: isAssigned ? "#b45309" : "#ffffff",
+          border: isAssigned ? "1px solid #fde68a" : "none",
+          boxShadow: isAssigned ? "none" : "0 2px 8px rgba(37, 99, 235, 0.3)"
+        }}
       >
         {loading ? (
-          <Loader2 size={14} className="animate-spin" />
+          <Loader2 size={13} className="animate-spin" />
         ) : isAssigned ? (
           <>
-            <UserMinus size={14} />
+            <UserMinus size={13} />
             <span>Remove</span>
           </>
         ) : (
           <>
-            <UserPlus size={14} />
+            <UserPlus size={13} />
             <span>Assign</span>
           </>
-        )}
+        )
+      }
       </button>
     </motion.div>
   );
@@ -769,28 +957,28 @@ function PatientTransferCard({
 
 function EmptyColumn({ icon: Icon, title, subtitle }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 px-4 text-center h-full min-h-[220px]">
-      <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 mb-3 shadow-2xs">
-        <Icon size={22} />
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRadius: "14px", border: "1px dashed #cbd5e1", backgroundColor: "#ffffff", padding: "36px 16px", textAlign: "center", height: "100%", minHeight: "200px" }}>
+      <div style={{ width: "44px", height: "44px", borderRadius: "12px", backgroundColor: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", marginBottom: "10px" }}>
+        <Icon size={20} />
       </div>
-      <h4 className="text-xs font-black uppercase tracking-wider text-slate-700">{title}</h4>
-      <p className="mt-1 text-[11px] text-slate-500 max-w-xs font-semibold">{subtitle}</p>
+      <h4 style={{ fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.04em", color: "#334155", margin: 0 }}>{title}</h4>
+      <p style={{ marginTop: "4px", fontSize: "11px", color: "#64748b", fontWeight: "500", maxWidth: "260px", margin: 0 }}>{subtitle}</p>
     </div>
   );
 }
 
 function SkeletonColumn({ title }) {
   return (
-    <div className="flex flex-col h-full rounded-2xl bg-white border border-slate-200 p-5 space-y-3.5">
-      <div className="h-5 w-36 bg-slate-200 rounded animate-pulse" />
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", borderRadius: "14px", backgroundColor: "#ffffff", border: "1px solid #e2e8f0", padding: "16px", gap: "12px" }}>
+      <div style={{ height: "18px", width: "120px", backgroundColor: "#f1f5f9", borderRadius: "6px" }} className="animate-pulse" />
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="flex items-center gap-3.5 p-4 rounded-2xl border border-slate-100 animate-pulse">
-          <div className="w-10 h-10 rounded-xl bg-slate-200 shrink-0" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3.5 w-28 bg-slate-200 rounded" />
-            <div className="h-2.5 w-40 bg-slate-200 rounded" />
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px", borderRadius: "12px", border: "1px solid #f1f5f9" }} className="animate-pulse">
+          <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#f1f5f9", flexShrink: 0 }} />
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "6px" }}>
+            <div style={{ height: "12px", width: "100px", backgroundColor: "#f1f5f9", borderRadius: "4px" }} />
+            <div style={{ height: "10px", width: "140px", backgroundColor: "#f1f5f9", borderRadius: "4px" }} />
           </div>
-          <div className="w-16 h-7 bg-slate-200 rounded-lg shrink-0" />
+          <div style={{ width: "60px", height: "26px", backgroundColor: "#f1f5f9", borderRadius: "8px", flexShrink: 0 }} />
         </div>
       ))}
     </div>

@@ -69,7 +69,7 @@ function PatientDetails() {
         loadData(true);
         const interval = setInterval(() => {
             loadData(false);
-        }, 1000);
+        }, 15000);
         return () => clearInterval(interval);
     }, [patientId]);
 
@@ -150,23 +150,56 @@ function PatientDetails() {
         <AdminLayout>
             <div className="page-card">
                 {/* Header Navigation */}
-                <div className="mb-6 flex items-center justify-between pb-4 border-b border-slate-100">
+                <div style={{ display: "flex", alignItems: "center", justifyBetween: "space-between", justifyContent: "space-between", paddingBottom: "16px", marginBottom: "24px", borderBottom: "1px solid #e2e8f0" }}>
                     <button
                         onClick={() => navigate(-1)}
-                        className="btn btn--ghost btn--sm flex items-center gap-2 cursor-pointer"
+                        style={{
+                            padding: "8px 16px",
+                            borderRadius: "10px",
+                            backgroundColor: "#ffffff",
+                            border: "1px solid #cbd5e1",
+                            color: "#334155",
+                            fontSize: "13px",
+                            fontWeight: "700",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
+                        }}
                     >
                         <ArrowLeft size={16} /> Back
                     </button>
-                    <div className="flex items-center gap-3">
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                         <Link
                             to={`/admin/patients/edit/${patient.patientId}`}
-                            className="btn btn--ghost btn--sm"
+                            style={{
+                                padding: "8px 18px",
+                                borderRadius: "10px",
+                                backgroundColor: "#ffffff",
+                                color: "#1e293b",
+                                border: "1px solid #cbd5e1",
+                                fontSize: "13px",
+                                fontWeight: "700",
+                                textDecoration: "none",
+                                boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
+                            }}
                         >
                             Edit Patient
                         </Link>
                         <Link
                             to={`/admin/healthtwins/edit/${patient.patientId}`}
-                            className="btn btn--primary btn--sm"
+                            style={{
+                                padding: "8px 20px",
+                                borderRadius: "10px",
+                                background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                color: "#ffffff",
+                                border: "none",
+                                fontSize: "13px",
+                                fontWeight: "800",
+                                textDecoration: "none",
+                                boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)"
+                            }}
                         >
                             Edit Digital Twin
                         </Link>
@@ -174,45 +207,94 @@ function PatientDetails() {
                 </div>
 
                 {/* Page Hero Header */}
-                <div className="page-header pb-6 border-b border-slate-100">
-                    <div className="flex items-center gap-5 min-w-0">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-xl shadow-lg shrink-0">
+                <div style={{ paddingBottom: "24px", marginBottom: "24px", borderBottom: "1px solid #e2e8f0", display: "flex", flexWrap: "wrap", itemsCenter: "center", justifyContent: "space-between", gap: "16px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "18px", minWidth: 0 }}>
+                        <div style={{
+                            width: "64px",
+                            height: "64px",
+                            borderRadius: "18px",
+                            background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: "#ffffff",
+                            fontWeight: "800",
+                            fontSize: "22px",
+                            boxShadow: "0 6px 20px rgba(37, 99, 235, 0.3)",
+                            flexShrink: 0
+                        }}>
                             {initials || <UserCircle2 size={32} />}
                         </div>
-                        <div className="min-w-0">
-                            <div className="flex flex-wrap items-center gap-3 mb-1">
-                                <h1 className="page-title text-2xl">{fullName}</h1>
-                                <span className="badge badge--brand font-mono">{patient.patientId}</span>
-                                <span className={`badge ${riskBadgeClass} badge--dot`}>{riskLabel}</span>
+                        <div style={{ minWidth: 0 }}>
+                            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
+                                <h1 style={{ fontSize: "24px", fontWeight: "800", color: "#0f172a", margin: 0 }}>{fullName}</h1>
+                                <span style={{
+                                    backgroundColor: "#eff6ff",
+                                    color: "#1d4ed8",
+                                    border: "1px solid #bfdbfe",
+                                    fontSize: "11px",
+                                    fontWeight: "800",
+                                    padding: "2px 10px",
+                                    borderRadius: "8px",
+                                    fontFamily: "monospace"
+                                }}>
+                                    {patient.patientId}
+                                </span>
+                                <span style={{
+                                    backgroundColor: risk < 30 ? "#ecfdf5" : risk < 70 ? "#fffbeb" : "#fef2f2",
+                                    color: risk < 30 ? "#047857" : risk < 70 ? "#b45309" : "#b91c1c",
+                                    border: `1px solid ${risk < 30 ? "#a7f3d0" : risk < 70 ? "#fde68a" : "#fecaca"}`,
+                                    fontSize: "11px",
+                                    fontWeight: "800",
+                                    padding: "2px 10px",
+                                    borderRadius: "20px",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "5px"
+                                }}>
+                                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: risk < 30 ? "#10b981" : risk < 70 ? "#f59e0b" : "#ef4444" }} />
+                                    {riskLabel}
+                                </span>
                             </div>
-                            <p className="page-subtitle">
+                            <p style={{ color: "#64748b", fontSize: "13px", fontWeight: "500", margin: 0 }}>
                                 {patient.gender || "Gender N/A"} • {calculateAge(patient.dob)} yrs • Registered Patient 360° Profile
                             </p>
                         </div>
                     </div>
-                    <div className="page-header__actions">
-                        <div className="page-meta">
-                            <Sparkles size={15} />
-                            Digital Twin ID: {patient.patientId}
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                        <div style={{
+                            backgroundColor: "#f8fafc",
+                            border: "1px solid #cbd5e1",
+                            padding: "8px 16px",
+                            borderRadius: "12px",
+                            fontSize: "12px",
+                            fontWeight: "700",
+                            color: "#334155",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "8px"
+                        }}>
+                            <Sparkles size={15} style={{ color: "#4f46e5" }} />
+                            Digital Twin ID: <span style={{ fontFamily: "monospace", color: "#0f172a" }}>{patient.patientId}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Main 360 Grid */}
-                <div className="grid-section lg:grid-cols-2 mt-8 gap-6">
-                    {/* Patient Profile */}
-                    <div className="soft-card">
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="stat-card__icon" style={{ background: "rgba(59, 130, 246, 0.12)" }}>
-                                <UserCircle2 size={20} className="text-blue-600" />
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+                    {/* Patient Profile Card */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                            <div style={{ width: "40px", height: "40px", borderRadius: "12px", backgroundColor: "#eff6ff", border: "1px solid #bfdbfe", display: "flex", alignItems: "center", justifyCenter: "center", justifyContent: "center", color: "#2563eb", shrink: 0 }}>
+                                <UserCircle2 size={20} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-slate-900">Demographics & Contact</h3>
-                                <p className="text-xs text-slate-500">Personal & contact records</p>
+                                <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0 }}>Demographics & Contact</h3>
+                                <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>Personal & contact records</p>
                             </div>
                         </div>
 
-                        <div className="space-y-3.5">
+                        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                             <InfoRow icon={<UserCircle2 size={16} />} label="Full Name" value={fullName} />
                             <InfoRow icon={<BadgeCheck size={16} />} label="Patient ID" value={patient.patientId} mono />
                             <InfoRow icon={<Calendar size={16} />} label="Gender & Age" value={`${patient.gender || "—"} (${calculateAge(patient.dob)} years old)`} />
@@ -222,31 +304,42 @@ function PatientDetails() {
                         </div>
                     </div>
 
-                    {/* Vital Signs Grid */}
-                    <div className="soft-card">
-                        <div className="flex items-center justify-between mb-5">
-                            <div className="flex items-center gap-3">
-                                <div className="stat-card__icon" style={{ background: "rgba(244, 63, 94, 0.12)" }}>
-                                    <HeartPulse size={20} className="text-rose-500" />
+                    {/* Vital Signs Grid Card */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                <div style={{ width: "40px", height: "40px", borderRadius: "12px", backgroundColor: "#fff1f2", border: "1px solid #fecdd3", display: "flex", alignItems: "center", justifyContent: "center", color: "#e11d48" }}>
+                                    <HeartPulse size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-slate-900">Latest Vital Signs</h3>
-                                    <p className="text-xs text-slate-500">Real-time physiological telemetry</p>
+                                    <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0 }}>Latest Vital Signs</h3>
+                                    <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>Real-time physiological telemetry</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                 <Link
                                     to={`/admin/healthtwins/edit/${patient.patientId}`}
-                                    className="px-3 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold border border-rose-200 transition-all inline-flex items-center gap-1.5"
+                                    style={{
+                                        padding: "6px 14px",
+                                        borderRadius: "8px",
+                                        backgroundColor: "#fff1f2",
+                                        color: "#be123c",
+                                        border: "1px solid #fecdd3",
+                                        fontSize: "12px",
+                                        fontWeight: "700",
+                                        textDecoration: "none",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "6px"
+                                    }}
                                 >
                                     <HeartPulse size={13} />
                                     <span>Edit Vitals</span>
                                 </Link>
-                                <span className="badge badge--slate text-xs hidden sm:inline-block">Live Telemetry</span>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                             <VitalBox
                                 label="Heart Rate"
                                 value={healthTwin?.heartRate}
@@ -278,40 +371,40 @@ function PatientDetails() {
                         </div>
                     </div>
 
-                    {/* Biometrics & Risk */}
-                    <div className="soft-card">
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="stat-card__icon" style={{ background: "rgba(245, 158, 11, 0.12)" }}>
-                                <Gauge size={20} className="text-amber-500" />
+                    {/* Biometrics & Risk Card */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                            <div style={{ width: "40px", height: "40px", borderRadius: "12px", backgroundColor: "#fffbebf", backgroundColor: "#fffbeb", border: "1px solid #fde68a", display: "flex", alignItems: "center", justifyContent: "center", color: "#d97706" }}>
+                                <Gauge size={20} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-slate-900">Biometrics & Risk Indicator</h3>
-                                <p className="text-xs text-slate-500">BMI & AI risk stratification score</p>
+                                <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0 }}>Biometrics & Risk Indicator</h3>
+                                <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>BMI & AI risk stratification score</p>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4 border border-slate-100">
+                        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderRadius: "14px", backgroundColor: "#f8fafc", padding: "16px", border: "1px solid #e2e8f0" }}>
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Body Mass Index</p>
-                                    <p className="text-2xl font-extrabold text-slate-900 mt-1">
-                                        {bmi || "—"} <span className="text-sm font-medium text-slate-400">BMI</span>
+                                    <p style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", margin: 0 }}>Body Mass Index</p>
+                                    <p style={{ fontSize: "22px", fontWeight: "800", color: "#0f172a", margin: "4px 0 0 0" }}>
+                                        {bmi || "—"} <span style={{ fontSize: "13px", fontWeight: "600", color: "#94a3b8" }}>BMI</span>
                                     </p>
                                 </div>
-                                <div className="text-right">
-                                    <span className="text-xs font-bold text-slate-600 block">{bmi ? bmiCategory(bmi) : "N/A"}</span>
-                                    <span className="text-xs text-slate-400">
+                                <div style={{ textAlign: "right" }}>
+                                    <span style={{ fontSize: "12px", fontWeight: "800", color: "#334155", display: "block" }}>{bmi ? bmiCategory(bmi) : "N/A"}</span>
+                                    <span style={{ fontSize: "12px", color: "#64748b" }}>
                                         {healthTwin?.height || patient?.height ? `${healthTwin?.height || patient?.height}cm` : "175cm"} / {healthTwin?.weight || patient?.weight ? `${healthTwin?.weight || patient?.weight}kg` : "70kg"}
                                     </span>
                                 </div>
                             </div>
 
                             <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-sm font-bold text-slate-800">Overall AI Health Risk</span>
-                                    <span className="text-sm font-bold text-slate-900">{risk}%</span>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                                    <span style={{ fontSize: "13px", fontWeight: "800", color: "#1e293b" }}>Overall AI Health Risk</span>
+                                    <span style={{ fontSize: "14px", fontWeight: "800", color: "#0f172a" }}>{risk}%</span>
                                 </div>
-                                <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                                <div style={{ width: "100%", height: "10px", backgroundColor: "#e2e8f0", borderRadius: "20px", overflow: "hidden" }}>
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${risk}%` }}
@@ -319,226 +412,258 @@ function PatientDetails() {
                                         className={`h-full rounded-full ${riskBarColor}`}
                                     />
                                 </div>
-                                <div className="flex items-center justify-between mt-2 text-xs text-slate-500">
-                                    <span>Blood Group: <strong className="text-slate-800">{healthTwin?.bloodGroup || patient?.bloodGroup || "O+"}</strong></span>
-                                    <span className={`badge ${riskBadgeClass}`}>{riskLabel} Status</span>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "8px", fontSize: "12px", color: "#64748b" }}>
+                                    <span>Blood Group: <strong style={{ color: "#0f172a" }}>{healthTwin?.bloodGroup || patient?.bloodGroup || "O+"}</strong></span>
+                                    <span style={{
+                                        backgroundColor: risk < 30 ? "#ecfdf5" : risk < 70 ? "#fffbeb" : "#fef2f2",
+                                        color: risk < 30 ? "#047857" : risk < 70 ? "#b45309" : "#b91c1c",
+                                        border: `1px solid ${risk < 30 ? "#a7f3d0" : risk < 70 ? "#fde68a" : "#fecaca"}`,
+                                        fontSize: "11px",
+                                        fontWeight: "800",
+                                        padding: "2px 8px",
+                                        borderRadius: "6px"
+                                    }}>
+                                        {riskLabel} Status
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Medical Details & Clinical History */}
-                    <div className="soft-card lg:col-span-2">
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="stat-card__icon" style={{ background: "rgba(139, 92, 246, 0.12)" }}>
-                                <Pill size={20} className="text-violet-600" />
+                    {/* Medical Details & Clinical History Card */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                            <div style={{ width: "40px", height: "40px", borderRadius: "12px", backgroundColor: "#f3e8ff", border: "1px solid #e9d5ff", display: "flex", alignItems: "center", justifyContent: "center", color: "#7c3aed" }}>
+                                <Pill size={20} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-slate-900">Medical Details & Clinical History</h3>
-                                <p className="text-xs text-slate-500">Known allergies, chronic conditions, and ongoing medications</p>
+                                <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0 }}>Medical Details & Clinical History</h3>
+                                <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>Known allergies, chronic conditions, and ongoing medications</p>
                             </div>
                         </div>
 
                         {healthTwin ? (
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                                {/* Allergies */}
-                                <div className="rounded-xl border border-rose-100 bg-rose-50/40 p-4 space-y-2">
-                                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-rose-700 mb-2">
-                                        <AlertTriangle size={14} className="text-rose-500" />
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+                                {/* Allergies Card */}
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#e11d48", marginBottom: "10px" }}>
+                                        <AlertTriangle size={14} style={{ color: "#e11d48" }} />
                                         <span>Allergies</span>
                                     </div>
                                     {healthTwin.allergies && healthTwin.allergies.length > 0 ? (
-                                        <div className="flex flex-wrap gap-1.5">
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                                             {healthTwin.allergies.map((item, idx) => (
-                                                <span key={idx} className="badge badge--rose font-semibold">
+                                                <span key={idx} style={{ backgroundColor: "#fff1f2", color: "#be123c", border: "1px solid #fecdd3", fontSize: "12px", fontWeight: "700", padding: "4px 10px", borderRadius: "8px" }}>
                                                     {item}
                                                 </span>
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="text-slate-400 italic text-xs">No known allergies reported</p>
+                                        <p style={{ color: "#94a3b8", fontStyle: "italic", fontSize: "12px", margin: 0 }}>No known allergies reported</p>
                                     )}
                                 </div>
 
-                                {/* Chronic Diseases */}
-                                <div className="rounded-xl border border-amber-100 bg-amber-50/40 p-4 space-y-2">
-                                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-amber-700 mb-2">
-                                        <Activity size={14} className="text-amber-500" />
+                                {/* Chronic Diseases Card */}
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#d97706", marginBottom: "10px" }}>
+                                        <Activity size={14} style={{ color: "#d97706" }} />
                                         <span>Chronic Diseases</span>
                                     </div>
                                     {healthTwin.chronicDiseases && healthTwin.chronicDiseases.length > 0 ? (
-                                        <div className="flex flex-wrap gap-1.5">
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                                             {healthTwin.chronicDiseases.map((item, idx) => (
-                                                <span key={idx} className="badge badge--amber font-semibold">
+                                                <span key={idx} style={{ backgroundColor: "#fffbeb", color: "#b45309", border: "1px solid #fde68a", fontSize: "12px", fontWeight: "700", padding: "4px 10px", borderRadius: "8px" }}>
                                                     {item}
                                                 </span>
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="text-slate-400 italic text-xs">No chronic conditions reported</p>
+                                        <p style={{ color: "#94a3b8", fontStyle: "italic", fontSize: "12px", margin: 0 }}>No chronic conditions reported</p>
                                     )}
                                 </div>
 
-                                {/* Current Medications */}
-                                <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 space-y-2">
-                                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-blue-700 mb-2">
-                                        <Pill size={14} className="text-blue-500" />
+                                {/* Current Medications Card */}
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#2563eb", marginBottom: "10px" }}>
+                                        <Pill size={14} style={{ color: "#2563eb" }} />
                                         <span>Current Medications</span>
                                     </div>
                                     {healthTwin.currentMedications && healthTwin.currentMedications.length > 0 ? (
-                                        <div className="flex flex-wrap gap-1.5">
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                                             {healthTwin.currentMedications.map((item, idx) => (
-                                                <span key={idx} className="badge badge--brand font-semibold">
+                                                <span key={idx} style={{ backgroundColor: "#eff6ff", color: "#1d4ed8", border: "1px solid #bfdbfe", fontSize: "12px", fontWeight: "700", padding: "4px 10px", borderRadius: "8px" }}>
                                                     {item}
                                                 </span>
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="text-slate-400 italic text-xs">No current medications listed</p>
+                                        <p style={{ color: "#94a3b8", fontStyle: "italic", fontSize: "12px", margin: 0 }}>No current medications listed</p>
                                     )}
                                 </div>
                             </div>
                         ) : (
-                            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center">
-                                <p className="text-sm text-slate-500">No medical details or health twin profile found for this patient.</p>
+                            <div style={{ borderRadius: "14px", border: "1px solid #e2e8f0", backgroundColor: "#f8fafc", padding: "24px", textAlign: "center" }}>
+                                <p style={{ fontSize: "13px", color: "#64748b", margin: 0 }}>No medical details or health twin profile found for this patient.</p>
                             </div>
                         )}
                     </div>
 
-                    {/* AI Model Parameters (Heart & Diabetes) */}
-                    <div className="soft-card lg:col-span-2">
-                        <div className="flex items-center justify-between mb-5 pb-3 border-b border-slate-100">
-                            <div className="flex items-center gap-3">
-                                <div className="stat-card__icon" style={{ background: "rgba(99, 102, 241, 0.12)" }}>
-                                    <Sparkles size={20} className="text-indigo-600" />
+                    {/* Clinical Model Inputs (Heart & Diabetes) Card */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)", gridColumn: "1 / -1" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px", paddingBottom: "14px", borderBottom: "1px solid #e2e8f0" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                <div style={{ width: "40px", height: "40px", borderRadius: "12px", backgroundColor: "#e0e7ff", border: "1px solid #c7d2fe", display: "flex", alignItems: "center", justifyContent: "center", color: "#4f46e5" }}>
+                                    <Sparkles size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-slate-900">AI Clinical Prediction Model Inputs</h3>
-                                    <p className="text-xs text-slate-500">Configured parameters for Heart AI & Diabetes AI classification models</p>
+                                    <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0 }}>Clinical Prediction Model Inputs</h3>
+                                    <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>Configured clinical inputs for Heart & Diabetes classification models</p>
                                 </div>
                             </div>
                             <Link
                                 to={`/admin/healthtwins/edit/${patient.patientId}`}
-                                className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold border border-indigo-200 transition-all inline-flex items-center gap-1.5"
+                                style={{
+                                    padding: "8px 16px",
+                                    borderRadius: "8px",
+                                    backgroundColor: "#e0e7ff",
+                                    color: "#4338ca",
+                                    border: "1px solid #c7d2fe",
+                                    fontSize: "12px",
+                                    fontWeight: "800",
+                                    textDecoration: "none",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "6px"
+                                }}
                             >
                                 <Sparkles size={13} />
                                 <span>Edit Model Inputs</span>
                             </Link>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Heart AI Inputs */}
-                            <div className="rounded-xl border border-rose-100 bg-rose-50/40 p-4 space-y-3">
-                                <div className="flex items-center justify-between border-b border-rose-200/60 pb-2">
-                                    <span className="text-xs font-extrabold uppercase text-rose-800 flex items-center gap-1.5">
-                                        <Heart size={14} className="text-rose-600" /> Heart AI Inputs
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "20px" }}>
+                            {/* Heart Inputs Container */}
+                            <div style={{ backgroundColor: "#f8fafc", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px" }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: "12px", marginBottom: "14px", borderBottom: "1px solid #e2e8f0" }}>
+                                    <span style={{ fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#e11d48", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                                        <Heart size={15} style={{ color: "#e11d48" }} /> Heart Inputs
                                     </span>
-                                    <span className="text-[11px] font-bold text-rose-600">10 Parameters</span>
                                 </div>
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                    <div className="bg-white p-2 rounded border border-rose-100">
-                                        <span className="text-slate-400 block text-[10px]">Chest Pain (cp)</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.cp ?? healthTwin?.chestPainType ?? 0}</span>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Chest Pain (cp)</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.cp ?? healthTwin?.chestPainType ?? 0}</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-rose-100">
-                                        <span className="text-slate-400 block text-[10px]">Cholesterol (chol)</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.chol ?? healthTwin?.cholesterol ?? 200} mg/dL</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Cholesterol (chol)</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.chol ?? healthTwin?.cholesterol ?? 200} mg/dL</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-rose-100">
-                                        <span className="text-slate-400 block text-[10px]">Fasting BS &gt; 120</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.fbs ?? healthTwin?.fastingBS ?? 0 ? "Yes" : "No"}</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Fasting BS &gt; 120</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.fbs ?? healthTwin?.fastingBS ?? 0 ? "Yes" : "No"}</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-rose-100">
-                                        <span className="text-slate-400 block text-[10px]">Resting ECG</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.restecg ?? healthTwin?.restECG ?? 0}</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Resting ECG</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.restecg ?? healthTwin?.restECG ?? 0}</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-rose-100">
-                                        <span className="text-slate-400 block text-[10px]">Max Heart Rate</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.thalach ?? healthTwin?.maxHeartRate ?? 150} bpm</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Max Heart Rate</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.thalach ?? healthTwin?.maxHeartRate ?? 150} bpm</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-rose-100">
-                                        <span className="text-slate-400 block text-[10px]">Exercise Angina</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.exang ?? healthTwin?.exerciseAngina ?? 0 ? "Yes" : "No"}</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Exercise Angina</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.exang ?? healthTwin?.exerciseAngina ?? 0 ? "Yes" : "No"}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Diabetes AI Inputs */}
-                            <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 space-y-3">
-                                <div className="flex items-center justify-between border-b border-blue-200/60 pb-2">
-                                    <span className="text-xs font-extrabold uppercase text-blue-800 flex items-center gap-1.5">
-                                        <Activity size={14} className="text-blue-600" /> Diabetes AI Inputs
+                            {/* Diabetes Inputs Container */}
+                            <div style={{ backgroundColor: "#f8fafc", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px" }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: "12px", marginBottom: "14px", borderBottom: "1px solid #e2e8f0" }}>
+                                    <span style={{ fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#2563eb", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                                        <Activity size={15} style={{ color: "#2563eb" }} /> Diabetes Inputs
                                     </span>
-                                    <span className="text-[11px] font-bold text-blue-600">6 Parameters</span>
                                 </div>
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                    <div className="bg-white p-2 rounded border border-blue-100">
-                                        <span className="text-slate-400 block text-[10px]">Hypertension</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.hypertension ? "Yes" : "No"}</span>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Hypertension</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.hypertension ? "Yes" : "No"}</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-blue-100">
-                                        <span className="text-slate-400 block text-[10px]">Heart Disease</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.heartDisease ?? healthTwin?.heart_disease ? "Yes" : "No"}</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Heart Disease</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.heartDisease ?? healthTwin?.heart_disease ? "Yes" : "No"}</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-blue-100">
-                                        <span className="text-slate-400 block text-[10px]">Smoking History</span>
-                                        <span className="font-bold text-slate-800">
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Smoking History</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>
                                             {healthTwin?.smokingHistory === 1 ? "Current" : healthTwin?.smokingHistory === 2 ? "Former" : "Never"}
                                         </span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-blue-100">
-                                        <span className="text-slate-400 block text-[10px]">BMI (kg/m²)</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.bmi ?? bmi ?? 22.9}</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>BMI (kg/m²)</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.bmi ?? bmi ?? 22.9}</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-blue-100">
-                                        <span className="text-slate-400 block text-[10px]">HbA1c Level</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.hba1cLevel ?? healthTwin?.HbA1c_level ?? 5.7}%</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>HbA1c Level</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.hba1cLevel ?? healthTwin?.HbA1c_level ?? 5.7}%</span>
                                     </div>
-                                    <div className="bg-white p-2 rounded border border-blue-100">
-                                        <span className="text-slate-400 block text-[10px]">Blood Glucose</span>
-                                        <span className="font-bold text-slate-800">{healthTwin?.bloodGlucoseLevel ?? healthTwin?.blood_glucose_level ?? 100} mg/dL</span>
+                                    <div style={{ backgroundColor: "#ffffff", padding: "10px 12px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
+                                        <span style={{ color: "#64748b", display: "block", fontSize: "10px", fontWeight: "700", textTransform: "uppercase" }}>Blood Glucose</span>
+                                        <span style={{ fontWeight: "800", color: "#0f172a", fontSize: "13px" }}>{healthTwin?.bloodGlucoseLevel ?? healthTwin?.blood_glucose_level ?? 100} mg/dL</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* FHIR Privacy & Consent */}
-                    <div className="soft-card lg:col-span-2">
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="stat-card__icon" style={{ background: "rgba(16, 185, 129, 0.12)" }}>
-                                <ShieldCheck size={20} className="text-emerald-600" />
+                    {/* FHIR Privacy & Consent Record Card */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)", gridColumn: "1 / -1" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+                            <div style={{ width: "40px", height: "40px", borderRadius: "12px", backgroundColor: "#ecfdf5", border: "1px solid #a7f3d0", display: "flex", alignItems: "center", justifyContent: "center", color: "#059669" }}>
+                                <ShieldCheck size={20} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-slate-900">FHIR Privacy & Consent Record</h3>
-                                <p className="text-xs text-slate-500">Patient data sharing authorization status</p>
+                                <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0 }}>FHIR Privacy & Consent Record</h3>
+                                <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>Patient data sharing authorization status</p>
                             </div>
                         </div>
 
                         {consent ? (
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Consent Type</p>
-                                    <p className="text-base font-bold text-slate-900 mt-1">{consent.consentType || "N/A"}</p>
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px" }}>
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }}>
+                                    <p style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", margin: 0 }}>Consent Type</p>
+                                    <p style={{ fontSize: "14px", fontWeight: "800", color: "#0f172a", margin: "6px 0 0 0" }}>{consent.consentType || "N/A"}</p>
                                 </div>
-                                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</p>
-                                    <span className={`inline-flex items-center gap-1.5 mt-1.5 badge ${consent.status === "ACTIVE" || consent.status === "GRANTED" ? "badge--success" : "badge--warning"}`}>
-                                        <BadgeCheck size={12} /> {consent.status || "UNKNOWN"}
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }}>
+                                    <p style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", margin: 0 }}>Status</p>
+                                    <span style={{
+                                        marginTop: "6px",
+                                        backgroundColor: consent.status === "ACTIVE" || consent.status === "GRANTED" ? "#ecfdf5" : "#fffbeb",
+                                        color: consent.status === "ACTIVE" || consent.status === "GRANTED" ? "#047857" : "#b45309",
+                                        border: `1px solid ${consent.status === "ACTIVE" || consent.status === "GRANTED" ? "#a7f3d0" : "#fde68a"}`,
+                                        fontSize: "11px",
+                                        fontWeight: "800",
+                                        padding: "4px 10px",
+                                        borderRadius: "8px",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "6px"
+                                    }}>
+                                        <BadgeCheck size={14} /> {consent.status || "UNKNOWN"}
                                     </span>
                                 </div>
-                                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Granted Date</p>
-                                    <p className="text-sm font-semibold text-slate-800 mt-1">{consent.grantedDate || "N/A"}</p>
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }}>
+                                    <p style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", margin: 0 }}>Granted Date</p>
+                                    <p style={{ fontSize: "13px", fontWeight: "700", color: "#334155", margin: "6px 0 0 0" }}>{consent.grantedDate || "N/A"}</p>
                                 </div>
-                                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Expiry Date</p>
-                                    <p className="text-sm font-semibold text-slate-800 mt-1">{consent.expiryDate || "N/A"}</p>
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }}>
+                                    <p style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", margin: 0 }}>Expiry Date</p>
+                                    <p style={{ fontSize: "13px", fontWeight: "700", color: "#334155", margin: "6px 0 0 0" }}>{consent.expiryDate || "N/A"}</p>
                                 </div>
                             </div>
                         ) : (
-                            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center">
-                                <p className="text-sm text-slate-500">No active FHIR data sharing consent on file for this patient.</p>
+                            <div style={{ borderRadius: "14px", border: "1px solid #e2e8f0", backgroundColor: "#f8fafc", padding: "24px", textAlign: "center" }}>
+                                <p style={{ fontSize: "13px", color: "#64748b", margin: 0 }}>No active FHIR data sharing consent on file for this patient.</p>
                             </div>
                         )}
                     </div>

@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "framer-motion";
 import {
   Eye,
@@ -23,6 +24,7 @@ export default function DoctorCard({
   refresh,
 }) {
   const initials = (doctor?.doctorName || "DR")
+    .replace(/^Dr\.\s*/i, "")
     .split(" ")
     .map((w) => w[0])
     .filter(Boolean)
@@ -30,7 +32,13 @@ export default function DoctorCard({
     .join("")
     .toUpperCase();
 
-  const isActive = doctor?.status === "ACTIVE";
+  const isActive = String(doctor?.status || "").toUpperCase() === "ACTIVE";
+
+  const dept = doctor?.department || "General Medicine";
+  const spec = doctor?.specialization;
+
+  // Deduplicate department & specialization if they are identical (e.g., Cardiology & Cardiology)
+  const isSpecSameAsDept = spec && spec.trim().toLowerCase() === dept.trim().toLowerCase();
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(`Are you sure you want to delete Dr. ${doctor?.doctorName}?`);
@@ -50,138 +58,275 @@ export default function DoctorCard({
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
       style={{
-        padding: "26px",
-        background: "#ffffff",
-        borderRadius: "26px",
-        border: "1.5px solid #e2e8f0",
-        boxShadow: "0 4px 20px -2px rgba(15, 23, 42, 0.05)"
+        padding: "24px",
+        backgroundColor: "#ffffff",
+        borderRadius: "20px",
+        border: "1px solid #e2e8f0",
+        boxShadow: "0 4px 18px rgba(15, 23, 42, 0.04)",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+        position: "relative"
       }}
-      className="group flex flex-col justify-between hover:shadow-xl hover:border-blue-300 transition-all duration-300 h-full"
+      className="group hover:border-indigo-200 hover:shadow-xl transition-all duration-300"
     >
-      {/* Top Meta Bar: Doctor ID & Status Badge */}
-      <div className="flex items-center justify-between gap-3 mb-5">
-        <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
-          ID: {doctor?.doctorId || "D101"}
-        </span>
-        <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold tracking-wide shrink-0 ${
-            isActive
-              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-              : "bg-slate-100 text-slate-600 border border-slate-200"
-          }`}
-        >
-          <span className={`h-2 w-2 rounded-full ${isActive ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
-          {doctor?.status || "INACTIVE"}
-        </span>
-      </div>
+      <div>
+        {/* Top Meta Bar: Doctor ID & Status Badge */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", marginBottom: "18px" }}>
+          <span style={{
+            fontSize: "11px",
+            fontWeight: "700",
+            fontFamily: "monospace",
+            color: "#475569",
+            backgroundColor: "#f1f5f9",
+            padding: "4px 10px",
+            borderRadius: "8px"
+          }}>
+            ID: {doctor?.doctorId || "D101"}
+          </span>
 
-      {/* Doctor Info Row */}
-      <div className="flex items-start gap-4 mb-5">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-slate-900 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/20 shrink-0">
-          {initials || <Stethoscope size={24} />}
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "4px 12px",
+              borderRadius: "20px",
+              fontSize: "11px",
+              fontWeight: "800",
+              letterSpacing: "0.03em",
+              backgroundColor: isActive ? "#ecfdf5" : "#f1f5f9",
+              color: isActive ? "#047857" : "#64748b"
+            }}
+          >
+            <span style={{
+              width: "7px",
+              height: "7px",
+              borderRadius: "50%",
+              backgroundColor: isActive ? "#10b981" : "#94a3b8"
+            }} className={isActive ? "animate-pulse" : ""} />
+            {doctor?.status || "INACTIVE"}
+          </span>
         </div>
 
-        <div className="min-w-0 flex-1">
-          <h3 className="text-lg font-extrabold text-slate-900 leading-snug truncate group-hover:text-blue-600 transition-colors">
-            Dr. {doctor?.doctorName?.replace(/^Dr\.\s*/i, "")}
-          </h3>
-          <div className="flex flex-wrap items-center gap-1.5 mt-2">
-            <span className="inline-flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 border border-blue-100">
-              <Building2 size={12} /> {doctor?.department || "General"}
-            </span>
-            {doctor?.specialization && (
-              <span className="inline-flex items-center gap-1 rounded-lg bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700 border border-indigo-100">
-                <BadgeCheck size={12} /> {doctor?.specialization}
+        {/* Doctor Info Row */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "14px", marginBottom: "18px" }}>
+          <div style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "14px",
+            background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#ffffff",
+            fontWeight: "800",
+            fontSize: "17px",
+            boxShadow: "0 4px 14px rgba(37, 99, 235, 0.25)",
+            flexShrink: 0
+          }}>
+            {initials || <Stethoscope size={22} />}
+          </div>
+
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <h3 style={{
+              fontSize: "17px",
+              fontWeight: "800",
+              color: "#0f172a",
+              lineHeight: "1.3",
+              margin: 0,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap"
+            }}>
+              Dr. {doctor?.doctorName?.replace(/^Dr\.\s*/i, "")}
+            </h3>
+
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px", marginTop: "6px" }}>
+              <span style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                borderRadius: "8px",
+                backgroundColor: "#eff6ff",
+                padding: "3px 9px",
+                fontSize: "11px",
+                fontWeight: "700",
+                color: "#1d4ed8"
+              }}>
+                <Building2 size={12} /> {dept}
               </span>
-            )}
+
+              {spec && !isSpecSameAsDept && (
+                <span style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  borderRadius: "8px",
+                  backgroundColor: "#f5f3ff",
+                  padding: "3px 9px",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                  color: "#6d28d9"
+                }}>
+                  <BadgeCheck size={12} /> {spec}
+                </span>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Professional Metrics Grid */}
-      <div className="grid grid-cols-2 gap-3 mb-5">
-        <div className="rounded-2xl bg-slate-50/80 border border-slate-200/80 p-3.5 space-y-1">
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
-            <Briefcase size={14} className="text-blue-600" /> Experience
+        {/* Professional Metrics Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "18px" }}>
+          <div style={{
+            backgroundColor: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            borderRadius: "12px",
+            padding: "10px 12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "2px"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: "#64748b", fontWeight: "700" }}>
+              <Briefcase size={13} style={{ color: "#2563eb" }} /> Experience
+            </div>
+            <p style={{ fontSize: "15px", fontWeight: "800", color: "#0f172a", margin: 0 }}>
+              {doctor?.experience != null ? `${doctor.experience} Yrs` : "—"}
+            </p>
           </div>
-          <p className="text-base font-extrabold text-slate-900">
-            {doctor?.experience != null ? `${doctor.experience} Yrs` : "—"}
-          </p>
+
+          <div style={{
+            backgroundColor: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            borderRadius: "12px",
+            padding: "10px 12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "2px"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: "#64748b", fontWeight: "700" }}>
+              <GraduationCap size={13} style={{ color: "#4f46e5" }} /> Qualification
+            </div>
+            <p style={{ fontSize: "15px", fontWeight: "800", color: "#0f172a", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={doctor?.qualification}>
+              {doctor?.qualification || "MBBS"}
+            </p>
+          </div>
         </div>
 
-        <div className="rounded-2xl bg-slate-50/80 border border-slate-200/80 p-3.5 space-y-1">
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
-            <GraduationCap size={14} className="text-indigo-600" /> Qualification
-          </div>
-          <p className="text-base font-extrabold text-slate-900 truncate" title={doctor?.qualification}>
-            {doctor?.qualification || "MBBS"}
-          </p>
+        {/* Contact Snippets */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "12px", color: "#475569", marginBottom: "20px" }}>
+          {doctor?.email && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <Mail size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: "600" }}>{doctor.email}</span>
+            </div>
+          )}
+          {doctor?.phone && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Phone size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
+              <span style={{ fontWeight: "600" }}>{doctor.phone}</span>
+            </div>
+          )}
         </div>
-      </div>
-
-      {/* Contact Snippets */}
-      <div className="space-y-2.5 text-xs text-slate-600 mb-6 pt-1">
-        {doctor?.email && (
-          <div className="flex items-center gap-2.5 truncate">
-            <Mail size={14} className="text-slate-400 shrink-0" />
-            <span className="truncate font-semibold text-slate-700">{doctor.email}</span>
-          </div>
-        )}
-        {doctor?.phone && (
-          <div className="flex items-center gap-2.5">
-            <Phone size={14} className="text-slate-400 shrink-0" />
-            <span className="font-semibold text-slate-700">{doctor.phone}</span>
-          </div>
-        )}
       </div>
 
       {/* Card Action Footer */}
-      <div className="pt-4 border-t border-slate-100 space-y-3 mt-auto">
+      <div style={{ paddingTop: "14px", borderTop: "1px solid #f1f5f9", display: "flex", flexDirection: "column", gap: "10px" }}>
         {/* Primary View Action */}
         <button
           type="button"
           onClick={() => onView && onView(doctor)}
           style={{
-            padding: "11px 20px",
-            borderRadius: "14px",
+            width: "100%",
+            padding: "10px 18px",
+            borderRadius: "12px",
             background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
-            color: "#ffffff"
+            color: "#ffffff",
+            border: "none",
+            fontSize: "12px",
+            fontWeight: "800",
+            cursor: "pointer",
+            boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            transition: "all 0.15s ease"
           }}
-          className="w-full font-extrabold text-xs shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
-          <Eye size={16} className="text-white" />
+          <Eye size={15} style={{ color: "#ffffff" }} />
           <span>View Full Profile</span>
         </button>
 
         {/* Quick Actions Bar */}
-        <div className="grid grid-cols-3 gap-2">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
           <button
             type="button"
             onClick={() => onEdit && onEdit(doctor)}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 transition-all cursor-pointer"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "5px",
+              borderRadius: "10px",
+              backgroundColor: "#f1f5f9",
+              color: "#334155",
+              border: "1px solid #cbd5e1",
+              padding: "7px 10px",
+              fontSize: "11px",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
             title="Edit Doctor Profile"
           >
-            <Pencil size={13} className="text-slate-500" />
+            <Pencil size={12} style={{ color: "#64748b" }} />
             <span>Edit</span>
           </button>
 
           <button
             type="button"
             onClick={() => onAssign && onAssign(doctor)}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/70 hover:bg-blue-100 px-3 py-2 text-xs font-bold text-blue-700 transition-all cursor-pointer"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "5px",
+              borderRadius: "10px",
+              backgroundColor: "#eff6ff",
+              color: "#1d4ed8",
+              border: "1px solid #bfdbfe",
+              padding: "7px 10px",
+              fontSize: "11px",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
             title="Assign Patients"
           >
-            <UserPlus size={13} className="text-blue-600" />
+            <UserPlus size={12} style={{ color: "#2563eb" }} />
             <span>Assign</span>
           </button>
 
           <button
             type="button"
             onClick={handleDelete}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/70 hover:bg-rose-100 px-3 py-2 text-xs font-bold text-rose-700 transition-all cursor-pointer"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "5px",
+              borderRadius: "10px",
+              backgroundColor: "#fff1f2",
+              color: "#be123c",
+              border: "1px solid #fecdd3",
+              padding: "7px 10px",
+              fontSize: "11px",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
             title="Delete Doctor"
           >
-            <Trash2 size={13} className="text-rose-600" />
+            <Trash2 size={12} style={{ color: "#e11d48" }} />
             <span>Delete</span>
           </button>
         </div>

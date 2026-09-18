@@ -84,7 +84,7 @@ function HealthTwins({ keycloak }) {
         }, 0);
         const interval = setInterval(() => {
             loadHealthTwins();
-        }, 1000);
+        }, 15000);
         return () => {
             clearTimeout(initial);
             clearInterval(interval);

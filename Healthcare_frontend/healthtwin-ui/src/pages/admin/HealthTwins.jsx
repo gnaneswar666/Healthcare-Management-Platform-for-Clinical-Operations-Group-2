@@ -78,7 +78,7 @@ function HealthTwins() {
         loadHealthTwins(true);
         const interval = setInterval(() => {
             loadHealthTwins(false);
-        }, 1000);
+        }, 15000);
 
         return () => clearInterval(interval);
     }, [loadHealthTwins]);

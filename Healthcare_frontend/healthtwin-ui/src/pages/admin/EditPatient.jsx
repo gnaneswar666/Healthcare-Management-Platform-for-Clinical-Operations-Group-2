@@ -260,38 +260,90 @@ function EditPatient() {
                 className="w-full max-w-6xl mx-auto space-y-8 p-2 sm:p-4 pb-28"
             >
                 {/* Enterprise Header Banner */}
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 text-white shadow-xl flex flex-wrap items-center justify-between gap-6">
-                    <div className="flex items-center gap-4">
+                <div
+                    style={{
+                        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+                        padding: "24px 32px",
+                        borderRadius: "20px",
+                        border: "1px solid #334155",
+                        boxShadow: "0 10px 30px -5px rgba(15, 23, 42, 0.3)",
+                        display: "flex",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "16px",
+                        color: "#ffffff"
+                    }}
+                >
+                    <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
                         <button
                             type="button"
                             onClick={() => navigate("/admin/patients")}
-                            className="w-11 h-11 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-all cursor-pointer shrink-0 active:scale-95"
+                            style={{
+                                width: "44px",
+                                height: "44px",
+                                borderRadius: "12px",
+                                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                border: "1px solid rgba(255, 255, 255, 0.2)",
+                                color: "#ffffff",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                cursor: "pointer",
+                                flexShrink: 0
+                            }}
                             title="Back to Patients"
                         >
                             <ArrowLeft size={20} />
                         </button>
-                        <div>
-                            <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                                <ShieldCheck size={14} />
-                                <span>FHIR Patient Registry & AI Models</span>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                                <span style={{
+                                    backgroundColor: "rgba(59, 130, 246, 0.2)",
+                                    color: "#93c5fd",
+                                    border: "1px solid rgba(147, 197, 253, 0.3)",
+                                    fontSize: "11px",
+                                    fontWeight: "800",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.05em",
+                                    padding: "2px 10px",
+                                    borderRadius: "20px",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "6px"
+                                }}>
+                                    <ShieldCheck size={13} style={{ color: "#60a5fa" }} /> FHIR Patient Registry & Clinical Models
+                                </span>
                             </div>
-                            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-snug">
+                            <h1 style={{ color: "#ffffff", fontSize: "24px", fontWeight: "800", margin: 0, lineHeight: 1.2 }}>
                                 Edit Patient Profile: {patient.patientId || patientId}
                             </h1>
-                            <p className="text-xs md:text-sm text-slate-300 mt-1 font-medium">
-                                Update demographic attributes, clinical twin vitals, and Heart / Diabetes AI model parameters
+                            <p style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "500", margin: "4px 0 0 0" }}>
+                                Update demographic attributes, clinical twin vitals, and Heart / Diabetes clinical model inputs
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 bg-slate-800/90 border border-slate-700/90 px-4 py-2.5 rounded-xl text-xs text-slate-200 font-semibold shadow-inner">
-                        <CheckCircle2 size={16} className="text-emerald-400" />
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        backgroundColor: "rgba(30, 41, 59, 0.9)",
+                        border: "1px solid rgba(255, 255, 255, 0.15)",
+                        padding: "8px 16px",
+                        borderRadius: "12px",
+                        fontSize: "12px",
+                        fontWeight: "700",
+                        color: "#f8fafc",
+                        flexShrink: 0
+                    }}>
+                        <CheckCircle2 size={16} style={{ color: "#34d399" }} />
                         <span>System Synchronized</span>
                     </div>
                 </div>
 
                 {loading ? (
-                    <div className="bg-white rounded-2xl border border-slate-200 shadow-md py-20 text-center flex flex-col items-center justify-center gap-3">
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "60px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
                         <Loader2 size={32} className="animate-spin text-blue-600" />
                         <p className="text-sm font-semibold text-slate-500">Fetching patient record details...</p>
                     </div>
@@ -312,7 +364,7 @@ function EditPatient() {
                         </AnimatePresence>
 
                         {/* Section 1 Card: Identification */}
-                        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 md:p-8 space-y-6 shadow-md hover:shadow-lg transition-all">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
                             <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100">
                                 <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0 shadow-xs">
                                     <User size={20} />
@@ -392,7 +444,7 @@ function EditPatient() {
                         </div>
 
                         {/* Section 2 Card: Contact Info */}
-                        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 md:p-8 space-y-6 shadow-md hover:shadow-lg transition-all">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
                             <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100">
                                 <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 shadow-xs">
                                     <Mail size={20} />
@@ -452,7 +504,7 @@ function EditPatient() {
                         </div>
 
                         {/* Section 3 Card: Physical Demographics & Vitals */}
-                        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 md:p-8 space-y-6 shadow-md hover:shadow-lg transition-all">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
                             <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100">
                                 <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 shadow-xs">
                                     <Heart size={20} />
@@ -588,23 +640,23 @@ function EditPatient() {
                         </div>
 
                         {/* Section 4 Card: Heart AI Model Data */}
-                        <div className="bg-gradient-to-br from-rose-50/50 via-white to-red-50/40 border border-rose-200 rounded-2xl p-6 md:p-8 space-y-6 shadow-md hover:shadow-lg transition-all">
-                            <div className="flex items-center justify-between pb-4 border-b border-rose-100">
-                                <div className="flex items-center gap-3.5">
-                                    <div className="w-10 h-10 rounded-xl bg-rose-600 border border-rose-700 flex items-center justify-center text-white shrink-0 shadow-md">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", borderBottom: "1px solid #f1f5f9", paddingBottom: "16px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
+                                    <div style={{ width: "42px", height: "42px", borderRadius: "12px", backgroundColor: "#dc2626", border: "1px solid #b91c1c", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(220, 38, 38, 0.25)" }}>
                                         <Heart size={20} />
                                     </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-slate-900 leading-snug">
-                                            Heart Disease AI Model Parameters
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                        <h3 style={{ fontSize: "18px", fontWeight: "800", color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
+                                            Heart Disease Clinical Features
                                         </h3>
-                                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                        <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", margin: "4px 0 0 0" }}>
                                             Clinical telemetry and diagnostic inputs for Heart Disease prediction
                                         </p>
                                     </div>
                                 </div>
-                                <span className="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full border border-rose-200">
-                                    Heart AI Model
+                                <span style={{ backgroundColor: "#ffe4e6", color: "#9f1239", border: "1px solid #fecdd3", fontSize: "11px", fontWeight: "800", padding: "4px 12px", borderRadius: "20px", flexShrink: 0, whiteSpace: "nowrap" }}>
+                                    Heart Model
                                 </span>
                             </div>
 
@@ -727,23 +779,23 @@ function EditPatient() {
                         </div>
 
                         {/* Section 5 Card: Diabetes AI Model Data */}
-                        <div className="bg-gradient-to-br from-blue-50/50 via-white to-cyan-50/40 border border-blue-200 rounded-2xl p-6 md:p-8 space-y-6 shadow-md hover:shadow-lg transition-all">
-                            <div className="flex items-center justify-between pb-4 border-b border-blue-100">
-                                <div className="flex items-center gap-3.5">
-                                    <div className="w-10 h-10 rounded-xl bg-blue-600 border border-blue-700 flex items-center justify-center text-white shrink-0 shadow-md">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", borderBottom: "1px solid #f1f5f9", paddingBottom: "16px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
+                                    <div style={{ width: "42px", height: "42px", borderRadius: "12px", backgroundColor: "#2563eb", border: "1px solid #1d4ed8", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)" }}>
                                         <Activity size={20} />
                                     </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-slate-900 leading-snug">
-                                            Diabetes AI Model Parameters
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                        <h3 style={{ fontSize: "18px", fontWeight: "800", color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
+                                            Diabetes Clinical Features
                                         </h3>
-                                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                        <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", margin: "4px 0 0 0" }}>
                                             Clinical indicators for Diabetes risk calculation
                                         </p>
                                     </div>
                                 </div>
-                                <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">
-                                    Diabetes AI Model
+                                <span style={{ backgroundColor: "#dbeafe", color: "#1e40af", border: "1px solid #bfdbfe", fontSize: "11px", fontWeight: "800", padding: "4px 12px", borderRadius: "20px", flexShrink: 0, whiteSpace: "nowrap" }}>
+                                    Diabetes Model
                                 </span>
                             </div>
 
@@ -865,12 +917,35 @@ function EditPatient() {
                             </div>
                         </div>
 
-                        {/* Actions Footer Bar */}
-                        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 flex items-center justify-end gap-3 shadow-md">
+                        {/* Actions Footer Bar - No Truncation */}
+                        <div
+                            style={{
+                                backgroundColor: "#ffffff",
+                                border: "1px solid #cbd5e1",
+                                borderRadius: "20px",
+                                padding: "18px 32px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "flex-end",
+                                gap: "14px",
+                                boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)"
+                            }}
+                        >
                             <button
                                 type="button"
                                 onClick={() => navigate("/admin/patients")}
-                                className="px-6 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all cursor-pointer active:scale-95 shadow-xs"
+                                style={{
+                                    padding: "10px 24px",
+                                    borderRadius: "12px",
+                                    backgroundColor: "#f1f5f9",
+                                    color: "#334155",
+                                    border: "1px solid #cbd5e1",
+                                    fontSize: "12px",
+                                    fontWeight: "700",
+                                    cursor: "pointer",
+                                    flexShrink: 0,
+                                    whiteSpace: "nowrap"
+                                }}
                             >
                                 Cancel
                             </button>
@@ -878,7 +953,22 @@ function EditPatient() {
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="px-7 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-xs shadow-md hover:shadow-indigo-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                style={{
+                                    padding: "10px 28px",
+                                    borderRadius: "12px",
+                                    background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                    color: "#ffffff",
+                                    border: "none",
+                                    fontSize: "12px",
+                                    fontWeight: "800",
+                                    cursor: "pointer",
+                                    flexShrink: 0,
+                                    whiteSpace: "nowrap",
+                                    boxShadow: "0 4px 14px rgba(37, 99, 235, 0.35)",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "8px"
+                                }}
                             >
                                 {submitting ? (
                                     <>

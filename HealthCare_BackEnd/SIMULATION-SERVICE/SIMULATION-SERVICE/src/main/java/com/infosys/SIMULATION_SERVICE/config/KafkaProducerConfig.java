@@ -1,4 +1,4 @@
-﻿package com.infosys.SIMULATION_SERVICE.config;
+package com.infosys.SIMULATION_SERVICE.config;
 
 import java.util.HashMap;
 import java.util.Map;

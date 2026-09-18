@@ -1,145 +1,143 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     ArrowLeft,
     UserPlus,
     ShieldCheck,
-    Heart,
+    Stethoscope,
     User,
     Mail,
     Phone,
-    Calendar,
-    Ruler,
-    Scale,
-    CheckCircle2,
-    Hash,
-    UserCheck,
-    Droplets,
-    Users,
+    Building2,
+    GraduationCap,
+    Briefcase,
+    Clock,
     Sparkles,
     AlertCircle,
     Loader2,
-    Activity,
-    ActivitySquare,
+    Hash,
+    Users,
     Fingerprint,
-    Cpu,
     Zap
 } from "lucide-react";
 
 import AdminLayout from "../../components/admin/AdminLayout";
-import { addPatient, getPatients } from "../../services/patientService";
-import { createHealthTwin, updateHealthTwin } from "../../services/HealthTwinService";
-import { logKeycloakRegistration } from "../../services/auditService";
+import { addDoctor, getDoctors } from "../../services/doctorService";
 import { validateEmail, validatePhone } from "../../utils/validation";
-import { getNextPatientId } from "../../utils/patientUtils";
+import { getNextDoctorId } from "../../utils/doctorUtils";
 
-function AddPatient() {
+function AddDoctor() {
     const navigate = useNavigate();
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
-    const [autoPatientId, setAutoPatientId] = useState("P201");
+    const [autoDoctorId, setAutoDoctorId] = useState("D101");
 
-    const [form, setForm] = useState({
-        patientId: "",
-        firstName: "",
-        lastName: "",
+    const [doctor, setDoctor] = useState({
+        doctorId: "",
+        doctorName: "",
         email: "",
         phone: "",
         gender: "Male",
-        bloodGroup: "O+",
-        dob: "",
-        height: "",
-        weight: "",
-        address: "Healthcare Panel"
+        specialization: "",
+        qualification: "",
+        experience: "",
+        department: "",
+        availability: "10:00 AM - 06:00 PM"
     });
 
     useEffect(() => {
-        async function fetchExistingPatients() {
+        async function fetchExistingDoctors() {
             try {
-                const res = await getPatients();
-                const nextId = getNextPatientId(res.data);
-                setAutoPatientId(nextId);
-                setForm((prev) => ({
+                const res = await getDoctors();
+                const nextId = getNextDoctorId(res.data || []);
+                setAutoDoctorId(nextId);
+                setDoctor((prev) => ({
                     ...prev,
-                    patientId: prev.patientId || nextId
+                    doctorId: prev.doctorId || nextId
                 }));
             } catch (err) {
-                console.error("Failed to load existing patients for auto ID generation:", err);
-                setAutoPatientId("P201");
-                setForm((prev) => ({
+                console.error("Failed to load doctors for auto ID generation:", err);
+                setAutoDoctorId("D101");
+                setDoctor((prev) => ({
                     ...prev,
-                    patientId: prev.patientId || "P201"
+                    doctorId: prev.doctorId || "D101"
                 }));
             }
         }
-        fetchExistingPatients();
+        fetchExistingDoctors();
     }, []);
 
     function handleChange(e) {
-        setForm({
-            ...form,
+        setDoctor({
+            ...doctor,
             [e.target.name]: e.target.value
         });
     }
 
     function handleFillSampleData() {
-        const randomNum = Math.floor(10 + Math.random() * 90);
-        setForm({
-            patientId: autoPatientId || "P203",
-            firstName: "Alex",
-            lastName: "Morgan",
-            email: `alex.morgan${randomNum}@healthtwin.io`,
-            phone: "9876543210",
+        const samples = [
+            {
+                name: "Dr. Sarah Jenkins",
+                dept: "Cardiology",
+                spec: "Pediatric Cardiology",
+                qual: "MD, DM Cardiology",
+                exp: "12",
+                email: `sarah.jenkins${Math.floor(10 + Math.random() * 90)}@hospital.com`,
+                phone: "9808707606"
+            },
+            {
+                name: "Dr. Robert Chen",
+                dept: "Neurology",
+                spec: "Neuro-Oncology",
+                qual: "MD, Neuro Surgery",
+                exp: "15",
+                email: `robert.chen${Math.floor(10 + Math.random() * 90)}@hospital.com`,
+                phone: "9876543210"
+            },
+            {
+                name: "Dr. Elena Rostova",
+                dept: "Endocrinology",
+                spec: "Diabetes & Metabolism",
+                qual: "MD, FACP",
+                exp: "10",
+                email: `elena.rostova${Math.floor(10 + Math.random() * 90)}@hospital.com`,
+                phone: "9123456789"
+            }
+        ];
+        const picked = samples[Math.floor(Math.random() * samples.length)];
+        setDoctor((prev) => ({
+            ...prev,
+            doctorId: autoDoctorId || "D104",
+            doctorName: picked.name,
+            email: picked.email,
+            phone: picked.phone,
             gender: "Male",
-            bloodGroup: "A+",
-            dob: "1994-06-15",
-            height: "178",
-            weight: "74",
-            address: "Building 4, Medical District"
-        });
+            department: picked.dept,
+            specialization: picked.spec,
+            qualification: picked.qual,
+            experience: picked.exp,
+            availability: "10:00 AM - 06:00 PM"
+        }));
         setError("");
     }
-
-    // Live calculations for preview panel
-    const liveBmi = useMemo(() => {
-        const h = Number(form.height);
-        const w = Number(form.weight);
-        if (h > 0 && w > 0) {
-            return (w / Math.pow(h / 100, 2)).toFixed(1);
-        }
-        return null;
-    }, [form.height, form.weight]);
-
-    const liveAge = useMemo(() => {
-        if (!form.dob) return null;
-        const birthDate = new Date(form.dob);
-        if (isNaN(birthDate.getTime())) return null;
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age >= 0 ? age : null;
-    }, [form.dob]);
 
     async function handleSubmit(e) {
         e.preventDefault();
         setError("");
 
-        if (!form.firstName.trim() || !form.lastName.trim()) {
-            setError("First name and last name are required fields.");
+        if (!doctor.doctorName.trim()) {
+            setError("Doctor Name is required.");
             return;
         }
 
-        const emailCheck = validateEmail(form.email);
+        const emailCheck = validateEmail(doctor.email);
         if (!emailCheck.isValid) {
             setError(emailCheck.message);
             return;
         }
 
-        const phoneCheck = validatePhone(form.phone);
+        const phoneCheck = validatePhone(doctor.phone);
         if (!phoneCheck.isValid) {
             setError(phoneCheck.message);
             return;
@@ -147,122 +145,21 @@ function AddPatient() {
 
         setSubmitting(true);
         try {
-            const digitsOnly = form.phone.replace(/\D/g, "");
-            const numericPhone = Number(digitsOnly) || 9808707606;
-            const isoDob = form.dob ? new Date(form.dob).toISOString() : new Date().toISOString();
-            const finalPatientId = form.patientId.trim() || autoPatientId || "P201";
-
-            // 1. Patient Demographics Payload for Patient Service
-            const patientPayload = {
-                patientId: finalPatientId,
-                firstName: form.firstName.trim(),
-                lastName: form.lastName.trim(),
-                email: form.email.trim(),
-                phone: numericPhone,
-                gender: form.gender || "Male",
-                password: "Patient@123",
-                address: form.address || "Healthcare System",
-                dob: isoDob
+            const finalDoctorId = doctor.doctorId.trim() || autoDoctorId || "D101";
+            const payload = {
+                ...doctor,
+                doctorId: finalDoctorId,
+                doctorName: doctor.doctorName.trim(),
+                email: doctor.email.trim(),
+                experience: doctor.experience ? Number(doctor.experience) : 0,
+                status: "ACTIVE"
             };
 
-            // 2. Digital Twin Vitals Payload for HealthTwin Service
-            const hVal = form.height && !isNaN(Number(form.height)) ? Number(form.height) : 175.0;
-            const wVal = form.weight && !isNaN(Number(form.weight)) ? Number(form.weight) : 70.0;
-            const calcBmi = hVal > 0 ? Number((wVal / Math.pow(hVal / 100, 2)).toFixed(1)) : 22.9;
-
-            const twinPayload = {
-                patientId: finalPatientId,
-                height: hVal,
-                weight: wVal,
-                bloodGroup: form.bloodGroup || "O+",
-                allergies: [],
-                chronicDiseases: [],
-                currentMedications: [],
-                riskScore: 15.0,
-
-                // Heart AI Model Defaults
-                chestPainType: 0,
-                cp: 0,
-                cholesterol: 200,
-                chol: 200,
-                fastingBS: 0,
-                fbs: 0,
-                restECG: 0,
-                restecg: 0,
-                maxHeartRate: 150,
-                thalach: 150,
-                exerciseAngina: 0,
-                exang: 0,
-                oldpeak: 1.0,
-                slope: 1,
-                majorVessels: 0,
-                ca: 0,
-                thalassemia: 1,
-                thal: 1,
-
-                // Diabetes AI Model Defaults
-                hypertension: 0,
-                heartDisease: 0,
-                heart_disease: 0,
-                smokingHistory: 0,
-                smoking_history: 0,
-                bmi: calcBmi,
-                hba1cLevel: 5.7,
-                HbA1c_level: 5.7,
-                bloodGlucoseLevel: 100,
-                blood_glucose_level: 100
-            };
-
-            // 1. Send patient record to Patient Service (MongoDB)
-            try {
-                await addPatient(patientPayload);
-            } catch (patientErr) {
-                console.error("Failed to add patient:", patientErr);
-                const status = patientErr.response?.status;
-                const backendError = typeof patientErr.response?.data === 'string'
-                    ? patientErr.response.data
-                    : patientErr.response?.data?.message || patientErr.response?.data?.error || patientErr.message;
-
-                if (status === 500) {
-                    console.warn("Backend 500 received, navigating to patients list.");
-                } else {
-                    setError(backendError || "Failed to register patient profile.");
-                    setSubmitting(false);
-                    return;
-                }
-            }
-
-            // 2. Send twin vitals to HealthTwin Service
-            try {
-                await createHealthTwin(twinPayload);
-            } catch {
-                try {
-                    await updateHealthTwin(finalPatientId, twinPayload);
-                } catch (twinErr) {
-                    console.warn("Could not post/update twin record directly (may be auto-created by backend):", twinErr);
-                }
-            }
-
-            // 3. Log Keycloak Patient Registration in Audit Service Microservice
-            try {
-                await logKeycloakRegistration({
-                    patientId: finalPatientId,
-                    email: form.email.trim(),
-                    firstName: form.firstName.trim(),
-                    lastName: form.lastName.trim(),
-                    registeredBy: "Admin (admin@medisphere.com)",
-                    status: "SUCCESS",
-                    details: `Keycloak login credentials & realm user account created for patient ${form.firstName.trim()} ${form.lastName.trim()} (${finalPatientId})`
-                });
-            } catch (auditErr) {
-                console.warn("Could not dispatch Keycloak audit log:", auditErr);
-            }
-
-            // 4. Always close form and navigate back to patients list after adding
-            navigate("/admin/patients");
+            await addDoctor(payload);
+            navigate("/admin/doctors");
         } catch (err) {
-            console.error("Unexpected error in patient registration flow:", err);
-            navigate("/admin/patients");
+            console.error("Failed to add doctor:", err);
+            setError(err.response?.data?.message || "Failed to register doctor profile.");
         } finally {
             setSubmitting(false);
         }
@@ -295,7 +192,7 @@ function AddPatient() {
                     <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
                         <button
                             type="button"
-                            onClick={() => navigate("/admin/patients")}
+                            onClick={() => navigate("/admin/doctors")}
                             style={{
                                 width: "44px",
                                 height: "44px",
@@ -309,7 +206,7 @@ function AddPatient() {
                                 cursor: "pointer",
                                 flexShrink: 0
                             }}
-                            title="Back to Patients"
+                            title="Back to Doctors"
                         >
                             <ArrowLeft size={20} />
                         </button>
@@ -329,7 +226,7 @@ function AddPatient() {
                                     alignItems: "center",
                                     gap: "6px"
                                 }}>
-                                    <ShieldCheck size={13} style={{ color: "#60a5fa" }} /> Keycloak SSO & FHIR Integration
+                                    <ShieldCheck size={13} style={{ color: "#60a5fa" }} /> Keycloak SSO & Clinical Integration
                                 </span>
                                 <span style={{
                                     backgroundColor: "rgba(16, 185, 129, 0.2)",
@@ -345,14 +242,14 @@ function AddPatient() {
                                     alignItems: "center",
                                     gap: "6px"
                                 }}>
-                                    <Zap size={13} style={{ color: "#34d399" }} /> AI Twin Synced
+                                    <Zap size={13} style={{ color: "#34d399" }} /> Doctor Profile Synced
                                 </span>
                             </div>
                             <h1 style={{ color: "#ffffff", fontSize: "24px", fontWeight: "800", margin: 0, lineHeight: 1.2 }}>
-                                Register New Patient Profile
+                                Register New Doctor Profile
                             </h1>
                             <p style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "500", margin: "4px 0 0 0" }}>
-                                Configure patient credentials, identity profile, and initial Digital Twin vitals
+                                Configure doctor credentials, clinical specialization, and department assignments
                             </p>
                         </div>
                     </div>
@@ -402,7 +299,7 @@ function AddPatient() {
                                 )}
                             </AnimatePresence>
 
-                            {/* Section 1: Patient Identification */}
+                            {/* Section 1: Doctor Identification */}
                             <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-5">
                                 <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100">
                                     <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0 shadow-xs">
@@ -410,7 +307,7 @@ function AddPatient() {
                                     </div>
                                     <div>
                                         <h3 className="text-base font-bold text-slate-900 leading-snug flex items-center gap-2">
-                                            Patient Identification
+                                            Doctor Identification
                                             <span className="text-[10px] uppercase font-extrabold tracking-wider text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md">
                                                 Required
                                             </span>
@@ -422,10 +319,10 @@ function AddPatient() {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                                    {/* Patient ID */}
+                                    {/* Doctor ID */}
                                     <div>
                                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            Patient ID <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                                            Doctor ID <span className="text-slate-400 font-normal lowercase">(optional)</span>
                                         </label>
                                         <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                                             <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
@@ -433,20 +330,20 @@ function AddPatient() {
                                             </div>
                                             <input
                                                 type="text"
-                                                name="patientId"
-                                                value={form.patientId}
+                                                name="doctorId"
+                                                value={doctor.doctorId}
                                                 onChange={handleChange}
-                                                placeholder={`e.g. ${autoPatientId}`}
+                                                placeholder={`e.g. ${autoDoctorId}`}
                                                 className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
                                             />
                                         </div>
                                         <p className="text-[11px] text-slate-400 mt-1.5 font-medium">Auto-generated if blank</p>
                                     </div>
 
-                                    {/* First Name */}
+                                    {/* Doctor Name */}
                                     <div>
                                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            First Name <span className="text-rose-500">*</span>
+                                            Doctor Name <span className="text-rose-500">*</span>
                                         </label>
                                         <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                                             <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
@@ -454,40 +351,41 @@ function AddPatient() {
                                             </div>
                                             <input
                                                 type="text"
-                                                name="firstName"
-                                                value={form.firstName}
+                                                name="doctorName"
+                                                value={doctor.doctorName}
                                                 onChange={handleChange}
                                                 required
-                                                placeholder="Enter first name"
+                                                placeholder="e.g. Dr. Sarah Jenkins"
                                                 className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
                                             />
                                         </div>
                                     </div>
 
-                                    {/* Last Name */}
+                                    {/* Gender */}
                                     <div>
                                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            Last Name <span className="text-rose-500">*</span>
+                                            Gender
                                         </label>
                                         <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                                             <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
-                                                <UserCheck size={18} />
+                                                <Users size={18} />
                                             </div>
-                                            <input
-                                                type="text"
-                                                name="lastName"
-                                                value={form.lastName}
+                                            <select
+                                                name="gender"
+                                                value={doctor.gender}
                                                 onChange={handleChange}
-                                                required
-                                                placeholder="Enter last name"
-                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
-                                            />
+                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none cursor-pointer"
+                                            >
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Section 2: Contact Information */}
+                            {/* Section 2: Contact & Authentication */}
                             <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-5">
                                 <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100">
                                     <div className="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 shadow-xs">
@@ -516,10 +414,10 @@ function AddPatient() {
                                             <input
                                                 type="email"
                                                 name="email"
-                                                value={form.email}
+                                                value={doctor.email}
                                                 onChange={handleChange}
                                                 required
-                                                placeholder="patient@example.com"
+                                                placeholder="sarah.jenkins@hospital.com"
                                                 className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
                                             />
                                         </div>
@@ -537,9 +435,9 @@ function AddPatient() {
                                             <input
                                                 type="tel"
                                                 name="phone"
-                                                value={form.phone}
+                                                value={doctor.phone}
                                                 onChange={handleChange}
-                                                placeholder="+1 (555) 019-2834"
+                                                placeholder="9808707606"
                                                 className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
                                             />
                                         </div>
@@ -547,138 +445,119 @@ function AddPatient() {
                                 </div>
                             </div>
 
-                            {/* Section 3: Physical Demographics & Vitals */}
+                            {/* Section 3: Clinical Profile & Specialization */}
                             <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-5">
-                                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                                    <div className="flex items-center gap-3.5">
-                                        <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 shadow-xs">
-                                            <Heart size={20} />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-base font-bold text-slate-900 leading-snug">
-                                                Physical Demographics & Vitals
-                                            </h3>
-                                            <p className="text-xs text-slate-500 font-medium mt-0.5">
-                                                Baseline physical measurements for AI Digital Twin initialization
-                                            </p>
-                                        </div>
+                                <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100">
+                                    <div className="w-10 h-10 rounded-2xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600 shrink-0 shadow-xs">
+                                        <Stethoscope size={20} />
                                     </div>
-                                    {liveBmi && (
-                                        <div className="hidden sm:flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0">
-                                            <Activity size={14} />
-                                            <span>BMI: {liveBmi}</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Gender, Blood Group, DOB */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                                    {/* Gender */}
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            Gender
-                                        </label>
-                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-rose-600 focus-within:ring-2 focus-within:ring-rose-500/20 transition-all overflow-hidden">
-                                            <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
-                                                <Users size={18} />
-                                            </div>
-                                            <select
-                                                name="gender"
-                                                value={form.gender}
-                                                onChange={handleChange}
-                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none cursor-pointer"
-                                            >
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    {/* Blood Group */}
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            Blood Group
-                                        </label>
-                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-rose-600 focus-within:ring-2 focus-within:ring-rose-500/20 transition-all overflow-hidden">
-                                            <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
-                                                <Droplets size={18} />
-                                            </div>
-                                            <select
-                                                name="bloodGroup"
-                                                value={form.bloodGroup}
-                                                onChange={handleChange}
-                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none cursor-pointer"
-                                            >
-                                                <option value="O+">O+</option>
-                                                <option value="O-">O-</option>
-                                                <option value="A+">A+</option>
-                                                <option value="A-">A-</option>
-                                                <option value="B+">B+</option>
-                                                <option value="B-">B-</option>
-                                                <option value="AB+">AB+</option>
-                                                <option value="AB-">AB-</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    {/* Date of Birth */}
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            Date of Birth
-                                        </label>
-                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-rose-600 focus-within:ring-2 focus-within:ring-rose-500/20 transition-all overflow-hidden">
-                                            <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
-                                                <Calendar size={18} />
-                                            </div>
-                                            <input
-                                                type="date"
-                                                name="dob"
-                                                value={form.dob}
-                                                onChange={handleChange}
-                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none"
-                                            />
-                                        </div>
+                                        <h3 className="text-base font-bold text-slate-900 leading-snug">
+                                            Clinical Specialization & Qualifications
+                                        </h3>
+                                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                            Department assignment, medical credentials, and duty schedule
+                                        </p>
                                     </div>
                                 </div>
 
-                                {/* Height & Weight */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-1">
-                                    {/* Height */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    {/* Department */}
                                     <div>
                                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            Height <span className="text-slate-400 font-normal lowercase">(cm)</span>
+                                            Department
                                         </label>
-                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-rose-600 focus-within:ring-2 focus-within:ring-rose-500/20 transition-all overflow-hidden">
+                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-500/20 transition-all overflow-hidden">
                                             <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
-                                                <Ruler size={18} />
+                                                <Building2 size={18} />
                                             </div>
                                             <input
-                                                type="number"
-                                                name="height"
-                                                value={form.height}
+                                                type="text"
+                                                name="department"
+                                                value={doctor.department}
                                                 onChange={handleChange}
-                                                placeholder="175"
+                                                placeholder="e.g. Cardiology"
                                                 className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
                                             />
                                         </div>
                                     </div>
 
-                                    {/* Weight */}
+                                    {/* Specialization */}
                                     <div>
                                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                                            Weight <span className="text-slate-400 font-normal lowercase">(kg)</span>
+                                            Specialization
                                         </label>
-                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-rose-600 focus-within:ring-2 focus-within:ring-rose-500/20 transition-all overflow-hidden">
+                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-500/20 transition-all overflow-hidden">
                                             <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
-                                                <Scale size={18} />
+                                                <Stethoscope size={18} />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="specialization"
+                                                value={doctor.specialization}
+                                                onChange={handleChange}
+                                                placeholder="e.g. Pediatric Cardiology"
+                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Qualification */}
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                                            Qualification
+                                        </label>
+                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-500/20 transition-all overflow-hidden">
+                                            <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
+                                                <GraduationCap size={18} />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="qualification"
+                                                value={doctor.qualification}
+                                                onChange={handleChange}
+                                                placeholder="e.g. MD, DM Cardiology"
+                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Experience */}
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                                            Experience <span className="text-slate-400 font-normal lowercase">(Years)</span>
+                                        </label>
+                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-500/20 transition-all overflow-hidden">
+                                            <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
+                                                <Briefcase size={18} />
                                             </div>
                                             <input
                                                 type="number"
-                                                name="weight"
-                                                value={form.weight}
+                                                name="experience"
+                                                value={doctor.experience}
                                                 onChange={handleChange}
-                                                placeholder="70"
+                                                placeholder="e.g. 12"
+                                                min="0"
+                                                className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Availability */}
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                                            Availability / Schedule
+                                        </label>
+                                        <div className="flex items-center h-12 bg-slate-50/70 border border-slate-300 rounded-xl focus-within:bg-white focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-500/20 transition-all overflow-hidden">
+                                            <div className="w-11 h-full flex items-center justify-center bg-slate-100 border-r border-slate-200 text-slate-500 shrink-0">
+                                                <Clock size={18} />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="availability"
+                                                value={doctor.availability}
+                                                onChange={handleChange}
+                                                placeholder="10:00 AM - 06:00 PM"
                                                 className="w-full px-3 text-sm font-semibold text-slate-900 bg-transparent outline-none placeholder:text-slate-400"
                                             />
                                         </div>
@@ -687,13 +566,13 @@ function AddPatient() {
                             </div>
                         </div>
 
-                        {/* Right Column: Live Patient Digital Twin Card Preview (Col Span 5 - Sticky) */}
+                        {/* Right Column: Live Doctor Profile Preview Card (Col Span 5 - Sticky) */}
                         <div className="lg:col-span-5 lg:sticky lg:top-6 space-y-6">
                             <div style={{ backgroundColor: "#0f172a", border: "1px solid #334155", borderRadius: "24px", color: "#ffffff", padding: "28px", boxShadow: "0 20px 40px -10px rgba(15, 23, 42, 0.35)" }} className="space-y-6">
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", borderBottom: "1px solid #334155", paddingBottom: "16px" }}>
                                     <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0, flex: 1, color: "#818cf8", fontSize: "12px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                                        <Cpu size={16} style={{ flexShrink: 0 }} />
-                                        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Live Digital Twin Preview</span>
+                                        <Stethoscope size={16} style={{ flexShrink: 0 }} />
+                                        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Live Doctor Profile Preview</span>
                                     </div>
                                     <span style={{ backgroundColor: "rgba(16, 185, 129, 0.15)", color: "#34d399", border: "1px solid rgba(52, 211, 153, 0.3)", fontSize: "11px", fontWeight: "800", padding: "3px 10px", borderRadius: "20px", flexShrink: 0, whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: "6px" }}>
                                         <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#34d399" }} className="animate-pulse" />
@@ -701,66 +580,64 @@ function AddPatient() {
                                     </span>
                                 </div>
 
-                                {/* Patient Profile Card Head */}
+                                {/* Doctor Profile Card Head */}
                                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                                     <div style={{ width: "64px", height: "64px", borderRadius: "16px", background: "linear-gradient(135deg, #4f46e5 0%, #2563eb 50%, #06b6d4 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontSize: "20px", fontWeight: "900", boxShadow: "0 6px 16px rgba(79, 70, 229, 0.35)", flexShrink: 0 }}>
-                                        {form.firstName ? form.firstName[0].toUpperCase() : "P"}
-                                        {form.lastName ? form.lastName[0].toUpperCase() : "T"}
+                                        {doctor.doctorName ? doctor.doctorName.replace(/^Dr\.\s*/i, "").charAt(0).toUpperCase() : "D"}
+                                        {doctor.doctorName && doctor.doctorName.replace(/^Dr\.\s*/i, "").split(" ")[1] ? doctor.doctorName.replace(/^Dr\.\s*/i, "").split(" ")[1].charAt(0).toUpperCase() : "R"}
                                     </div>
                                     <div style={{ minWidth: 0, flex: 1 }}>
                                         <h3 style={{ fontSize: "18px", fontWeight: "800", color: "#ffffff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                            {form.firstName || form.lastName
-                                                ? `${form.firstName} ${form.lastName}`.trim()
-                                                : "Patient Full Name"}
+                                            {doctor.doctorName || "Dr. Sarah Jenkins"}
                                         </h3>
                                         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px" }}>
                                             <span style={{ fontSize: "11px", fontFamily: "monospace", fontWeight: "700", color: "#cbd5e1", backgroundColor: "#1e293b", border: "1px solid #475569", padding: "2px 8px", borderRadius: "6px" }}>
-                                                ID: {form.patientId || autoPatientId || "P201"}
+                                                ID: {doctor.doctorId || autoDoctorId || "D101"}
                                             </span>
                                             <span style={{ fontSize: "11px", fontWeight: "700", color: "#a5b4fc", backgroundColor: "rgba(99, 102, 241, 0.2)", border: "1px solid rgba(165, 180, 252, 0.3)", padding: "2px 8px", borderRadius: "6px" }}>
-                                                {form.bloodGroup || "O+"}
+                                                {doctor.department || "Cardiology"}
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Demographics & Vitals Live Summary Grid */}
+                                {/* Clinical Summary Grid */}
                                 <div className="grid grid-cols-2 gap-3 pt-2">
                                     <div style={{ backgroundColor: "rgba(30, 41, 59, 0.6)", border: "1px solid rgba(255, 255, 255, 0.1)", borderRadius: "14px", padding: "12px" }}>
-                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Gender & Age</span>
+                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Gender & Exp</span>
                                         <span style={{ fontSize: "13px", fontWeight: "700", color: "#ffffff", marginTop: "2px", display: "block" }}>
-                                            {form.gender} {liveAge !== null ? `(${liveAge} yrs)` : ""}
+                                            {doctor.gender} ({doctor.experience || 0} yrs)
                                         </span>
                                     </div>
 
                                     <div style={{ backgroundColor: "rgba(30, 41, 59, 0.6)", border: "1px solid rgba(255, 255, 255, 0.1)", borderRadius: "14px", padding: "12px" }}>
-                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Calculated BMI</span>
-                                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#34d399", marginTop: "2px", display: "block" }}>
-                                            {liveBmi ? `${liveBmi} kg/m²` : "22.9 (Default)"}
+                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Specialization</span>
+                                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#34d399", marginTop: "2px", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                            {doctor.specialization || "General Medicine"}
                                         </span>
                                     </div>
 
                                     <div style={{ backgroundColor: "rgba(30, 41, 59, 0.6)", border: "1px solid rgba(255, 255, 255, 0.1)", borderRadius: "14px", padding: "12px" }}>
-                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Height</span>
-                                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#ffffff", marginTop: "2px", display: "block" }}>
-                                            {form.height ? `${form.height} cm` : "175 cm"}
+                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Qualification</span>
+                                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#ffffff", marginTop: "2px", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                            {doctor.qualification || "MD, DM Cardiology"}
                                         </span>
                                     </div>
 
                                     <div style={{ backgroundColor: "rgba(30, 41, 59, 0.6)", border: "1px solid rgba(255, 255, 255, 0.1)", borderRadius: "14px", padding: "12px" }}>
-                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Weight</span>
-                                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#ffffff", marginTop: "2px", display: "block" }}>
-                                            {form.weight ? `${form.weight} kg` : "70 kg"}
+                                        <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8", display: "block" }}>Schedule</span>
+                                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#ffffff", marginTop: "2px", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                            {doctor.availability || "10:00 AM - 06:00 PM"}
                                         </span>
                                     </div>
                                 </div>
 
-                                {/* Keycloak & AI Microservices Pipeline Status */}
+                                {/* Automated Pipeline Actions */}
                                 <div style={{ borderTop: "1px solid #334155", paddingTop: "16px" }} className="space-y-2.5">
                                     <div style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#94a3b8", marginBottom: "8px" }}>
                                         Automated Pipeline Actions
                                     </div>
-                                    <div style={{ display: "flex", alignItems: "center", justifyBetween: "space-between", gap: "12px", backgroundColor: "rgba(2, 6, 23, 0.6)", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", backgroundColor: "rgba(2, 6, 23, 0.6)", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
                                         <span style={{ display: "flex", alignItems: "center", gap: "8px", color: "#cbd5e1", fontSize: "12px", fontWeight: "500", minWidth: 0, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                             <Fingerprint size={14} style={{ color: "#818cf8", flexShrink: 0 }} />
                                             Keycloak Realm SSO Account
@@ -768,12 +645,12 @@ function AddPatient() {
                                         <span style={{ color: "#34d399", fontSize: "12px", fontWeight: "800", flexShrink: 0, whiteSpace: "nowrap" }}>Auto-Provision</span>
                                     </div>
 
-                                    <div style={{ display: "flex", alignItems: "center", justifyBetween: "space-between", gap: "12px", backgroundColor: "rgba(2, 6, 23, 0.6)", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", backgroundColor: "rgba(2, 6, 23, 0.6)", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
                                         <span style={{ display: "flex", alignItems: "center", gap: "8px", color: "#cbd5e1", fontSize: "12px", fontWeight: "500", minWidth: 0, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                            <ActivitySquare size={14} style={{ color: "#60a5fa", flexShrink: 0 }} />
-                                            Health Twin Baseline Vector
+                                            <Stethoscope size={14} style={{ color: "#60a5fa", flexShrink: 0 }} />
+                                            Clinical Credentials Vector
                                         </span>
-                                        <span style={{ color: "#34d399", fontSize: "12px", fontWeight: "800", flexShrink: 0, whiteSpace: "nowrap" }}>AI Seeded</span>
+                                        <span style={{ color: "#34d399", fontSize: "12px", fontWeight: "800", flexShrink: 0, whiteSpace: "nowrap" }}>Verified</span>
                                     </div>
                                 </div>
                             </div>
@@ -820,7 +697,7 @@ function AddPatient() {
                         <div style={{ display: "flex", alignItems: "center", gap: "12px", flexShrink: 0, marginLeft: "auto" }}>
                             <button
                                 type="button"
-                                onClick={() => navigate("/admin/patients")}
+                                onClick={() => navigate("/admin/doctors")}
                                 style={{
                                     padding: "10px 24px",
                                     borderRadius: "12px",
@@ -860,12 +737,12 @@ function AddPatient() {
                                 {submitting ? (
                                     <>
                                         <Loader2 size={16} className="animate-spin" />
-                                        <span>Registering Profile...</span>
+                                        <span>Registering Doctor...</span>
                                     </>
                                 ) : (
                                     <>
                                         <UserPlus size={16} />
-                                        <span>Register Patient Profile</span>
+                                        <span>Register Doctor Profile</span>
                                     </>
                                 )}
                             </button>
@@ -877,4 +754,4 @@ function AddPatient() {
     );
 }
 
-export default AddPatient;
+export default AddDoctor;

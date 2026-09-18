@@ -1,4 +1,4 @@
-﻿package com.infosys.SIMULATION_SERVICE.client;
+package com.infosys.SIMULATION_SERVICE.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

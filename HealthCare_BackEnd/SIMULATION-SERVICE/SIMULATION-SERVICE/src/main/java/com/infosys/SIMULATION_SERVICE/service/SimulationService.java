@@ -1,4 +1,4 @@
-﻿package com.infosys.SIMULATION_SERVICE.service;
+package com.infosys.SIMULATION_SERVICE.service;
 
 import java.time.Instant;
 import java.util.List;

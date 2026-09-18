@@ -126,14 +126,14 @@ const PatientDiabetesPrediction = () => {
                 <motion.div variants={itemVariants} className="page-header">
                     <div className="page-header__info">
                         <div className="page-status-chip page-status-chip--teal">
-                            <Brain size={14} /> AI Insights
+                            <Brain size={14} /> Clinical Insights
                         </div>
                         <h1 className="page-title">My Diabetes Predictions</h1>
-                        <p className="page-subtitle">Personalized clinical risk predictions powered by HealthCare AI — review the latest analysis, confidence, and explainable factors.</p>
+                        <p className="page-subtitle">Personalized clinical risk predictions — review the latest analysis, confidence, and explainable factors.</p>
                     </div>
                     <div className="page-header__actions">
                         <div className="page-meta">
-                            <HeartPulse size={15} /> Diabetes Prediction Model
+                            <HeartPulse size={15} /> Diabetes Model
                         </div>
                     </div>
                 </motion.div>
@@ -149,7 +149,7 @@ const PatientDiabetesPrediction = () => {
                             </div>
                             <div className="text-center">
                                 <p className="font-semibold text-slate-700">Loading predictions...</p>
-                                <p className="text-sm text-slate-400">Fetching your latest AI analysis</p>
+                                <p className="text-sm text-slate-400">Fetching your latest clinical analysis</p>
                             </div>
                         </div>
                     </motion.div>
@@ -162,7 +162,7 @@ const PatientDiabetesPrediction = () => {
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-extrabold text-slate-900">Latest Prediction</h3>
-                                    <p className="text-xs font-semibold text-slate-500">Most recent AI-driven clinical assessment</p>
+                                    <p className="text-xs font-semibold text-slate-500">Most recent clinical assessment</p>
                                 </div>
                             </div>
                             <LatestPredictionCard
@@ -181,15 +181,9 @@ const PatientDiabetesPrediction = () => {
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-semibold text-slate-900">Prediction History</h3>
-                                        <p className="text-sm text-slate-500">Track your AI prediction history over time</p>
+                                        <p className="text-sm text-slate-500">Track your prediction history over time</p>
                                     </div>
                                 </div>
-                                {history.length > 0 && (
-                                    <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
-                                        <Sparkles size={12} />
-                                        <span>{history.length} prediction{history.length !== 1 ? "s" : ""}</span>
-                                    </div>
-                                )}
                             </div>
 
                             {history.length === 0 ? (
@@ -199,7 +193,7 @@ const PatientDiabetesPrediction = () => {
                                             <History size={36} className="text-slate-300" />
                                         </div>
                                         <div className="font-semibold text-slate-700 text-lg mb-1">No Prediction History</div>
-                                        <p className="text-sm text-slate-400">Your previous AI predictions will appear here once generated.</p>
+                                        <p className="text-sm text-slate-400">Your previous predictions will appear here once generated.</p>
                                     </div>
                                 </div>
                             ) : (

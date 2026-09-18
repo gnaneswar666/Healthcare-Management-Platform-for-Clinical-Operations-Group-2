@@ -419,38 +419,90 @@ function EditHealthTwin() {
                 className="w-full max-w-6xl mx-auto space-y-6 p-2 sm:p-4 pb-28"
             >
                 {/* Enterprise Dark Header Banner */}
-                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 md:p-8 text-white shadow-lg flex flex-wrap items-center justify-between gap-6">
-                    <div className="flex items-center gap-4">
+                <div
+                    style={{
+                        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+                        padding: "24px 32px",
+                        borderRadius: "20px",
+                        border: "1px solid #334155",
+                        boxShadow: "0 10px 30px -5px rgba(15, 23, 42, 0.3)",
+                        display: "flex",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "16px",
+                        color: "#ffffff"
+                    }}
+                >
+                    <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
                         <button
                             type="button"
                             onClick={() => navigate("/admin/patients")}
-                            className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-all cursor-pointer shrink-0 active:scale-95"
+                            style={{
+                                width: "44px",
+                                height: "44px",
+                                borderRadius: "12px",
+                                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                border: "1px solid rgba(255, 255, 255, 0.2)",
+                                color: "#ffffff",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                cursor: "pointer",
+                                flexShrink: 0
+                            }}
                             title="Back to Patients"
                         >
-                            <ArrowLeft size={18} />
+                            <ArrowLeft size={20} />
                         </button>
-                        <div>
-                            <div className="inline-flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 px-3 py-1 rounded-md text-xs font-semibold mb-2">
-                                <HeartPulse size={14} />
-                                <span>FHIR Digital Twin & AI Model Configuration</span>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                                <span style={{
+                                    backgroundColor: "rgba(6, 182, 212, 0.2)",
+                                    color: "#67e8f9",
+                                    border: "1px solid rgba(103, 232, 249, 0.3)",
+                                    fontSize: "11px",
+                                    fontWeight: "800",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.05em",
+                                    padding: "2px 10px",
+                                    borderRadius: "20px",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "6px"
+                                }}>
+                                    <HeartPulse size={13} style={{ color: "#22d3ee" }} /> FHIR Digital Twin & AI Model Configuration
+                                </span>
                             </div>
-                            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-snug">
+                            <h1 style={{ color: "#ffffff", fontSize: "24px", fontWeight: "800", margin: 0, lineHeight: 1.2 }}>
                                 Edit Health Twin: {patientId}
                             </h1>
-                            <p className="text-xs md:text-sm text-slate-300 mt-1 font-medium">
+                            <p style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "500", margin: "4px 0 0 0" }}>
                                 Configure physical measurements, Heart AI parameters & Diabetes AI parameters
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 bg-slate-800/90 border border-slate-700/90 px-4 py-2.5 rounded-lg text-xs text-slate-200 font-semibold shadow-inner">
-                        <CheckCircle2 size={16} className="text-emerald-400" />
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        backgroundColor: "rgba(30, 41, 59, 0.9)",
+                        border: "1px solid rgba(255, 255, 255, 0.15)",
+                        padding: "8px 16px",
+                        borderRadius: "12px",
+                        fontSize: "12px",
+                        fontWeight: "700",
+                        color: "#f8fafc",
+                        flexShrink: 0
+                    }}>
+                        <CheckCircle2 size={16} style={{ color: "#34d399" }} />
                         <span>AI Prediction Models Ready</span>
                     </div>
                 </div>
 
                 {loading ? (
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm py-20 text-center flex flex-col items-center justify-center gap-3">
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "20px", padding: "60px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
                         <Loader2 size={32} className="animate-spin text-cyan-600" />
                         <p className="text-sm font-semibold text-slate-500">Fetching Health Twin details...</p>
                     </div>
@@ -471,7 +523,7 @@ function EditHealthTwin() {
                         </AnimatePresence>
 
                         {/* Section 1 Card: Patient & Blood Profile */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 space-y-6 shadow-xs">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
                             <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
                                 <div className="w-10 h-10 rounded-lg bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600 shrink-0 shadow-xs">
                                     <HeartPulse size={20} />
@@ -537,7 +589,7 @@ function EditHealthTwin() {
                         </div>
 
                         {/* Section 2 Card: Body Measurements & Risk Score */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 space-y-6 shadow-xs">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
                             <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
                                 <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0 shadow-xs">
                                     <Ruler size={20} />
@@ -612,17 +664,17 @@ function EditHealthTwin() {
                         </div>
 
                         {/* Section 2.5 Card: Live Vital Signs Telemetry */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 space-y-6 shadow-xs">
-                            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                                <div className="flex items-center gap-3">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", borderBottom: "1px solid #f1f5f9", paddingBottom: "16px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
                                     <div className="w-10 h-10 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 shadow-xs">
                                         <HeartPulse size={20} />
                                     </div>
-                                    <div>
-                                        <h3 className="text-base font-bold text-slate-900 leading-snug">
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                        <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
                                             Live Vital Signs Telemetry
                                         </h3>
-                                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                        <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", margin: "4px 0 0 0" }}>
                                             Configure real-time physiological vitals (Heart rate, SpO₂, Temperature & Blood pressure)
                                         </p>
                                     </div>
@@ -631,7 +683,22 @@ function EditHealthTwin() {
                                     type="button"
                                     onClick={handleSimulateVitals}
                                     disabled={simulatingVitals}
-                                    className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm disabled:opacity-50"
+                                    style={{
+                                        padding: "8px 16px",
+                                        borderRadius: "10px",
+                                        backgroundColor: "#dc2626",
+                                        color: "#ffffff",
+                                        border: "none",
+                                        fontSize: "12px",
+                                        fontWeight: "800",
+                                        cursor: "pointer",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "6px",
+                                        flexShrink: 0,
+                                        whiteSpace: "nowrap",
+                                        boxShadow: "0 2px 8px rgba(220, 38, 38, 0.25)"
+                                    }}
                                 >
                                     <Sparkles size={14} className={simulatingVitals ? "animate-spin" : ""} />
                                     <span>{simulatingVitals ? "Simulating..." : "Simulate Live Vitals"}</span>
@@ -726,39 +793,51 @@ function EditHealthTwin() {
                             </div>
                         </div>
 
-                        {/* NEW SECTION 3: HEART DISEASE AI MODEL PARAMETERS */}
-                        <div className="bg-gradient-to-br from-rose-50/40 via-white to-red-50/30 border border-rose-200/90 rounded-xl p-6 md:p-8 space-y-6 shadow-sm">
-                            <div className="flex items-center justify-between pb-4 border-b border-rose-100">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-lg bg-rose-600 border border-rose-700 flex items-center justify-center text-white shrink-0 shadow-md">
+                        {/* SECTION 3: HEART DISEASE AI MODEL PARAMETERS */}
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", borderBottom: "1px solid #f1f5f9", paddingBottom: "16px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
+                                    <div style={{ width: "42px", height: "42px", borderRadius: "12px", backgroundColor: "#dc2626", border: "1px solid #b91c1c", color: "#ffffff", display: "flex", alignItems: "center", justifyCenter: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(220, 38, 38, 0.25)" }}>
                                         <Heart size={20} />
                                     </div>
-                                    <div>
-                                        <div className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-rose-600 bg-rose-100 px-2 py-0.5 rounded mb-0.5">
-                                            <Brain size={12} /> Heart AI Model Features
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                        <div style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px", fontWeight: "800", textTransform: "uppercase", color: "#e11d48", backgroundColor: "#ffe4e6", padding: "2px 8px", borderRadius: "4px", marginBottom: "4px" }}>
+                                            <Brain size={12} /> Heart Model Features
                                         </div>
-                                        <h3 className="text-base font-bold text-slate-900 leading-snug">
-                                            Heart Disease AI Model Clinical Parameters
+                                        <h3 style={{ fontSize: "18px", fontWeight: "800", color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
+                                            Heart Disease Clinical Features
                                         </h3>
-                                        <p className="text-xs text-slate-500 font-medium mt-0.5">
-                                            Direct clinical data used for Heart AI Disease prediction & SHAP explainability
+                                        <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", margin: "4px 0 0 0" }}>
+                                            Direct clinical data used for Heart Disease prediction & SHAP explainability
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                                     <button
                                         type="button"
                                         onClick={handleSimulateHeart}
                                         disabled={simulatingHeart}
-                                        className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm disabled:opacity-50"
+                                        style={{
+                                            padding: "8px 16px",
+                                            borderRadius: "10px",
+                                            backgroundColor: "#dc2626",
+                                            color: "#ffffff",
+                                            border: "none",
+                                            fontSize: "12px",
+                                            fontWeight: "800",
+                                            cursor: "pointer",
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: "6px",
+                                            flexShrink: 0,
+                                            whiteSpace: "nowrap",
+                                            boxShadow: "0 2px 8px rgba(220, 38, 38, 0.25)"
+                                        }}
                                     >
                                         <Sparkles size={14} className={simulatingHeart ? "animate-spin" : ""} />
                                         <span>{simulatingHeart ? "Simulating..." : "Simulate Heart Data"}</span>
                                     </button>
-                                    <div className="hidden lg:flex items-center gap-1.5 text-xs text-rose-700 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-lg font-bold">
-                                        <Sparkles size={14} className="text-rose-500" />
-                                        <span>10 Predictors</span>
-                                    </div>
+
                                 </div>
                             </div>
 
@@ -962,39 +1041,51 @@ function EditHealthTwin() {
                             </div>
                         </div>
 
-                        {/* NEW SECTION 4: DIABETES AI MODEL PARAMETERS */}
-                        <div className="bg-gradient-to-br from-blue-50/40 via-white to-cyan-50/30 border border-blue-200/90 rounded-xl p-6 md:p-8 space-y-6 shadow-sm">
-                            <div className="flex items-center justify-between pb-4 border-b border-blue-100">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-lg bg-blue-600 border border-blue-700 flex items-center justify-center text-white shrink-0 shadow-md">
+                        {/* SECTION 4: DIABETES AI MODEL PARAMETERS */}
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", borderBottom: "1px solid #f1f5f9", paddingBottom: "16px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
+                                    <div style={{ width: "42px", height: "42px", borderRadius: "12px", backgroundColor: "#2563eb", border: "1px solid #1d4ed8", color: "#ffffff", display: "flex", alignItems: "center", justifyCenter: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)" }}>
                                         <Activity size={20} />
                                     </div>
-                                    <div>
-                                        <div className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-blue-600 bg-blue-100 px-2 py-0.5 rounded mb-0.5">
-                                            <Brain size={12} /> Diabetes AI Model Features
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                        <div style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px", fontWeight: "800", textTransform: "uppercase", color: "#1d4ed8", backgroundColor: "#dbeafe", padding: "2px 8px", borderRadius: "4px", marginBottom: "4px" }}>
+                                            <Brain size={12} /> Diabetes Model Features
                                         </div>
-                                        <h3 className="text-base font-bold text-slate-900 leading-snug">
-                                            Diabetes AI Model Clinical Parameters
+                                        <h3 style={{ fontSize: "18px", fontWeight: "800", color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
+                                            Diabetes Clinical Features
                                         </h3>
-                                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                        <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", margin: "4px 0 0 0" }}>
                                             Direct clinical metrics used for Diabetes prediction & ANN/RF classification
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                                     <button
                                         type="button"
                                         onClick={handleSimulateDiabetes}
                                         disabled={simulatingDiabetes}
-                                        className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm disabled:opacity-50"
+                                        style={{
+                                            padding: "8px 16px",
+                                            borderRadius: "10px",
+                                            backgroundColor: "#2563eb",
+                                            color: "#ffffff",
+                                            border: "none",
+                                            fontSize: "12px",
+                                            fontWeight: "800",
+                                            cursor: "pointer",
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: "6px",
+                                            flexShrink: 0,
+                                            whiteSpace: "nowrap",
+                                            boxShadow: "0 2px 8px rgba(37, 99, 235, 0.25)"
+                                        }}
                                     >
                                         <Sparkles size={14} className={simulatingDiabetes ? "animate-spin" : ""} />
                                         <span>{simulatingDiabetes ? "Simulating..." : "Simulate Diabetes Data"}</span>
                                     </button>
-                                    <div className="hidden lg:flex items-center gap-1.5 text-xs text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg font-bold">
-                                        <Sparkles size={14} className="text-blue-500" />
-                                        <span>6 Predictors</span>
-                                    </div>
+
                                 </div>
                             </div>
 
@@ -1126,7 +1217,7 @@ function EditHealthTwin() {
                         </div>
 
                         {/* Section 5 Card: Medical Details & Clinical History */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 space-y-6 shadow-xs">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "28px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-6">
                             <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
                                 <div className="w-10 h-10 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center text-violet-600 shrink-0 shadow-xs">
                                     <Pill size={20} />
@@ -1204,12 +1295,35 @@ function EditHealthTwin() {
                             </div>
                         </div>
 
-                        {/* Actions Footer Bar */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-5 flex items-center justify-end gap-3 shadow-xs">
+                        {/* Actions Footer Bar - No Truncation */}
+                        <div
+                            style={{
+                                backgroundColor: "#ffffff",
+                                border: "1px solid #cbd5e1",
+                                borderRadius: "20px",
+                                padding: "18px 32px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "flex-end",
+                                gap: "14px",
+                                boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)"
+                            }}
+                        >
                             <button
                                 type="button"
                                 onClick={() => navigate("/admin/patients")}
-                                className="px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all cursor-pointer active:scale-95 shadow-xs"
+                                style={{
+                                    padding: "10px 24px",
+                                    borderRadius: "12px",
+                                    backgroundColor: "#f1f5f9",
+                                    color: "#334155",
+                                    border: "1px solid #cbd5e1",
+                                    fontSize: "12px",
+                                    fontWeight: "700",
+                                    cursor: "pointer",
+                                    flexShrink: 0,
+                                    whiteSpace: "nowrap"
+                                }}
                             >
                                 Cancel
                             </button>
@@ -1217,7 +1331,22 @@ function EditHealthTwin() {
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-700 hover:to-indigo-700 text-white font-extrabold text-xs shadow-md hover:shadow-cyan-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                style={{
+                                    padding: "10px 28px",
+                                    borderRadius: "12px",
+                                    background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                    color: "#ffffff",
+                                    border: "none",
+                                    fontSize: "12px",
+                                    fontWeight: "800",
+                                    cursor: "pointer",
+                                    flexShrink: 0,
+                                    whiteSpace: "nowrap",
+                                    boxShadow: "0 4px 14px rgba(37, 99, 235, 0.35)",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "8px"
+                                }}
                             >
                                 {saving ? (
                                     <>

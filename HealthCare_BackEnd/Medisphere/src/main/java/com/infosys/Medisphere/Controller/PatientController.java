@@ -73,7 +73,7 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(saved);
     }
-    
+
    // @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
     @PutMapping("/{patientId}")
     public ResponseEntity<Patient> updatePatient(

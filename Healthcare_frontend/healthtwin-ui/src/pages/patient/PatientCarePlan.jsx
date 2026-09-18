@@ -200,9 +200,9 @@ const PatientCarePlan = () => {
                         <div className="flex items-center gap-2.5 mb-1.5">
                             <div className="page-status-chip page-status-chip--teal">
                                 <Sparkles size={14} />
-                                Personal AI Care Companion
+                                Personal Care Companion
                             </div>
-                            <span className="text-xs font-mono font-bold px-3 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="text-xs font-mono font-bold px-3 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                                 Patient ID: {patientId}
                             </span>
                         </div>
@@ -216,18 +216,33 @@ const PatientCarePlan = () => {
                         <button
                             onClick={loadData}
                             disabled={loading}
-                            className="btn btn--primary flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
+                            style={{
+                                padding: "10px 20px",
+                                borderRadius: "12px",
+                                background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                color: "#ffffff",
+                                border: "none",
+                                fontSize: "13px",
+                                fontWeight: "800",
+                                cursor: "pointer",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)",
+                                flexShrink: 0,
+                                whiteSpace: "nowrap"
+                            }}
                         >
                             <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
-                            Sync Care Plan
+                            <span>Sync Care Plan</span>
                         </button>
                     </div>
                 </motion.div>
 
                 {loading ? (
                     <div className="soft-card p-20 text-center flex flex-col items-center justify-center">
-                        <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600 mb-4" />
-                        <h3 className="text-base font-bold text-slate-800">Generating Your AI Care Protocol...</h3>
+                        <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600 mb-4" />
+                        <h3 className="text-base font-bold text-slate-800">Generating Your Care Protocol...</h3>
                         <p className="text-xs text-slate-500 mt-1">Retrieving latest clinical guidelines and vitals log</p>
                     </div>
                 ) : carePlan ? (
@@ -239,10 +254,12 @@ const PatientCarePlan = () => {
                             {/* LEFT (2 COLS): DAILY ADHERENCE CHECKLIST CARD */}
                             <motion.div
                                 variants={itemVariants}
-                                className="lg:col-span-2 soft-card p-6 md:p-7 relative overflow-hidden"
+                                className="lg:col-span-2 p-6 md:p-7 relative overflow-hidden"
                                 style={{
-                                    background: "linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)",
-                                    borderColor: "#a7f3d0"
+                                    backgroundColor: "#ffffff",
+                                    border: "1px solid #cbd5e1",
+                                    borderRadius: "20px",
+                                    boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)"
                                 }}
                             >
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -258,8 +275,19 @@ const PatientCarePlan = () => {
                                         <h2 className="text-2xl font-black text-slate-900">Today's Health Tasks</h2>
                                     </div>
 
-                                    {/* Adherence Score Pill */}
-                                    <div className="flex items-center gap-3 bg-white px-4 py-3 rounded-2xl border border-emerald-200 shadow-sm shrink-0">
+                                    {/* Adherence Score Pill (Unclipped) */}
+                                    <div style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "12px",
+                                        backgroundColor: "#ffffff",
+                                        padding: "10px 16px",
+                                        borderRadius: "14px",
+                                        border: "1px solid #cbd5e1",
+                                        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+                                        flexShrink: 0,
+                                        whiteSpace: "nowrap"
+                                    }}>
                                         <div className="text-right">
                                             <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
                                                 Daily Progress
@@ -269,7 +297,7 @@ const PatientCarePlan = () => {
                                                 <span className="text-xs font-bold text-slate-400">({completedTasksCount}/6)</span>
                                             </div>
                                         </div>
-                                        <div className="h-10 w-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-bold shadow-md">
+                                        <div className="h-10 w-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-bold shadow-md shrink-0">
                                             <CheckCircle2 size={22} />
                                         </div>
                                     </div>
@@ -286,12 +314,12 @@ const PatientCarePlan = () => {
                                 {/* 6 ACTIVITY CHECKBOX CARDS */}
                                 <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
                                     {[
-                                        { key: "medicationCompleted", label: "Take Prescription Rx", sub: "Medication Schedule", icon: Pill, color: "text-blue-600 bg-blue-50 border-blue-100" },
-                                        { key: "exerciseCompleted", label: "30 Min Exercise", sub: "Daily Fitness Goal", icon: Dumbbell, color: "text-amber-600 bg-amber-50 border-amber-100" },
-                                        { key: "bpChecked", label: "Check Blood Pressure", sub: "Cardiovascular Vitals", icon: HeartPulse, color: "text-rose-600 bg-rose-50 border-rose-100" },
-                                        { key: "sugarChecked", label: "Log Blood Glucose", sub: "Glycemic Monitoring", icon: Activity, color: "text-purple-600 bg-purple-50 border-purple-100" },
-                                        { key: "dietCompleted", label: "Follow Diet Plan", sub: "Balanced Nutrition", icon: Utensils, color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
-                                        { key: "sleepCompleted", label: "7+ Hours Sleep", sub: "Rest & Sleep Hygiene", icon: Moon, color: "text-indigo-600 bg-indigo-50 border-indigo-100" }
+                                        { key: "medicationCompleted", label: "Take Prescription Rx", sub: "Medication Schedule", icon: Pill, color: "text-blue-600 bg-blue-50 border-blue-200" },
+                                        { key: "exerciseCompleted", label: "30 Min Exercise", sub: "Daily Fitness Goal", icon: Dumbbell, color: "text-amber-600 bg-amber-50 border-amber-200" },
+                                        { key: "bpChecked", label: "Check Blood Pressure", sub: "Cardiovascular Vitals", icon: HeartPulse, color: "text-rose-600 bg-rose-50 border-rose-200" },
+                                        { key: "sugarChecked", label: "Log Blood Glucose", sub: "Glycemic Monitoring", icon: Activity, color: "text-purple-600 bg-purple-50 border-purple-200" },
+                                        { key: "dietCompleted", label: "Follow Diet Plan", sub: "Balanced Nutrition", icon: Utensils, color: "text-emerald-600 bg-emerald-50 border-emerald-200" },
+                                        { key: "sleepCompleted", label: "7+ Hours Sleep", sub: "Rest & Sleep Hygiene", icon: Moon, color: "text-indigo-600 bg-indigo-50 border-indigo-200" }
                                     ].map(({ key, label, sub, icon: Icon, color }) => {
                                         const checked = checklist[key];
                                         return (
@@ -299,22 +327,27 @@ const PatientCarePlan = () => {
                                                 key={key}
                                                 onClick={() => handleChecklistToggle(key)}
                                                 disabled={updatingProgress}
-                                                className={`p-4 rounded-2xl border text-left transition-all duration-200 flex items-center justify-between group ${
-                                                    checked
-                                                        ? "bg-white border-emerald-400 shadow-md ring-2 ring-emerald-400/30 scale-[1.01]"
-                                                        : "bg-white/90 border-slate-200/90 hover:border-slate-300 hover:bg-white hover:shadow-sm"
-                                                }`}
+                                                style={{
+                                                    backgroundColor: "#ffffff",
+                                                    border: checked ? "2px solid #10b981" : "1px solid #cbd5e1",
+                                                    borderRadius: "14px",
+                                                    padding: "14px 16px",
+                                                    boxShadow: checked ? "0 4px 12px rgba(16, 185, 129, 0.15)" : "0 1px 3px rgba(0, 0, 0, 0.02)",
+                                                    cursor: "pointer",
+                                                    transition: "all 0.2s ease"
+                                                }}
+                                                className="text-left flex items-center justify-between group"
                                             >
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`p-2.5 rounded-xl border ${color} transition-transform group-hover:scale-105`}>
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <div className={`p-2.5 rounded-xl border ${color} shrink-0`}>
                                                         <Icon size={18} />
                                                     </div>
-                                                    <div>
-                                                        <p className={`text-xs font-bold ${checked ? "text-emerald-950" : "text-slate-800"}`}>{label}</p>
-                                                        <p className="text-[10px] text-slate-400 font-medium">{sub}</p>
+                                                    <div className="min-w-0">
+                                                        <p className={`text-xs font-bold truncate ${checked ? "text-emerald-950" : "text-slate-800"}`}>{label}</p>
+                                                        <p className="text-[10px] text-slate-400 font-medium truncate">{sub}</p>
                                                     </div>
                                                 </div>
-                                                <div className="shrink-0">
+                                                <div className="shrink-0 ml-2">
                                                     {checked ? (
                                                         <div className="h-6 w-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-sm">
                                                             <Check size={14} strokeWidth={3} />
@@ -333,7 +366,13 @@ const PatientCarePlan = () => {
                             <motion.div variants={itemVariants} className="space-y-6 flex flex-col justify-between">
                                 
                                 {/* Target Risk Reduction Card */}
-                                <div className="soft-card p-6 border-blue-200 bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-white flex flex-col justify-between">
+                                <div style={{
+                                    backgroundColor: "#ffffff",
+                                    border: "1px solid #cbd5e1",
+                                    borderRadius: "20px",
+                                    padding: "24px",
+                                    boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)"
+                                }} className="flex flex-col justify-between">
                                     <div>
                                         <div className="flex items-center justify-between mb-3">
                                             <span className="text-xs font-extrabold uppercase tracking-wider text-blue-700 flex items-center gap-1.5">
@@ -353,7 +392,7 @@ const PatientCarePlan = () => {
                                             </div>
                                         </div>
 
-                                        <div className="mt-4 p-3 rounded-xl bg-white/80 border border-blue-100 flex items-center gap-2.5">
+                                        <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2.5">
                                             <TrendingDown size={18} className="text-emerald-600 shrink-0" />
                                             <p className="text-xs text-slate-700 font-medium">
                                                 Following this care plan reduces cardiovascular risk by <strong>{(prevRisk - targetRisk).toFixed(1)}%</strong> over 6 months.
@@ -361,27 +400,33 @@ const PatientCarePlan = () => {
                                         </div>
                                     </div>
 
-                                    <div className="mt-4 pt-3 border-t border-blue-100 flex items-center justify-between text-xs font-semibold text-slate-600">
+                                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-600">
                                         <span>Status: <strong className="text-emerald-700">{carePlan.status || "APPROVED"}</strong></span>
-                                        <span>Verified: <strong className="text-blue-700">Groq AI Llama 3.3</strong></span>
+                                        <span>Verified: <strong className="text-blue-700">Groq Clinical Engine</strong></span>
                                     </div>
                                 </div>
 
                                 {/* Clinical Guidelines & Safety Audit Card */}
-                                <div className="soft-card p-5 border-slate-200 bg-white">
+                                <div style={{
+                                    backgroundColor: "#ffffff",
+                                    border: "1px solid #cbd5e1",
+                                    borderRadius: "20px",
+                                    padding: "20px",
+                                    boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)"
+                                }}>
                                     <div className="flex items-center gap-2 mb-3">
                                         <ShieldCheck size={18} className="text-violet-600" />
                                         <h3 className="text-sm font-bold text-slate-900">Clinical Safety Audits</h3>
                                     </div>
 
                                     <div className="space-y-2.5 text-xs">
-                                        <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                        <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                                             <span className="text-slate-600 font-medium">ACC/AHA Guidelines Check</span>
                                             <span className="badge badge--success text-[10px] font-bold">
                                                 {carePlan.clinicalGuidelineCheck || "PASSED"}
                                             </span>
                                         </div>
-                                        <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                        <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                                             <span className="text-slate-600 font-medium">Drug Interaction Crosscheck</span>
                                             <span className="badge badge--success text-[10px] font-bold">
                                                 {carePlan.drugInteractionCheck || "SAFE"}
@@ -407,7 +452,7 @@ const PatientCarePlan = () => {
                             <div className="grid gap-6 md:grid-cols-2">
                                 
                                 {/* 1. Prescribed Medications Card */}
-                                <div className="soft-card p-6 hover:shadow-lg transition-all">
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
                                     <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
                                         <div className="p-3 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100">
                                             <Pill size={22} />
@@ -421,7 +466,7 @@ const PatientCarePlan = () => {
                                     <div className="space-y-2.5">
                                         {medications.length > 0 ? (
                                             medications.map((med, idx) => (
-                                                <div key={idx} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80 hover:bg-white hover:border-blue-300 transition-all text-sm">
+                                                <div key={idx} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200 hover:bg-white hover:border-blue-300 transition-all text-sm">
                                                     <div className="flex items-center gap-2.5">
                                                         <span className="h-2 w-2 rounded-full bg-blue-500" />
                                                         <span className="font-bold text-slate-900">{med}</span>
@@ -430,7 +475,7 @@ const PatientCarePlan = () => {
                                                 </div>
                                             ))
                                         ) : (
-                                            <div className="p-4 rounded-xl bg-slate-50 text-center text-xs text-slate-500">
+                                            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500">
                                                 No active prescriptions required at this time.
                                             </div>
                                         )}
@@ -438,7 +483,7 @@ const PatientCarePlan = () => {
                                 </div>
 
                                 {/* 2. Diet & Nutrition Protocol */}
-                                <div className="soft-card p-6 hover:shadow-lg transition-all">
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
                                     <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
                                         <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100">
                                             <Utensils size={22} />
@@ -449,13 +494,13 @@ const PatientCarePlan = () => {
                                         </div>
                                     </div>
 
-                                    <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/80 text-sm text-slate-800 font-medium leading-relaxed">
+                                    <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }} className="text-sm text-slate-800 font-medium leading-relaxed">
                                         {carePlan.diet || "Low Salt, Low Sugar, High Fiber Mediterranean Diet rich in whole grains and fresh vegetables."}
                                     </div>
                                 </div>
 
                                 {/* 3. Exercise & Fitness Protocol */}
-                                <div className="soft-card p-6 hover:shadow-lg transition-all">
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
                                     <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
                                         <div className="p-3 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100">
                                             <Dumbbell size={22} />
@@ -466,13 +511,13 @@ const PatientCarePlan = () => {
                                         </div>
                                     </div>
 
-                                    <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/80 text-sm text-slate-800 font-medium leading-relaxed">
+                                    <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }} className="text-sm text-slate-800 font-medium leading-relaxed">
                                         {carePlan.exercise || "30 min Brisk Walking (5 Days/week) + Light Strength Training routines."}
                                     </div>
                                 </div>
 
                                 {/* 4. Sleep & Rest Hygiene */}
-                                <div className="soft-card p-6 hover:shadow-lg transition-all">
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
                                     <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
                                         <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100">
                                             <Moon size={22} />
@@ -483,7 +528,7 @@ const PatientCarePlan = () => {
                                         </div>
                                     </div>
 
-                                    <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-200/80 text-sm text-slate-800 font-medium leading-relaxed">
+                                    <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }} className="text-sm text-slate-800 font-medium leading-relaxed">
                                         {carePlan.sleep || "7-8 Hours of Uninterrupted Night Rest. Maintain consistent bed time schedule."}
                                     </div>
                                 </div>
@@ -492,19 +537,19 @@ const PatientCarePlan = () => {
                         </div>
 
                         {/* ATTENDING PHYSICIAN REMARKS CARD */}
-                        <div className="soft-card p-6 border-violet-200 bg-gradient-to-r from-violet-50/50 via-white to-violet-50/30">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
                             <div className="flex items-center gap-3 mb-3">
                                 <div className="p-2.5 bg-violet-100 text-violet-700 rounded-xl">
                                     <Stethoscope size={20} />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-900 text-base">Attending Physician Remarks &amp; Diagnostics</h4>
-                                    <p className="text-xs text-slate-500">Clinical notes &amp; AI summary</p>
+                                    <p className="text-xs text-slate-500">Clinical notes &amp; protocol summary</p>
                                 </div>
                             </div>
                             
-                            <div className="p-4 rounded-2xl bg-white border border-slate-200 text-sm text-slate-700 font-medium leading-relaxed shadow-sm">
-                                {carePlan.doctorNotes || "AI generated care plan via Groq Llama 3.3 based on ACC/AHA guidelines."}
+                            <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "16px" }} className="text-sm text-slate-700 font-medium leading-relaxed">
+                                {carePlan.doctorNotes?.replace(/AI/g, "Clinical") || "Clinical care plan generated via Groq Clinical Engine based on ACC/AHA guidelines."}
                             </div>
                         </div>
 
@@ -517,7 +562,7 @@ const PatientCarePlan = () => {
                         </div>
                         <h3 className="text-xl font-bold text-slate-900">No Active Care Plan Found</h3>
                         <p className="text-slate-500 text-sm mt-1 mb-6">
-                            No active health protocol assigned yet. Syncing will generate your personalized AI recommendations.
+                            No active health protocol assigned yet. Syncing will generate your personalized clinical recommendations.
                         </p>
                         <button
                             onClick={loadData}

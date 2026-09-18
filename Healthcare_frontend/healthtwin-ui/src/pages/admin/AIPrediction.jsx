@@ -236,8 +236,8 @@ if (predictionsCache[cacheKey]) {
                         </h1>
                         <p className="page-subtitle">
                             {predictionModel === "heart"
-                                ? "Run AI-powered heart disease prediction for registered patients."
-                                : "Run AI-powered diabetes prediction for registered patients."}
+                                ? "Run heart disease prediction for registered patients."
+                                : "Run diabetes prediction for registered patients."}
                         </p>                   
                          </div>
               <div className="flex items-center gap-4">
@@ -331,9 +331,9 @@ if (predictionsCache[cacheKey]) {
                     ) : (
                         <div className="space-y-3">
                             {filteredPatients.map((patient, index) => {
-                            const cacheKey = `${predictionModel}-${patient.patientId}`;
-
-                            const hasPrediction = !!predictionsCache[cacheKey];                                return (
+                                const cacheKey = `${predictionModel}-${patient.patientId}`;
+                                const hasPrediction = !!predictionsCache[cacheKey];
+                                return (
                                     <motion.div
                                         key={patient.patientId}
                                         custom={index}
@@ -341,29 +341,52 @@ if (predictionsCache[cacheKey]) {
                                         initial="hidden"
                                         animate="visible"
                                         whileHover={{
-                                            scale: 1.004,
                                             y: -1,
-                                            boxShadow: "0 12px 30px -15px rgba(0,0,0,0.2)",
+                                            boxShadow: "0 10px 24px -10px rgba(15, 23, 42, 0.12)",
                                             transition: { duration: 0.15 }
                                         }}
-                                       className={`rounded-2xl border bg-white bg-gradient-to-br ${
-                                            hasPrediction
-                                                ? riskBg(predictionsCache[cacheKey]?.risk)
-                                                : "from-white to-slate-50/50 border-slate-100"
-                                        } p-5 transition-all duration-200 shadow-sm border-l-4`}
+                                        style={{
+                                            backgroundColor: "#ffffff",
+                                            border: "1px solid #cbd5e1",
+                                            borderRadius: "18px",
+                                            padding: "16px 24px",
+                                            boxShadow: "0 4px 14px rgba(15, 23, 42, 0.03)"
+                                        }}
+                                        className="transition-all duration-200"
                                     >
-                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
                                             {/* Left: Patient Info */}
-                                            <div className="flex items-center gap-4 flex-1 min-w-0">
-                                                <div className="avatar avatar--sm shrink-0">
+                                            <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
+                                                <div style={{
+                                                    width: "44px",
+                                                    height: "44px",
+                                                    borderRadius: "14px",
+                                                    background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                                    color: "#ffffff",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    fontWeight: "800",
+                                                    fontSize: "15px",
+                                                    flexShrink: 0,
+                                                    boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)"
+                                                }}>
                                                     {(patient.firstName?.[0] || "") + (patient.lastName?.[0] || "")}
                                                 </div>
-                                                <div className="min-w-0">
-                                                    <div className="flex flex-wrap items-center gap-2.5 mb-1">
-                                                        <h4 className="font-bold text-slate-900 truncate text-base">
+                                                <div style={{ minWidth: 0 }}>
+                                                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                                                        <h4 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                                             {patient.firstName} {patient.lastName}
                                                         </h4>
-                                                        <span className="badge badge--slate text-[0.7rem] px-2 py-0.5">
+                                                        <span style={{
+                                                            backgroundColor: "#f1f5f9",
+                                                            color: "#475569",
+                                                            border: "1px solid #cbd5e1",
+                                                            fontSize: "11px",
+                                                            fontWeight: "700",
+                                                            padding: "2px 8px",
+                                                            borderRadius: "6px"
+                                                        }}>
                                                             {patient.gender || "N/A"}
                                                         </span>
                                                         {hasPrediction && (
@@ -373,66 +396,107 @@ if (predictionsCache[cacheKey]) {
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                                                        <span className="flex items-center gap-1.5">
-                                                            <User size={12} />
-                                                            ID: <span className="font-mono font-semibold text-slate-600">{patient.patientId}</span>
+                                                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px", fontSize: "12px", color: "#64748b", fontWeight: "600" }}>
+                                                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                                                            <User size={13} style={{ color: "#64748b" }} />
+                                                            ID: <span style={{ fontFamily: "monospace", color: "#0f172a", backgroundColor: "#f1f5f9", padding: "1px 6px", borderRadius: "4px", border: "1px solid #cbd5e1" }}>{patient.patientId}</span>
                                                         </span>
-                                                        <span className="w-px h-3 bg-slate-200 hidden sm:block" />
-                                                        <span className="flex items-center gap-1.5">
-                                                            <CalendarDays size={12} />
-                                                           Age: <span className="font-semibold text-slate-700">
-                                                                {calculateAge(patient.dob)}
-                                                            </span>
+                                                        <span>•</span>
+                                                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                                                            <CalendarDays size={13} style={{ color: "#64748b" }} />
+                                                            Age: <strong style={{ color: "#0f172a" }}>{calculateAge(patient.dob)}</strong>
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            {/* Right: Action */}
-                                            <div className="shrink-0 flex gap-2">
+                                            {/* Right: Actions (Zero Truncation / Unclipped) */}
+                                            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0, marginLeft: "auto" }}>
                                                 <motion.button
-                                                    whileHover={{ scale: 1.04 }}
-                                                    whileTap={{ scale: 0.96 }}
+                                                    whileHover={{ scale: 1.03 }}
+                                                    whileTap={{ scale: 0.97 }}
                                                     onClick={() => handleSimulateAndPredict(patient.patientId)}
                                                     disabled={simulatingId === patient.patientId || loadingPatient === patient.patientId}
-                                                    className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold border border-purple-200 transition-all inline-flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                                                    style={{
+                                                        padding: "8px 16px",
+                                                        borderRadius: "10px",
+                                                        backgroundColor: "#f3e8ff",
+                                                        color: "#7c3aed",
+                                                        border: "1px solid #e9d5ff",
+                                                        fontSize: "12px",
+                                                        fontWeight: "800",
+                                                        cursor: "pointer",
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        gap: "6px",
+                                                        flexShrink: 0,
+                                                        whiteSpace: "nowrap"
+                                                    }}
                                                 >
                                                     <Sparkles size={14} className={simulatingId === patient.patientId ? "animate-spin text-purple-600" : "text-purple-600"} />
                                                     <span>{simulatingId === patient.patientId ? "Simulating..." : "Simulate Data"}</span>
                                                 </motion.button>
                                                 {hasPrediction && (
                                                     <motion.button
-                                                        whileHover={{ scale: 1.05 }}
-                                                        whileTap={{ scale: 0.95 }}
+                                                        whileHover={{ scale: 1.03 }}
+                                                        whileTap={{ scale: 0.97 }}
                                                         onClick={() => handleViewCached(patient.patientId)}
-                                                        className="btn btn--soft btn--sm"
+                                                        style={{
+                                                            padding: "8px 16px",
+                                                            borderRadius: "10px",
+                                                            backgroundColor: "#f1f5f9",
+                                                            color: "#334155",
+                                                            border: "1px solid #cbd5e1",
+                                                            fontSize: "12px",
+                                                            fontWeight: "700",
+                                                            cursor: "pointer",
+                                                            display: "inline-flex",
+                                                            alignItems: "center",
+                                                            gap: "6px",
+                                                            flexShrink: 0,
+                                                            whiteSpace: "nowrap"
+                                                        }}
                                                     >
                                                         <Eye size={14} />
                                                         View
                                                     </motion.button>
                                                 )}
                                                 <motion.button
-                                                    whileHover={{ scale: 1.04 }}
-                                                    whileTap={{ scale: 0.96 }}
+                                                    whileHover={{ scale: 1.03 }}
+                                                    whileTap={{ scale: 0.97 }}
                                                     onClick={() => handlePrediction(patient.patientId)}
                                                     disabled={loadingPatient === patient.patientId}
-                                                    className="btn btn--primary btn--sm"
+                                                    style={{
+                                                        padding: "8px 20px",
+                                                        borderRadius: "10px",
+                                                        background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                                        color: "#ffffff",
+                                                        border: "none",
+                                                        fontSize: "12px",
+                                                        fontWeight: "800",
+                                                        cursor: "pointer",
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        gap: "6px",
+                                                        flexShrink: 0,
+                                                        whiteSpace: "nowrap",
+                                                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)"
+                                                    }}
                                                 >
                                                     {loadingPatient === patient.patientId ? (
                                                         <>
                                                             <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                                                            Running...
+                                                            <span>Running...</span>
                                                         </>
                                                     ) : (
                                                         <>
-                                                <Brain size={14} />
-                                                {loadingPatient === patient.patientId
-                                                    ? "Running..."
-                                                    : predictionModel === "heart"
-                                                    ? (hasPrediction ? "Re-run Heart" : "Run Heart")
-                                                    : (hasPrediction ? "Re-run Diabetes" : "Run Diabetes")}
-                                            </>
+                                                            <Brain size={14} />
+                                                            <span>
+                                                                {predictionModel === "heart"
+                                                                    ? (hasPrediction ? "Re-run Heart" : "Run Heart")
+                                                                    : (hasPrediction ? "Re-run Diabetes" : "Run Diabetes")}
+                                                            </span>
+                                                        </>
                                                     )}
                                                 </motion.button>
                                             </div>

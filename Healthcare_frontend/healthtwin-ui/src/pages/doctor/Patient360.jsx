@@ -75,7 +75,7 @@ function DoctorPatient360() {
         loadData();
         const interval = setInterval(() => {
             loadData();
-        }, 1000);
+        }, 15000);
         return () => clearInterval(interval);
     }, [patientId]);
     const calculateAge = (dob) => {

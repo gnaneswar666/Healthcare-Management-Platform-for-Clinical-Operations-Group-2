@@ -1,4 +1,4 @@
-﻿package com.infosys.events;
+package com.infosys.events;
 
 import java.time.Instant;
 

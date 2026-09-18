@@ -21,10 +21,10 @@ const riskIcon = (risk) => {
 
 const riskBg = (risk) => {
     switch (risk?.toUpperCase()) {
-        case "HIGH": return "from-rose-50 to-red-50/60 border-rose-200";
-        case "MEDIUM": return "from-amber-50 to-yellow-50/60 border-amber-200";
-        case "LOW": return "from-emerald-50 to-green-50/60 border-emerald-200";
-        default: return "from-slate-50 to-gray-50/60 border-slate-200";
+        case "HIGH": return "from-rose-50/70 to-red-50/30 border-slate-200/80";
+        case "MEDIUM": return "from-amber-50/70 to-yellow-50/30 border-slate-200/80";
+        case "LOW": return "from-emerald-50/70 to-teal-50/30 border-slate-200/80";
+        default: return "from-slate-50 to-gray-50/50 border-slate-200/80";
     }
 };
 
@@ -56,65 +56,88 @@ const PredictionHistoryTable = ({ history, onView }) => {
                 const confidence = Math.round(Number(item.confidence) || 0);
                 const riskLevel = (item.risk || "UNKNOWN").toUpperCase();
 
+                const rawDate = item.predictionDate || item.createdAt || item.timestamp || item.date || item.created_at;
+                let formattedDate = "Recent";
+                let formattedTime = "";
+                if (rawDate) {
+                    const d = new Date(rawDate);
+                    if (!isNaN(d.getTime())) {
+                        formattedDate = d.toLocaleDateString();
+                        formattedTime = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    }
+                }
+
                 return (
                     <motion.div
-                        key={item.id}
+                        key={item.id || index}
                         custom={index}
                         variants={rowVariants}
                         initial="hidden"
                         animate="visible"
                         whileHover={{
-                            scale: 1.005,
-                            y: -1,
-                            boxShadow: "0 12px 30px -12px rgba(0,0,0,0.15)"
+                            y: -2,
+                            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.08)",
+                            transition: { duration: 0.15 }
                         }}
-                        className={`rounded-2xl border bg-gradient-to-br ${riskBg(riskLevel)} p-5 transition-all duration-200 shadow-sm`}
+                        style={{
+                            backgroundColor: "#ffffff",
+                            borderRadius: "18px",
+                            border: "1px solid #e2e8f0",
+                            borderLeft: riskLevel === "HIGH" || riskLevel === "CRITICAL" ? "5px solid #ef4444" : riskLevel === "MEDIUM" || riskLevel === "WARNING" ? "5px solid #f59e0b" : "5px solid #10b981",
+                            padding: "18px 24px",
+                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
+                            transition: "all 0.2s ease-in-out",
+                            width: "100%",
+                            boxSizing: "border-box"
+                        }}
                     >
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px", width: "100%" }}>
                             {/* Left side - Main info */}
-                            <div className="flex-1 min-w-0">
-                                <div className="flex flex-wrap items-center gap-2.5 mb-2.5">
+                            <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
                                     <span className={`badge ${riskBadgeClass(riskLevel)}`}>
                                         {riskIcon(riskLevel)}
                                         {item.risk || "Unknown"} Risk
                                     </span>
-                                    <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                                        <CalendarDays size={13} />
-                                        {new Date(item.predictionDate).toLocaleDateString()}
+                                    <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "#64748b", fontWeight: "600" }}>
+                                        <CalendarDays size={13} style={{ color: "#64748b" }} />
+                                        {formattedDate}
                                     </span>
-                                    <span className="flex items-center gap-1.5 text-xs text-slate-400">
-                                        <Clock size={13} />
-                                        {new Date(item.predictionDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
+                                    {formattedTime && (
+                                        <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "#94a3b8", fontWeight: "500" }}>
+                                            <Clock size={13} style={{ color: "#94a3b8" }} />
+                                            {formattedTime}
+                                        </span>
+                                    )}
                                 </div>
 
-                                <h4 className="text-lg font-bold text-slate-900 truncate">
+                                <h4 style={{ fontSize: "17px", fontWeight: "800", color: "#0f172a", margin: "0 0 6px 0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                     {item.prediction || "Heart Disease Assessment"}
                                 </h4>
 
-                                <div className="flex flex-wrap items-center gap-4 mt-2">
-                                    <div className="flex items-center gap-2">
-                                        <Activity size={14} className="text-slate-400" />
-                                        <span className="text-sm text-slate-600">
-                                            Confidence: <span className="font-bold text-slate-800">{confidence}%</span>
+                                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", fontSize: "13px", color: "#475569" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                        <Activity size={14} style={{ color: "#64748b" }} />
+                                        <span>
+                                            Confidence: <strong style={{ color: "#0f172a" }}>{confidence}%</strong>
                                         </span>
                                     </div>
-                                    <div className="hidden sm:block w-px h-4 bg-slate-200" />
-                                    <div className="flex items-center gap-2">
-                                        <BadgeCheck size={14} className="text-slate-400" />
-                                        <span className="text-sm text-slate-600">
-                                            Model: <span className="font-semibold text-slate-700">{item.modelVersion || "v2.0"}</span>
+                                    <span>•</span>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                        <BadgeCheck size={14} style={{ color: "#64748b" }} />
+                                        <span>
+                                            Model: <strong style={{ color: "#334155" }}>{item.modelVersion || "v2.0"}</strong>
                                         </span>
                                     </div>
                                 </div>
 
-                                {/* Confidence progress bar - larger for elderly readability */}
-                                <div className="mt-3 max-w-sm">
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="text-sm font-semibold text-slate-600">Confidence</span>
-                                        <span className="text-lg font-extrabold text-slate-900">{confidence}%</span>
+                                {/* Confidence progress bar */}
+                                <div style={{ marginTop: "12px", maxWidth: "360px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+                                        <span style={{ fontSize: "12px", fontWeight: "700", color: "#64748b" }}>Confidence</span>
+                                        <span style={{ fontSize: "14px", fontWeight: "800", color: "#0f172a" }}>{confidence}%</span>
                                     </div>
-                                    <div className="h-4 w-full overflow-hidden rounded-full bg-slate-200/70 shadow-inner">
+                                    <div style={{ height: "8px", width: "100%", backgroundColor: "#e2e8f0", borderRadius: "20px", overflow: "hidden" }}>
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: `${Math.min(confidence, 100)}%` }}
@@ -125,17 +148,32 @@ const PredictionHistoryTable = ({ history, onView }) => {
                                 </div>
                             </div>
 
-                            {/* Right side - Action */}
-                            <div className="shrink-0">
+                            {/* Right side - Action (Unclipped) */}
+                            <div style={{ flexShrink: 0, marginLeft: "auto" }}>
                                 <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
                                     type="button"
                                     onClick={() => onView(item.id)}
-                                    className="btn btn--primary btn--sm w-full sm:w-auto"
+                                    style={{
+                                        padding: "8px 18px",
+                                        borderRadius: "10px",
+                                        background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                        color: "#ffffff",
+                                        border: "none",
+                                        fontSize: "12px",
+                                        fontWeight: "800",
+                                        cursor: "pointer",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "6px",
+                                        boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)",
+                                        flexShrink: 0,
+                                        whiteSpace: "nowrap"
+                                    }}
                                 >
                                     <Eye size={15} />
-                                    View Report
+                                    <span>View Report</span>
                                 </motion.button>
                             </div>
                         </div>

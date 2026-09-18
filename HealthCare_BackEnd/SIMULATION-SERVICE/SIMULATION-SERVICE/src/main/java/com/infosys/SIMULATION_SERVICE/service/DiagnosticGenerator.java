@@ -22,7 +22,7 @@ public class DiagnosticGenerator {
         request.setCp(random.randomInt(0, 3));
 
         request.setChol(
-                Math.round(random.randomDouble(150, 280) * 10.0) / 10.0);
+                Math.round(random.randomDouble(150, 340) * 10.0) / 10.0);
 
         request.setFbs(random.randomInt(0, 1));
 
@@ -31,7 +31,7 @@ public class DiagnosticGenerator {
         request.setExang(random.randomInt(0, 1));
 
         request.setOldpeak(
-                Math.round(random.randomDouble(0.0, 4.0) * 10.0) / 10.0);
+                Math.round(random.randomDouble(0.0, 5.5) * 10.0) / 10.0);
 
         request.setSlope(random.randomInt(0, 2));
 

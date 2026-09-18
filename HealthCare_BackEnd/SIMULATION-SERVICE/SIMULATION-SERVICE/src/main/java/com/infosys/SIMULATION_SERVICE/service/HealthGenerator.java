@@ -1,4 +1,4 @@
-﻿package com.infosys.SIMULATION_SERVICE.service;
+package com.infosys.SIMULATION_SERVICE.service;
 
 import java.time.Instant;
 
@@ -36,7 +36,7 @@ public class HealthGenerator {
                 HealthTwinRequest aiHealth = generateViaGroqAi(health, effectiveKey);
                 if (aiHealth != null) {
                     System.out.println("AI Vitals Generated via Groq Llama 3.3 for Patient: " + health.getPatientId());
-                    System.out.println("Heart Rate: " + aiHealth.getHeartRate() + " | BP: " + aiHealth.getBloodPressure() + " | Temp: " + aiHealth.getTemperature() + " | O2: " + aiHealth.getOxygenLevel());
+                    System.out.println("Heart Rate: " + aiHealth.getHeartRate() + " | BP: " + aiHealth.getBloodPressure() + " | Temp: " + aiHealth.getTemperature() + " | O2: " + aiHealth.getOxygenLevel() + " | RiskScore: " + aiHealth.getRiskScore());
                     return aiHealth;
                 }
             } catch (Exception e) {
@@ -44,17 +44,32 @@ public class HealthGenerator {
             }
         }
 
-        // Local Random Fallback
-        health.setHeartRate(random.randomInt(65, 100));
-        health.setBloodPressure(random.randomInt(110, 155) + "/" + random.randomInt(60, 90));
-        health.setTemperature(Math.round(random.randomDouble(36.0, 38.5) * 10.0) / 10.0);
-        health.setOxygenLevel(random.randomInt(93, 100));
+        // Local Random Fallback with adjusted parameters (Heart rate capped at 120 max, BP decreased by ~10%)
+        boolean criticalSpike = random.randomInt(1, 100) <= 35;
+
+        if (criticalSpike) {
+            // Elevated / High Vital Spike
+            health.setHeartRate(random.randomInt(108, 120)); // Capped at 120 max
+            health.setBloodPressure(random.randomInt(135, 162) + "/" + random.randomInt(84, 98)); // Decreased by ~10%
+            health.setTemperature(Math.round(random.randomDouble(38.2, 39.5) * 10.0) / 10.0);
+            health.setOxygenLevel(random.randomInt(88, 92));
+            health.setRiskScore(random.randomInt(75, 92));
+        } else {
+            // Normal to mild values
+            health.setHeartRate(random.randomInt(60, 105));
+            health.setBloodPressure(random.randomInt(105, 132) + "/" + random.randomInt(60, 84));
+            health.setTemperature(Math.round(random.randomDouble(36.2, 37.8) * 10.0) / 10.0);
+            health.setOxygenLevel(random.randomInt(94, 100));
+            health.setRiskScore(random.randomInt(10, 55));
+        }
+
         health.setLastUpdated(Instant.now());
 
-        System.out.println("[Random Fallback] Heart Rate : " + health.getHeartRate());
-        System.out.println("[Random Fallback] BP : " + health.getBloodPressure());
-        System.out.println("[Random Fallback] Temp : " + health.getTemperature());
-        System.out.println("[Random Fallback] Oxygen : " + health.getOxygenLevel());
+        System.out.println("[Random Generator" + (criticalSpike ? " SPIKE" : "") + "] Heart Rate : " + health.getHeartRate());
+        System.out.println("[Random Generator] BP : " + health.getBloodPressure());
+        System.out.println("[Random Generator] Temp : " + health.getTemperature());
+        System.out.println("[Random Generator] Oxygen : " + health.getOxygenLevel());
+        System.out.println("[Random Generator] Risk Score : " + health.getRiskScore());
 
         return health;
     }
@@ -64,12 +79,14 @@ public class HealthGenerator {
 
         String prompt = "You are a clinical vital sign simulator. Generate realistic human vital signs for a patient health twin simulation.\n" +
                 "Existing Vitals: HeartRate=" + health.getHeartRate() + ", BP=" + health.getBloodPressure() + ", Temp=" + health.getTemperature() + ", O2=" + health.getOxygenLevel() + ".\n" +
+                "Simulate realistic patient vitals with heart rate up to a max limit of 120 bpm, blood pressure between 105/60 and 160/98, temperature between 36.2 C and 39.2 C, oxygen level between 88% and 100%, and risk score between 10 and 90.\n" +
                 "Respond ONLY with a valid JSON object matching this exact schema without markdown, raw text or explanations:\n" +
                 "{\n" +
-                "  \"heartRate\": 75,\n" +
-                "  \"bloodPressure\": \"120/80\",\n" +
-                "  \"temperature\": 36.8,\n" +
-                "  \"oxygenLevel\": 98\n" +
+                "  \"heartRate\": 115,\n" +
+                "  \"bloodPressure\": \"145/92\",\n" +
+                "  \"temperature\": 38.4,\n" +
+                "  \"oxygenLevel\": 91,\n" +
+                "  \"riskScore\": 78\n" +
                 "}";
 
         String[] models = {"llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768"};
@@ -88,13 +105,20 @@ public class HealthGenerator {
                     JsonNode root = objectMapper.readTree(response.getBody());
                     String content = root.path("choices").get(0).path("message").path("content").asText();
 
-                    content = content.replaceAll("`json", "").replaceAll("`", "").trim();
+                    content = content.replaceAll("```json", "").replaceAll("```", "").replaceAll("`", "").trim();
                     JsonNode vitalsJson = objectMapper.readTree(content);
 
-                    health.setHeartRate(vitalsJson.path("heartRate").asInt(75));
-                    health.setBloodPressure(vitalsJson.path("bloodPressure").asText("120/80"));
-                    health.setTemperature(Math.round(vitalsJson.path("temperature").asDouble(36.8) * 10.0) / 10.0);
-                    health.setOxygenLevel(vitalsJson.path("oxygenLevel").asInt(98));
+                    int hr = Math.min(120, vitalsJson.path("heartRate").asInt(115));
+                    health.setHeartRate(hr);
+                    health.setBloodPressure(vitalsJson.path("bloodPressure").asText("145/92"));
+                    health.setTemperature(Math.round(vitalsJson.path("temperature").asDouble(38.4) * 10.0) / 10.0);
+                    health.setOxygenLevel(vitalsJson.path("oxygenLevel").asInt(91));
+
+                    int calculatedRisk = 30;
+                    if (health.getHeartRate() > 115 || health.getOxygenLevel() < 92 || health.getTemperature() > 38.5) {
+                        calculatedRisk = 80;
+                    }
+                    health.setRiskScore(vitalsJson.path("riskScore").asInt(calculatedRisk));
                     health.setLastUpdated(Instant.now());
 
                     return health;

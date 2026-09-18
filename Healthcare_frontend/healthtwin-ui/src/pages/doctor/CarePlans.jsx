@@ -147,7 +147,7 @@ const CarePlans = ({ keycloak }) => {
                 setDoctorNotes(genRes.data?.doctorNotes || "");
                 populateEditForm(genRes.data);
                 setIsEditing(false);
-                setSuccess("New AI Care Plan generated successfully!");
+                setSuccess("New Care Plan generated successfully!");
             } catch (genErr) {
                 setError("Unable to retrieve or generate care plan. Please try again.");
                 setCarePlan(null);
@@ -157,7 +157,7 @@ const CarePlans = ({ keycloak }) => {
         }
     };
 
-    // Force Generate New AI Care Plan
+    // Force Generate New Care Plan
     const handleGenerateNewPlan = async () => {
         const queryId = patientId.trim();
         if (!queryId) {
@@ -173,7 +173,7 @@ const CarePlans = ({ keycloak }) => {
             setDoctorNotes(genRes.data?.doctorNotes || "");
             populateEditForm(genRes.data);
             setIsEditing(false);
-            setSuccess("Fresh AI Care Plan generated successfully!");
+            setSuccess("Fresh Care Plan generated successfully!");
         } catch (genErr) {
             setError("Unable to generate new care plan. Please try again.");
         } finally {
@@ -250,11 +250,11 @@ const CarePlans = ({ keycloak }) => {
                 <motion.div variants={itemVariants} className="page-header">
                     <div className="page-header__info">
                         <div className="page-status-chip">
-                            <Sparkles size={14} /> Clinical AI Care Plans
+                            <Sparkles size={14} /> Clinical Care Plans
                         </div>
                         <h1 className="page-title">Care Plan Management</h1>
                         <p className="page-subtitle">
-                            Review, customize, and validate AI-generated care plans against ACC/AHA clinical guidelines.
+                            Review, customize, and validate care plans against ACC/AHA clinical guidelines.
                         </p>
                     </div>
 
@@ -275,8 +275,8 @@ const CarePlans = ({ keycloak }) => {
                         <button
                             onClick={() => loadCarePlan(patientId)}
                             disabled={loading}
-                            style={{ background: "#0f172a", color: "#ffffff" }}
-                            className="flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-semibold shadow-md hover:opacity-90 transition-all disabled:opacity-50"
+                            style={{ background: "#0f172a", color: "#ffffff", whiteSpace: "nowrap", flexShrink: 0 }}
+                            className="flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-semibold shadow-md hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
                         >
                             {loading ? <RefreshCw size={15} className="animate-spin text-white" /> : <Search size={15} className="text-white" />}
                             <span>Fetch</span>
@@ -284,11 +284,11 @@ const CarePlans = ({ keycloak }) => {
                         <button
                             onClick={handleGenerateNewPlan}
                             disabled={loading}
-                            style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)", color: "#ffffff" }}
-                            className="flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-semibold shadow-md hover:opacity-90 transition-all disabled:opacity-50"
+                            style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)", color: "#ffffff", whiteSpace: "nowrap", flexShrink: 0 }}
+                            className="flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-semibold shadow-md hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
                         >
                             <Sparkles size={15} className="text-white" />
-                            <span>Generate AI Plan</span>
+                            <span>Generate Care Plan</span>
                         </button>
                     </div>
                 </motion.div>
@@ -339,13 +339,13 @@ const CarePlans = ({ keycloak }) => {
                         </span>
                     </div>
 
-                    <div className="soft-card" style={{ background: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", borderColor: "#fde68a" }}>
+                    <div className="soft-card">
                         <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-amber-700">
                             <span>Pending Review</span>
-                            <div className="rounded-xl bg-amber-200/60 p-2 text-amber-800"><Clock3 size={16} /></div>
+                            <div className="rounded-xl bg-amber-100 p-2 text-amber-700"><Clock3 size={16} /></div>
                         </div>
-                        <p className="mt-2 text-2xl font-extrabold text-amber-950">{dashboardStats.pendingApproval}</p>
-                        <span className="text-xs font-semibold text-amber-800">Requires approval</span>
+                        <p className="mt-2 text-2xl font-extrabold text-slate-900">{dashboardStats.pendingApproval}</p>
+                        <span className="text-xs font-semibold text-amber-700">Requires approval</span>
                     </div>
 
                     <div className="soft-card">
@@ -357,13 +357,13 @@ const CarePlans = ({ keycloak }) => {
                         <span className="text-xs font-semibold text-indigo-600">Risk reduced to LOW</span>
                     </div>
 
-                    <div className="soft-card" style={{ background: "linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)", borderColor: "#fecdd3" }}>
+                    <div className="soft-card">
                         <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-rose-700">
                             <span>High Risk</span>
-                            <div className="rounded-xl bg-rose-200/60 p-2 text-rose-800"><AlertTriangle size={16} /></div>
+                            <div className="rounded-xl bg-rose-100 p-2 text-rose-700"><AlertTriangle size={16} /></div>
                         </div>
-                        <p className="mt-2 text-2xl font-extrabold text-rose-950">{dashboardStats.highRiskPatients}</p>
-                        <span className="text-xs font-semibold text-rose-800">Priority intervention</span>
+                        <p className="mt-2 text-2xl font-extrabold text-slate-900">{dashboardStats.highRiskPatients}</p>
+                        <span className="text-xs font-semibold text-rose-700">Priority intervention</span>
                     </div>
                 </motion.div>
 
@@ -372,7 +372,7 @@ const CarePlans = ({ keycloak }) => {
                     <motion.div variants={itemVariants} className="section-card">
                         <div className="flex items-center justify-between mb-3">
                             <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                                <Clock3 size={14} className="text-amber-500" /> Pending Physician Review Queue ({pendingPlans.length})
+                                <Clock3 size={14} className="text-amber-500" /> Pending Physician Review Queue
                             </span>
                             <span className="text-xs text-slate-400">Click to select patient</span>
                         </div>
@@ -442,28 +442,28 @@ const CarePlans = ({ keycloak }) => {
                             </div>
 
                             {/* ACTION BUTTONS: IF APPROVED, SHOW APPROVED BADGE & EDIT */}
-                            <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-3 shrink-0">
                                 {currentStatus === "APPROVED" ? (
-                                    <div className="flex items-center gap-2">
-                                        <span style={{ background: "#d1fae5", color: "#065f46", border: "1.5px solid #6ee7b7" }} className="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm">
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <span style={{ background: "#d1fae5", color: "#065f46", border: "1.5px solid #6ee7b7", whiteSpace: "nowrap", flexShrink: 0 }} className="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm">
                                             <CheckCircle2 size={16} className="text-emerald-600" />
                                             Approved by Doctor
                                         </span>
                                         <button
                                             onClick={() => setIsEditing(!isEditing)}
-                                            style={{ background: "#f1f5f9", color: "#0f172a", border: "1.5px solid #cbd5e1" }}
-                                            className="px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm hover:bg-slate-200"
+                                            style={{ background: "#f1f5f9", color: "#0f172a", border: "1.5px solid #cbd5e1", whiteSpace: "nowrap", flexShrink: 0 }}
+                                            className="px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm hover:bg-slate-200 cursor-pointer"
                                         >
                                             <Edit3 size={15} className="text-slate-800" />
                                             <span>{isEditing ? "Cancel Edit" : "Edit Plan"}</span>
                                         </button>
                                     </div>
                                 ) : (
-                                    <>
+                                    <div className="flex items-center gap-2 shrink-0">
                                         <button
                                             onClick={() => setIsEditing(!isEditing)}
-                                            style={{ background: "#f1f5f9", color: "#0f172a", border: "1.5px solid #cbd5e1" }}
-                                            className="px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm hover:bg-slate-200"
+                                            style={{ background: "#f1f5f9", color: "#0f172a", border: "1.5px solid #cbd5e1", whiteSpace: "nowrap", flexShrink: 0 }}
+                                            className="px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm hover:bg-slate-200 cursor-pointer"
                                         >
                                             <Edit3 size={15} className="text-slate-800" />
                                             <span>{isEditing ? "Cancel Edit" : "Edit Plan"}</span>
@@ -471,8 +471,8 @@ const CarePlans = ({ keycloak }) => {
                                         <button
                                             onClick={handleApprove}
                                             disabled={actionLoading}
-                                            style={{ background: "#059669", color: "#ffffff", border: "1.5px solid #047857" }}
-                                            className="px-5 py-2.5 rounded-xl text-xs font-bold shadow-md hover:bg-emerald-700 transition-all flex items-center gap-2 disabled:opacity-50"
+                                            style={{ background: "#059669", color: "#ffffff", border: "1.5px solid #047857", whiteSpace: "nowrap", flexShrink: 0 }}
+                                            className="px-5 py-2.5 rounded-xl text-xs font-bold shadow-md hover:bg-emerald-700 transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
                                         >
                                             <Check size={16} className="text-white" />
                                             <span style={{ color: "#ffffff" }}>{actionLoading ? "Approving..." : "Approve Plan"}</span>
@@ -480,20 +480,20 @@ const CarePlans = ({ keycloak }) => {
                                         <button
                                             onClick={handleReject}
                                             disabled={actionLoading}
-                                            style={{ background: "#fef2f2", color: "#dc2626", border: "1.5px solid #fca5a5" }}
-                                            className="px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm hover:bg-rose-100 disabled:opacity-50"
+                                            style={{ background: "#ffffff", color: "#dc2626", border: "1.5px solid #cbd5e1", whiteSpace: "nowrap", flexShrink: 0 }}
+                                            className="px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm hover:bg-rose-50 disabled:opacity-50 cursor-pointer"
                                         >
                                             <XCircle size={15} className="text-rose-600" />
                                             <span>Request Revision</span>
                                         </button>
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         </div>
 
                         {/* METRICS ROW */}
                         <div className="grid gap-4 md:grid-cols-3">
-                            <div className="section-card">
+                            <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px" }}>
                                 <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
                                     <span>CVD Risk Score</span>
                                     <span className="text-rose-600 font-bold">{prevRisk}%</span>
@@ -509,7 +509,7 @@ const CarePlans = ({ keycloak }) => {
                                 </div>
                             </div>
 
-                            <div className="section-card">
+                            <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px" }}>
                                 <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
                                     <span>Patient Compliance</span>
                                     <span className="text-emerald-600 font-bold">{carePlan.adherence != null ? carePlan.adherence : 0}%</span>
@@ -520,7 +520,7 @@ const CarePlans = ({ keycloak }) => {
                                 <p className="text-xs text-slate-500">Tracked daily via checklist</p>
                             </div>
 
-                            <div className="section-card">
+                            <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px" }}>
                                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 block">Clinical Audits</span>
                                 <div className="space-y-1 text-xs">
                                     <div className="flex justify-between">
@@ -627,7 +627,7 @@ const CarePlans = ({ keycloak }) => {
                             </div>
                         ) : (
                             <div className="space-y-6">
-                                <div className="section-card" style={{ background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", borderColor: "#bfdbfe" }}>
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px" }}>
                                     <span className="text-xs font-extrabold uppercase tracking-wider text-blue-700 flex items-center gap-1.5">
                                         <Award size={15} /> Clinical Objective
                                     </span>
@@ -635,7 +635,7 @@ const CarePlans = ({ keycloak }) => {
                                 </div>
 
                                 <div className="grid gap-6 md:grid-cols-2">
-                                    <div className="section-card">
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "20px" }}>
                                         <div className="flex items-center gap-2.5 mb-3">
                                             <div className="rounded-xl bg-blue-100 p-2 text-blue-600"><Pill size={18} /></div>
                                             <h3 className="font-bold text-slate-900">Prescribed Medications</h3>
@@ -643,7 +643,7 @@ const CarePlans = ({ keycloak }) => {
                                         <div className="space-y-2">
                                             {medications.length > 0 ? (
                                                 medications.map((med, idx) => (
-                                                    <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 text-sm">
+                                                    <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
                                                         <span className="font-semibold text-slate-800">{med}</span>
                                                         <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">Prescribed</span>
                                                     </div>
@@ -654,32 +654,32 @@ const CarePlans = ({ keycloak }) => {
                                         </div>
                                     </div>
 
-                                    <div className="section-card">
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "20px" }}>
                                         <div className="flex items-center gap-2.5 mb-3">
                                             <div className="rounded-xl bg-emerald-100 p-2 text-emerald-600"><Utensils size={18} /></div>
                                             <h3 className="font-bold text-slate-900">Dietary Guidelines</h3>
                                         </div>
-                                        <p className="text-sm text-slate-700 bg-white p-3 rounded-xl border border-slate-200 font-medium">
+                                        <p style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "14px" }} className="text-sm text-slate-700 font-medium">
                                             {carePlan.diet || "Low Salt, Low Sugar, High Fiber Mediterranean Diet"}
                                         </p>
                                     </div>
 
-                                    <div className="section-card">
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "20px" }}>
                                         <div className="flex items-center gap-2.5 mb-3">
                                             <div className="rounded-xl bg-amber-100 p-2 text-amber-600"><Dumbbell size={18} /></div>
                                             <h3 className="font-bold text-slate-900">Exercise Protocol</h3>
                                         </div>
-                                        <p className="text-sm text-slate-700 bg-white p-3 rounded-xl border border-slate-200 font-medium">
+                                        <p style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "14px" }} className="text-sm text-slate-700 font-medium">
                                             {carePlan.exercise || "30 min Brisk Walking (5 Days/week) + Light Strength Training"}
                                         </p>
                                     </div>
 
-                                    <div className="section-card">
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "20px" }}>
                                         <div className="flex items-center gap-2.5 mb-3">
                                             <div className="rounded-xl bg-indigo-100 p-2 text-indigo-600"><Moon size={18} /></div>
                                             <h3 className="font-bold text-slate-900">Sleep & Recovery</h3>
                                         </div>
-                                        <p className="text-sm text-slate-700 bg-white p-3 rounded-xl border border-slate-200 font-medium">
+                                        <p style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "14px" }} className="text-sm text-slate-700 font-medium">
                                             {carePlan.sleep || "7-8 Hours of Night Rest"}
                                         </p>
                                     </div>
@@ -688,10 +688,10 @@ const CarePlans = ({ keycloak }) => {
                         )}
 
                         {/* DOCTOR REMARKS & DIAGNOSTICS TEXTAREA */}
-                        <div className="section-card p-5 bg-slate-50/90 rounded-3xl border border-slate-200 space-y-3">
+                        <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "20px" }} className="space-y-3">
                             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
                                 <Stethoscope size={16} className="text-blue-600" />
-                                Attending Physician Remarks & AI Engine Source
+                                Attending Physician Remarks & Engine Source
                             </label>
                             <textarea
                                 value={doctorNotes}
@@ -702,7 +702,7 @@ const CarePlans = ({ keycloak }) => {
                                 className="w-full rounded-2xl border-2 border-slate-300 bg-white text-sm font-semibold text-slate-900 focus:border-blue-600 focus:ring-4 focus:ring-blue-100 outline-none transition-all shadow-xs resize-y"
                             />
                             {carePlan.doctorNotes && (
-                                <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-xl p-3 text-xs text-blue-900 font-medium">
+                                <div style={{ backgroundColor: "#f8fafc", border: "1px solid #cbd5e1", borderRadius: "12px", padding: "12px" }} className="flex items-center gap-2 text-xs text-slate-700 font-medium">
                                     <span className="font-bold text-blue-700">Diagnostics:</span>
                                     <span>{carePlan.doctorNotes}</span>
                                 </div>
@@ -714,7 +714,7 @@ const CarePlans = ({ keycloak }) => {
                         <ClipboardList size={36} className="mx-auto text-slate-400 mb-2" />
                         <h3 className="text-base font-bold text-slate-900">No Care Plan Loaded</h3>
                         <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                            Enter a Patient ID above or click "Generate AI Plan" to load or create a care plan.
+                            Enter a Patient ID above or click "Generate Care Plan" to load or create a care plan.
                         </p>
                     </div>
                 )}

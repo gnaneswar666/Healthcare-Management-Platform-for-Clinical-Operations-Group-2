@@ -6,22 +6,22 @@ const getRiskTheme = (risk) => {
         case "HIGH":
         case "CRITICAL":
             return {
-                badge: "bg-rose-100 text-rose-900 border-rose-300 font-extrabold",
-                bg: "bg-rose-50/80 border-rose-200",
+                badge: "bg-rose-100/80 text-rose-900 border-slate-200 font-extrabold",
+                bg: "bg-rose-50/70 border-slate-200/80",
                 text: "text-rose-700"
             };
         case "MEDIUM":
         case "WARNING":
             return {
-                badge: "bg-amber-100 text-amber-950 border-amber-300 font-extrabold",
-                bg: "bg-amber-50/80 border-amber-200",
+                badge: "bg-amber-100/80 text-amber-900 border-slate-200 font-extrabold",
+                bg: "bg-amber-50/70 border-slate-200/80",
                 text: "text-amber-700"
             };
         case "LOW":
         default:
             return {
-                badge: "bg-emerald-100 text-emerald-950 border-emerald-300 font-extrabold",
-                bg: "bg-emerald-50/80 border-emerald-200",
+                badge: "bg-emerald-100/80 text-emerald-900 border-slate-200 font-extrabold",
+                bg: "bg-emerald-50/70 border-slate-200/80",
                 text: "text-emerald-700"
             };
     }
@@ -45,8 +45,8 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
                 <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 border border-blue-200 shadow-2xs text-blue-600">
                     <Brain size={32} />
                 </div>
-                <h3 className="text-lg font-extrabold text-slate-900 mb-1">No AI Predictions Yet</h3>
-                <p className="text-xs text-slate-500 mb-6 max-w-sm">Run an AI risk prediction to calculate your disease risk profile and personalized recommendations.</p>
+                <h3 className="text-lg font-extrabold text-slate-900 mb-1">No Clinical Predictions Yet</h3>
+                <p className="text-xs text-slate-500 mb-6 max-w-sm">Run a risk prediction to calculate your disease risk profile and personalized recommendations.</p>
                 <button
                     type="button"
                     onClick={onPredictAgain}
@@ -60,7 +60,7 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
                     className="flex items-center gap-2 text-xs font-extrabold shadow-md hover:shadow-lg transition-all cursor-pointer"
                 >
                     <Sparkles size={16} />
-                    {predicting ? "Running Prediction..." : "Run AI Risk Assessment"}
+                    {predicting ? "Running Prediction..." : "Run Clinical Risk Assessment"}
                 </button>
             </motion.div>
         );
@@ -68,9 +68,14 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
 
     const confidence = Math.round(Number(prediction.confidence) || 0);
     const probability = Math.round(Number(prediction.probability) || 0);
-    const createdAt = prediction.createdAt
-        ? new Date(prediction.createdAt).toLocaleString()
-        : "Recently";
+    const rawCreatedAt = prediction.createdAt || prediction.predictionDate || prediction.timestamp || prediction.date;
+    let createdAt = "Recently";
+    if (rawCreatedAt) {
+        const d = new Date(rawCreatedAt);
+        if (!isNaN(d.getTime())) {
+            createdAt = d.toLocaleString();
+        }
+    }
 
     const diseaseName = prediction.prediction || prediction.disease || "Health Risk Assessment";
     const theme = getRiskTheme(prediction.risk);
@@ -93,7 +98,7 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
                         <Brain size={24} />
                     </div>
                     <div className="min-w-0">
-                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">LATEST CLINICAL AI ASSESSMENT</span>
+                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">LATEST CLINICAL ASSESSMENT</span>
                         <h3 className="text-xl font-extrabold text-slate-900 truncate leading-tight">{diseaseName}</h3>
                     </div>
                 </div>
@@ -112,7 +117,7 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
 
             {/* Metrics 3 Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div style={{ padding: "16px 20px" }} className={`rounded-2xl border ${theme.bg} space-y-1`}>
+                <div style={{ padding: "16px 20px", backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px" }} className="space-y-1">
                     <div className="flex items-center gap-2">
                         <ShieldAlert size={16} className={theme.text} />
                         <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Risk Level</span>
@@ -120,7 +125,7 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
                     <p className={`text-2xl font-black ${theme.text}`}>{prediction.risk || "Low"}</p>
                 </div>
 
-                <div style={{ padding: "16px 20px" }} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 space-y-1">
+                <div style={{ padding: "16px 20px", backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px" }} className="space-y-1">
                     <div className="flex items-center gap-2">
                         <Activity size={16} className="text-blue-600" />
                         <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Disease Probability</span>
@@ -128,7 +133,7 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
                     <p className="text-2xl font-black text-slate-900">{probability}%</p>
                 </div>
 
-                <div style={{ padding: "16px 20px" }} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 space-y-1">
+                <div style={{ padding: "16px 20px", backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px" }} className="space-y-1">
                     <div className="flex items-center gap-2">
                         <CalendarDays size={16} className="text-slate-500" />
                         <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Assessment Date</span>
@@ -141,15 +146,15 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
             <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
                     <Cpu size={14} className="text-blue-600" />
-                    <span>Engine: HealthCare AI v1.0</span>
+                    <span>Engine: Clinical Decision Support v1.0</span>
                 </div>
 
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-3 flex-wrap shrink-0">
                     <button
                         type="button"
                         onClick={onPredictAgain}
                         disabled={predicting}
-                        style={{ padding: "10px 18px", borderRadius: "12px" }}
+                        style={{ padding: "10px 18px", borderRadius: "12px", whiteSpace: "nowrap", flexShrink: 0 }}
                         className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer"
                     >
                         <RefreshCw size={14} className={predicting ? "animate-spin text-slate-600" : "text-slate-600"} />
@@ -163,7 +168,9 @@ function LatestPredictionCard({ prediction, onView, onPredictAgain, predicting }
                             padding: "10px 20px",
                             borderRadius: "12px",
                             background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
-                            color: "#ffffff"
+                            color: "#ffffff",
+                            whiteSpace: "nowrap",
+                            flexShrink: 0
                         }}
                         className="font-bold text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer"
                     >

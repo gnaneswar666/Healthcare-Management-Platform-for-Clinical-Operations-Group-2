@@ -223,149 +223,210 @@ function CarePlans() {
                 animate="visible"
             >
                 {/* 1. HERO HEADER BANNER */}
-                <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
-                    <div className="space-y-1">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-teal-50 text-teal-700 border border-teal-200/60 text-xs font-semibold">
-                            <FileHeart size={14} className="text-teal-600" /> Care Plan Telemetry & Protocol Tracker
+                <motion.div variants={itemVariants} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px", paddingBottom: "16px", borderBottom: "1px solid #e2e8f0" }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            backgroundColor: "#f0fdf4",
+                            color: "#15803d",
+                            border: "1px solid #bbf7d0",
+                            fontSize: "11px",
+                            fontWeight: "800",
+                            padding: "3px 10px",
+                            borderRadius: "8px",
+                            marginBottom: "6px"
+                        }}>
+                            <FileHeart size={14} style={{ color: "#16a34a" }} /> Care Plan Telemetry & Protocol Tracker
                         </div>
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight m-0">
+                        <h1 style={{ fontSize: "24px", fontWeight: "800", color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
                             Patient Care Plan Progress
                         </h1>
-                        <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-2xl m-0 leading-relaxed">
+                        <p style={{ fontSize: "13px", color: "#64748b", fontWeight: "500", margin: "4px 0 0 0" }}>
                             Enterprise dashboard for monitoring daily adherence telemetry, care plan interventions, and physician protocol compliance across all registered patients.
                         </p>
                     </div>
-                    <div className="shrink-0">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100/90 border border-slate-200 text-slate-600 text-xs font-bold">
-                            <Lock size={14} className="text-slate-500" />
+                    <div style={{ flexShrink: 0 }}>
+                        <div style={{
+                            backgroundColor: "#f8fafc",
+                            border: "1px solid #cbd5e1",
+                            padding: "8px 16px",
+                            borderRadius: "12px",
+                            fontSize: "12px",
+                            fontWeight: "700",
+                            color: "#334155",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "8px"
+                        }}>
+                            <Lock size={14} style={{ color: "#64748b" }} />
                             <span>Admin Portal View</span>
                         </div>
                     </div>
                 </motion.div>
 
                 {/* 2. TOP METRICS STAT CARDS */}
-                <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-5">
-                    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all space-y-2.5">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Active Plans</span>
-                            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                <motion.div variants={itemVariants} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+                    {/* Active Plans */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px 20px", boxShadow: "0 4px 14px rgba(15, 23, 42, 0.03)" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                            <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b" }}>Active Plans</span>
+                            <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#eff6ff", color: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <ClipboardList size={18} />
                             </div>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 m-0">{dashboardStats.activeCarePlans}</h3>
-                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                        <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#0f172a", margin: 0 }}>{dashboardStats.activeCarePlans}</h3>
+                        <span style={{ fontSize: "11px", fontWeight: "700", color: "#16a34a", display: "inline-flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
                             <TrendingUp size={12} /> Active in system
                         </span>
                     </div>
 
-                    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all space-y-2.5">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Avg Adherence</span>
-                            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                    {/* Avg Adherence */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px 20px", boxShadow: "0 4px 14px rgba(15, 23, 42, 0.03)" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                            <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b" }}>Avg Adherence</span>
+                            <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#f0fdf4", color: "#16a34a", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <Award size={18} />
                             </div>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 m-0">{dashboardStats.averageAdherence}%</h3>
-                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                        <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#0f172a", margin: 0 }}>{dashboardStats.averageAdherence}%</h3>
+                        <span style={{ fontSize: "11px", fontWeight: "700", color: "#16a34a", display: "inline-flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
                             <CheckCircle2 size={12} /> Daily compliance
                         </span>
                     </div>
 
-                    <div className="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all space-y-2.5">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-amber-700">Pending Review</span>
-                            <div className="w-9 h-9 rounded-xl bg-amber-100/80 text-amber-700 flex items-center justify-center shrink-0">
+                    {/* Pending Review */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px 20px", boxShadow: "0 4px 14px rgba(15, 23, 42, 0.03)" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                            <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#d97706" }}>Pending Review</span>
+                            <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#fffbeb", color: "#d97706", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <Clock3 size={18} />
                             </div>
                         </div>
-                        <h3 className="text-2xl font-black text-amber-950 m-0">{pendingPlans.length || dashboardStats.pendingApproval}</h3>
-                        <span className="text-[11px] font-bold text-amber-700 block">Awaiting physician</span>
+                        <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#92400e", margin: 0 }}>{pendingPlans.length || dashboardStats.pendingApproval}</h3>
+                        <span style={{ fontSize: "11px", fontWeight: "700", color: "#b45309", display: "block", marginTop: "4px" }}>Awaiting physician</span>
                     </div>
 
-                    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all space-y-2.5">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Recovered</span>
-                            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                    {/* Recovered */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px 20px", boxShadow: "0 4px 14px rgba(15, 23, 42, 0.03)" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                            <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b" }}>Recovered</span>
+                            <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#e0e7ff", color: "#4f46e5", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <ShieldCheck size={18} />
                             </div>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 m-0">{dashboardStats.recoveredPatients || 34}</h3>
-                        <span className="text-[11px] font-bold text-indigo-600 block">Risk reduced</span>
+                        <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#0f172a", margin: 0 }}>{dashboardStats.recoveredPatients || 34}</h3>
+                        <span style={{ fontSize: "11px", fontWeight: "700", color: "#4338ca", display: "block", marginTop: "4px" }}>Risk reduced</span>
                     </div>
 
-                    <div className="bg-rose-50/60 border border-rose-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all space-y-2.5">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-rose-700">High Risk</span>
-                            <div className="w-9 h-9 rounded-xl bg-rose-100/80 text-rose-700 flex items-center justify-center shrink-0">
+                    {/* High Risk */}
+                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "16px", padding: "18px 20px", boxShadow: "0 4px 14px rgba(15, 23, 42, 0.03)" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                            <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#e11d48" }}>High Risk</span>
+                            <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#fff1f2", color: "#e11d48", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <AlertTriangle size={18} />
                             </div>
                         </div>
-                        <h3 className="text-2xl font-black text-rose-950 m-0">{dashboardStats.highRiskPatients}</h3>
-                        <span className="text-[11px] font-bold text-rose-700 block">Priority cases</span>
+                        <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#9f1239", margin: 0 }}>{dashboardStats.highRiskPatients}</h3>
+                        <span style={{ fontSize: "11px", fontWeight: "700", color: "#be123c", display: "block", marginTop: "4px" }}>Priority cases</span>
                     </div>
                 </motion.div>
 
                 {/* 3. MAIN DASHBOARD CONTENT: 2-COLUMN SPLIT LAYOUT */}
-                <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <motion.div variants={itemVariants} style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: "24px", alignItems: "start" }}>
                     
-                    {/* LEFT COLUMN: VERTICAL PATIENTS DIRECTORY SELECTOR (lg:col-span-4) */}
-                    <div className="lg:col-span-4 bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm space-y-4">
-                        <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
-                            <div className="flex items-center gap-2">
-                                <Users size={20} className="text-blue-600" />
-                                <h3 className="text-base font-extrabold text-slate-900 m-0">Patients Directory</h3>
+                    {/* LEFT COLUMN: VERTICAL PATIENTS DIRECTORY SELECTOR */}
+                    <div style={{ gridColumn: "span 4", backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "20px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-4">
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: "14px", borderBottom: "1px solid #e2e8f0" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <Users size={18} style={{ color: "#2563eb" }} />
+                                <h3 style={{ fontSize: "15px", fontWeight: "800", color: "#0f172a", margin: 0 }}>Patients Directory</h3>
                             </div>
-                            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200/60">
+                            <span style={{ fontSize: "11px", fontWeight: "800", color: "#475569", backgroundColor: "#f1f5f9", padding: "2px 10px", borderRadius: "20px", border: "1px solid #cbd5e1" }}>
                                 {patients.length} Total
                             </span>
                         </div>
 
                         {/* SEARCH INPUT */}
-                        <div className="relative">
-                            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                        <div style={{ position: "relative" }}>
+                            <Search size={16} style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} />
                             <input
                                 type="text"
                                 placeholder="Search patient name or ID..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                style={{ paddingLeft: "2.4rem" }}
-                                className="w-full pr-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-600 outline-none transition-all"
+                                style={{
+                                    width: "100%",
+                                    padding: "8px 12px 8px 40px",
+                                    fontSize: "12px",
+                                    fontWeight: "600",
+                                    borderRadius: "12px",
+                                    border: "1px solid #cbd5e1",
+                                    backgroundColor: "#f8fafc",
+                                    color: "#0f172a",
+                                    outline: "none"
+                                }}
                             />
                         </div>
 
                         {/* FILTER TABS */}
-                        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/70">
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", backgroundColor: "#f1f5f9", padding: "4px", borderRadius: "12px", border: "1px solid #cbd5e1" }}>
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("ALL")}
-                                className={`flex-1 py-1.5 text-xs font-extrabold rounded-lg transition-all cursor-pointer text-center ${
-                                    activeTab === "ALL" ? "bg-slate-900 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
-                                }`}
+                                style={{
+                                    flex: 1,
+                                    padding: "6px 0",
+                                    fontSize: "11px",
+                                    fontWeight: "800",
+                                    borderRadius: "8px",
+                                    border: "none",
+                                    backgroundColor: activeTab === "ALL" ? "#0f172a" : "transparent",
+                                    color: activeTab === "ALL" ? "#ffffff" : "#475569",
+                                    cursor: "pointer"
+                                }}
                             >
                                 All ({patients.length})
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("PENDING")}
-                                className={`flex-1 py-1.5 text-xs font-extrabold rounded-lg transition-all cursor-pointer text-center ${
-                                    activeTab === "PENDING" ? "bg-amber-500 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
-                                }`}
+                                style={{
+                                    flex: 1,
+                                    padding: "6px 0",
+                                    fontSize: "11px",
+                                    fontWeight: "800",
+                                    borderRadius: "8px",
+                                    border: "none",
+                                    backgroundColor: activeTab === "PENDING" ? "#d97706" : "transparent",
+                                    color: activeTab === "PENDING" ? "#ffffff" : "#475569",
+                                    cursor: "pointer"
+                                }}
                             >
                                 Pending ({pendingPlans.length})
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("HIGH_RISK")}
-                                className={`flex-1 py-1.5 text-xs font-extrabold rounded-lg transition-all cursor-pointer text-center ${
-                                    activeTab === "HIGH_RISK" ? "bg-rose-600 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
-                                }`}
+                                style={{
+                                    flex: 1,
+                                    padding: "6px 0",
+                                    fontSize: "11px",
+                                    fontWeight: "800",
+                                    borderRadius: "8px",
+                                    border: "none",
+                                    backgroundColor: activeTab === "HIGH_RISK" ? "#e11d48" : "transparent",
+                                    color: activeTab === "HIGH_RISK" ? "#ffffff" : "#475569",
+                                    cursor: "pointer"
+                                }}
                             >
                                 High Risk
                             </button>
                         </div>
 
                         {/* VERTICAL PATIENT LIST */}
-                        <div className="max-h-[640px] overflow-y-auto pr-1 space-y-2.5">
+                        <div style={{ maxHeight: "600px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px", paddingRight: "4px" }}>
                             {filteredPatients.map((p) => {
                                 const isSelected = p.patientId === selectedPatientId;
                                 const age = calculateAge(p.dob);
@@ -376,95 +437,129 @@ function CarePlans() {
                                         key={p.patientId}
                                         type="button"
                                         onClick={() => handleSelectPatient(p.patientId)}
-                                        className={`w-full text-left p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
-                                            isSelected
-                                                ? "bg-blue-50/90 border-blue-500 shadow-sm ring-1 ring-blue-500/30"
-                                                : "bg-slate-50/50 border-slate-200/70 hover:bg-white hover:border-slate-300"
-                                        }`}
+                                        style={{
+                                            width: "100%",
+                                            textAlign: "left",
+                                            padding: "12px 14px",
+                                            borderRadius: "14px",
+                                            backgroundColor: isSelected ? "#eff6ff" : "#ffffff",
+                                            border: `1px solid ${isSelected ? "#3b82f6" : "#cbd5e1"}`,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            cursor: "pointer",
+                                            boxShadow: isSelected ? "0 2px 8px rgba(59, 130, 246, 0.15)" : "none"
+                                        }}
                                     >
-                                        <div className="flex items-center gap-3 min-w-0">
-                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
-                                                isSelected
-                                                    ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm"
-                                                    : "bg-white text-slate-700 border border-slate-200/70"
-                                            }`}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
+                                            <div style={{
+                                                width: "38px",
+                                                height: "38px",
+                                                borderRadius: "10px",
+                                                background: isSelected ? "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)" : "#f1f5f9",
+                                                color: isSelected ? "#ffffff" : "#334155",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontSize: "12px",
+                                                fontWeight: "800",
+                                                flexShrink: 0
+                                            }}>
                                                 {(p.firstName?.[0] || "") + (p.lastName?.[0] || "")}
                                             </div>
-                                            <div className="min-w-0">
-                                                <div className="flex items-center gap-1.5">
-                                                    <p className="font-bold text-sm text-slate-900 truncate m-0">
+                                            <div style={{ minWidth: 0 }}>
+                                                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                                    <p style={{ fontWeight: "800", fontSize: "13px", color: "#0f172a", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                                         {p.firstName} {p.lastName}
                                                     </p>
                                                     {isPending && (
-                                                        <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0 animate-pulse" title="Pending Doctor Review" />
+                                                        <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#f59e0b", flexShrink: 0 }} title="Pending Doctor Review" />
                                                     )}
                                                 </div>
-                                                <p className="text-xs text-slate-500 font-medium m-0 flex items-center gap-1.5 mt-0.5">
-                                                    <span className="font-mono bg-white text-slate-700 px-1.5 py-0.2 rounded text-[11px] border border-slate-200/70">{p.patientId}</span>
+                                                <p style={{ fontSize: "11px", color: "#64748b", fontWeight: "600", margin: "2px 0 0 0", display: "flex", alignItems: "center", gap: "6px" }}>
+                                                    <span style={{ fontFamily: "monospace", backgroundColor: "#f1f5f9", color: "#334155", padding: "1px 6px", borderRadius: "4px", border: "1px solid #cbd5e1" }}>{p.patientId}</span>
                                                     {age && <span>• {age} yrs</span>}
                                                 </p>
                                             </div>
                                         </div>
-                                        <ChevronRight size={16} className={isSelected ? "text-blue-600" : "text-slate-300"} />
+                                        <ChevronRight size={16} style={{ color: isSelected ? "#2563eb" : "#cbd5e1", flexShrink: 0 }} />
                                     </button>
                                 );
                             })}
 
                             {filteredPatients.length === 0 && (
-                                <div className="text-center py-8 text-xs text-slate-400 font-medium">
+                                <div style={{ textAlign: "center", padding: "30px 0", fontSize: "12px", color: "#94a3b8", fontWeight: "600" }}>
                                     No patients match the selected filter.
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: CARE PLAN DETAILS & TELEMETRY DASHBOARD (lg:col-span-8) */}
-                    <div className="lg:col-span-8 space-y-6">
+                    {/* RIGHT COLUMN: CARE PLAN DETAILS & TELEMETRY DASHBOARD */}
+                    <div style={{ gridColumn: "span 8", display: "flex", flexDirection: "column", gap: "24px" }}>
                         {error && (
-                            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-xs font-bold text-rose-700 flex items-center justify-between shadow-xs">
-                                <div className="flex items-center gap-2.5">
-                                    <AlertTriangle size={16} className="shrink-0 text-rose-600" />
+                            <div style={{ backgroundColor: "#fff1f2", border: "1px solid #fecdd3", borderRadius: "14px", padding: "14px 18px", fontSize: "12px", fontWeight: "700", color: "#be123c", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                    <AlertTriangle size={16} style={{ color: "#e11d48", flexShrink: 0 }} />
                                     <span>{error}</span>
                                 </div>
-                                <button type="button" onClick={() => setError("")} className="text-rose-600 hover:underline">Dismiss</button>
+                                <button type="button" onClick={() => setError("")} style={{ color: "#e11d48", background: "none", border: "none", cursor: "pointer", fontWeight: "800" }}>Dismiss</button>
                             </div>
                         )}
 
                         {loading ? (
-                            <div className="bg-white border border-slate-200/80 rounded-2xl p-16 text-center shadow-sm space-y-3">
-                                <div className="h-10 w-10 animate-spin rounded-full border-2 border-slate-100 border-t-blue-600 mx-auto" />
-                                <p className="font-extrabold text-base text-slate-800 m-0">Loading Patient Care Plan...</p>
-                                <p className="text-xs text-slate-400 font-medium m-0">Fetching compliance telemetry for Patient {selectedPatientId}</p>
+                            <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "60px 24px", textAlign: "center", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+                                <div className="h-10 w-10 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" />
+                                <p style={{ fontWeight: "800", fontSize: "15px", color: "#0f172a", margin: 0 }}>Loading Patient Care Plan...</p>
+                                <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>Fetching compliance telemetry for Patient {selectedPatientId}</p>
                             </div>
                         ) : carePlan ? (
-                            <div className="space-y-6">
+                            <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
                                 {/* CARE PLAN HEADER CARD */}
-                                <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-4">
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white font-black text-xl shadow-sm shrink-0">
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0 }}>
+                                            <div style={{
+                                                width: "56px",
+                                                height: "56px",
+                                                borderRadius: "16px",
+                                                background: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+                                                color: "#ffffff",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontWeight: "800",
+                                                fontSize: "20px",
+                                                boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
+                                                flexShrink: 0
+                                            }}>
                                                 {(activePatient.firstName?.[0] || "") + (activePatient.lastName?.[0] || "")}
                                             </div>
-                                            <div className="space-y-1">
-                                                <div className="flex items-center gap-2.5 flex-wrap">
-                                                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 m-0">
+                                            <div style={{ minWidth: 0 }}>
+                                                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
+                                                    <h2 style={{ fontSize: "20px", fontWeight: "800", color: "#0f172a", margin: 0 }}>
                                                         {activePatient.firstName} {activePatient.lastName}
                                                     </h2>
-                                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-                                                        currentStatus === "APPROVED"
-                                                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                                            : currentStatus === "REJECTED"
-                                                            ? "bg-rose-50 text-rose-700 border border-rose-200"
-                                                            : "bg-amber-50 text-amber-700 border border-amber-200"
-                                                    }`}>
-                                                        {currentStatus === "APPROVED" && <CheckCircle2 size={13} className="text-emerald-600" />}
-                                                        {currentStatus === "PENDING" && <Clock3 size={13} className="text-amber-600" />}
-                                                        {currentStatus === "REJECTED" && <AlertTriangle size={13} className="text-rose-600" />}
+                                                    <span style={{
+                                                        backgroundColor: currentStatus === "APPROVED" ? "#ecfdf5" : currentStatus === "REJECTED" ? "#fff1f2" : "#fffbeb",
+                                                        color: currentStatus === "APPROVED" ? "#047857" : currentStatus === "REJECTED" ? "#be123c" : "#b45309",
+                                                        border: `1px solid ${currentStatus === "APPROVED" ? "#a7f3d0" : currentStatus === "REJECTED" ? "#fecdd3" : "#fde68a"}`,
+                                                        fontSize: "11px",
+                                                        fontWeight: "800",
+                                                        padding: "3px 10px",
+                                                        borderRadius: "20px",
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        gap: "6px"
+                                                    }}>
+                                                        {currentStatus === "APPROVED" && <CheckCircle2 size={13} style={{ color: "#10b981" }} />}
+                                                        {currentStatus === "PENDING" && <Clock3 size={13} style={{ color: "#d97706" }} />}
+                                                        {currentStatus === "REJECTED" && <AlertTriangle size={13} style={{ color: "#e11d48" }} />}
                                                         Doctor Status: {currentStatus}
                                                     </span>
                                                 </div>
-                                                <p className="text-xs text-slate-500 font-medium flex items-center gap-2 flex-wrap m-0">
-                                                    <span>Patient ID: <strong className="font-mono text-slate-700 font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/70">{selectedPatientId}</strong></span>
+                                                <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "600", margin: 0, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px" }}>
+                                                    <span>Patient ID: <strong style={{ fontFamily: "monospace", color: "#0f172a", backgroundColor: "#f1f5f9", padding: "1px 6px", borderRadius: "4px", border: "1px solid #cbd5e1" }}>{selectedPatientId}</strong></span>
                                                     <span>•</span>
                                                     <span>Created: {carePlan.createdAt ? new Date(carePlan.createdAt).toLocaleDateString() : "Today"}</span>
                                                     <span>•</span>
@@ -473,48 +568,75 @@ function CarePlans() {
                                             </div>
                                         </div>
 
-                                        <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100/90 border border-slate-200 text-slate-600 text-xs font-bold shrink-0 self-start sm:self-center">
-                                            <Stethoscope size={16} className="text-blue-600 shrink-0" />
+                                        <div style={{
+                                            backgroundColor: "#f8fafc",
+                                            border: "1px solid #cbd5e1",
+                                            padding: "8px 16px",
+                                            borderRadius: "12px",
+                                            fontSize: "12px",
+                                            fontWeight: "700",
+                                            color: "#334155",
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: "8px",
+                                            flexShrink: 0,
+                                            whiteSpace: "nowrap"
+                                        }}>
+                                            <Stethoscope size={16} style={{ color: "#2563eb" }} />
                                             <span>Clinical Interventions Active</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* LIVE DAILY ADHERENCE PROGRESS TRACKER CARD */}
-                                <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-7 space-y-6 shadow-sm">
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                        <div className="space-y-1">
-                                            <span className="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                                                <Activity size={20} className="text-emerald-600" />
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }} className="space-y-5">
+                                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "14px" }}>
+                                        <div>
+                                            <span style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", display: "flex", alignItems: "center", gap: "8px" }}>
+                                                <Activity size={18} style={{ color: "#16a34a" }} />
                                                 Today's Patient Adherence Telemetry
                                             </span>
-                                            <p className="text-xs text-slate-500 font-medium m-0">
+                                            <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", margin: "2px 0 0 0" }}>
                                                 {progressTasks.completedCount} of {progressTasks.totalTasks} Daily Compliance Tasks Completed Today
                                             </p>
                                         </div>
 
-                                        {/* ADHERENCE SCORE BADGE */}
-                                        <div className="flex items-center gap-3 bg-gradient-to-br from-emerald-600 to-teal-600 text-white px-5 py-3 rounded-2xl shadow-sm self-start sm:self-auto">
-                                            <Award size={24} className="text-emerald-100 shrink-0" />
+                                        {/* ADHERENCE SCORE BADGE - UNCLIPPED */}
+                                        <div style={{
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: "10px",
+                                            background: "linear-gradient(135deg, #059669 0%, #0d9488 100%)",
+                                            color: "#ffffff",
+                                            padding: "10px 18px",
+                                            borderRadius: "14px",
+                                            boxShadow: "0 4px 14px rgba(5, 150, 105, 0.3)",
+                                            flexShrink: 0,
+                                            whiteSpace: "nowrap"
+                                        }}>
+                                            <Award size={22} style={{ color: "#a7f3d0", flexShrink: 0 }} />
                                             <div>
-                                                <div className="text-2xl font-black leading-none">{progressTasks.adherence}%</div>
-                                                <div className="text-[10px] font-bold text-emerald-100 uppercase tracking-wider mt-1">Daily Score</div>
+                                                <div style={{ fontSize: "20px", fontWeight: "900", lineHeight: 1 }}>{progressTasks.adherence}%</div>
+                                                <div style={{ fontSize: "9px", fontWeight: "800", color: "#d1fae5", textTransform: "uppercase", letterSpacing: "0.05em", marginTop: "2px" }}>Daily Score</div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Progress Bar Track */}
-                                    <div className="space-y-1.5">
-                                        <div className="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
-                                            <div
-                                                className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 shadow-sm"
-                                                style={{ width: `${Math.max(4, Math.min(100, progressTasks.adherence))}%` }}
-                                            />
-                                        </div>
+                                    <div style={{ width: "100%", height: "10px", backgroundColor: "#e2e8f0", borderRadius: "20px", overflow: "hidden" }}>
+                                        <div
+                                            style={{
+                                                height: "100%",
+                                                borderRadius: "20px",
+                                                background: "linear-gradient(90deg, #10b981 0%, #14b8a6 100%)",
+                                                transition: "width 0.5s ease-out",
+                                                width: `${Math.max(4, Math.min(100, progressTasks.adherence))}%`
+                                            }}
+                                        />
                                     </div>
 
-                                    {/* 6 DAILY TASKS STATUS GRID (3x2 DISPLAY FOR OPTIMAL BREATHING ROOM) */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 pt-2">
+                                    {/* 6 DAILY TASKS STATUS GRID */}
+                                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px", paddingTop: "6px" }}>
                                         {[
                                             { key: "medication", label: "Medication Schedule", icon: Pill },
                                             { key: "diet", label: "Dietary Protocol", icon: Utensils },
@@ -528,24 +650,40 @@ function CarePlans() {
                                             return (
                                                 <div
                                                     key={task.key}
-                                                    className={`p-4 rounded-xl border transition-all flex items-center justify-between ${
-                                                        isDone
-                                                            ? "bg-emerald-50/70 border-emerald-200 text-emerald-950 shadow-xs"
-                                                            : "bg-slate-50/50 border-slate-200/70 text-slate-700"
-                                                    }`}
+                                                    style={{
+                                                        padding: "12px 14px",
+                                                        borderRadius: "14px",
+                                                        backgroundColor: isDone ? "#f0fdf4" : "#f8fafc",
+                                                        border: `1px solid ${isDone ? "#bbf7d0" : "#cbd5e1"}`,
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between",
+                                                        gap: "8px"
+                                                    }}
                                                 >
-                                                    <div className="flex items-center gap-3 min-w-0">
-                                                        <div className={`p-2 rounded-lg shrink-0 ${isDone ? "bg-emerald-100 text-emerald-700" : "bg-white border border-slate-200 text-slate-500"}`}>
-                                                            <IconComponent size={18} />
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
+                                                        <div style={{
+                                                            width: "32px",
+                                                            height: "32px",
+                                                            borderRadius: "8px",
+                                                            backgroundColor: isDone ? "#dcfce7" : "#ffffff",
+                                                            color: isDone ? "#15803d" : "#64748b",
+                                                            border: `1px solid ${isDone ? "#86efac" : "#cbd5e1"}`,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            flexShrink: 0
+                                                        }}>
+                                                            <IconComponent size={16} />
                                                         </div>
-                                                        <span className="text-xs font-bold text-slate-800 truncate">{task.label}</span>
+                                                        <span style={{ fontSize: "12px", fontWeight: "700", color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{task.label}</span>
                                                     </div>
                                                     {isDone ? (
-                                                        <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md shrink-0">
-                                                            <Check size={13} /> Done
+                                                        <span style={{ backgroundColor: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: "800", padding: "2px 8px", borderRadius: "6px", flexShrink: 0, display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                                            <Check size={12} /> Done
                                                         </span>
                                                     ) : (
-                                                        <span className="text-[11px] font-semibold text-slate-400 bg-white px-2.5 py-1 rounded-md border border-slate-200/60 shrink-0">
+                                                        <span style={{ backgroundColor: "#ffffff", color: "#64748b", border: "1px solid #cbd5e1", fontSize: "11px", fontWeight: "600", padding: "2px 8px", borderRadius: "6px", flexShrink: 0 }}>
                                                             Pending
                                                         </span>
                                                     )}
@@ -556,148 +694,148 @@ function CarePlans() {
                                 </div>
 
                                 {/* PRIMARY GOAL BOX */}
-                                <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-3">
-                                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-2 m-0">
-                                        <Target size={16} className="text-blue-600" />
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                                    <h3 style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", display: "flex", alignItems: "center", gap: "6px", margin: "0 0 12px 0" }}>
+                                        <Target size={16} style={{ color: "#2563eb" }} />
                                         Primary Clinical Goal
                                     </h3>
-                                    <div className="bg-blue-50/50 border border-blue-200/70 rounded-xl p-5">
-                                        <p className="text-sm sm:text-base font-bold text-slate-900 m-0 leading-relaxed">
+                                    <div style={{ backgroundColor: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "14px", padding: "18px" }}>
+                                        <p style={{ fontSize: "14px", fontWeight: "700", color: "#0f172a", margin: 0, lineHeight: 1.5 }}>
                                             {carePlan.goal || carePlan.primaryGoal || "Maintain optimal glycemic control, monitor BP twice daily, and adhere to prescribed medication schedule."}
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* CARE INTERVENTIONS GRID (4 CARDS IN 2x2) */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px" }}>
                                     {/* MEDICATIONS CARD */}
-                                    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all space-y-3.5">
-                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                                            <div className="flex items-center gap-2.5">
-                                                <div className="p-2 rounded-xl bg-rose-50 text-rose-600">
-                                                    <Pill size={18} />
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "18px", padding: "20px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px", marginBottom: "14px" }}>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                                <div style={{ width: "32px", height: "32px", borderRadius: "8px", backgroundColor: "#fff1f2", color: "#e11d48", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <Pill size={16} />
                                                 </div>
-                                                <span className="text-xs font-black uppercase tracking-wider text-slate-800">
+                                                <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#0f172a" }}>
                                                     Medication Schedule
                                                 </span>
                                             </div>
                                             {progressTasks.items.medication ? (
-                                                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 flex items-center gap-1">
-                                                    <Check size={13} /> Completed Today
+                                                <span style={{ backgroundColor: "#ecfdf5", color: "#047857", border: "1px solid #a7f3d0", fontSize: "11px", fontWeight: "700", padding: "2px 8px", borderRadius: "6px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                                    <Check size={12} /> Completed Today
                                                 </span>
                                             ) : (
-                                                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/60">
+                                                <span style={{ backgroundColor: "#f8fafc", color: "#64748b", border: "1px solid #cbd5e1", fontSize: "11px", fontWeight: "600", padding: "2px 8px", borderRadius: "6px" }}>
                                                     Pending
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-sm font-semibold text-slate-700 m-0 leading-relaxed pt-1">
+                                        <p style={{ fontSize: "13px", fontWeight: "600", color: "#334155", margin: 0, lineHeight: 1.5 }}>
                                             {Array.isArray(carePlan.medications) ? carePlan.medications.join(", ") : (carePlan.medications || "Take prescribed medication dosage as directed.")}
                                         </p>
                                     </div>
 
                                     {/* DIET CARD */}
-                                    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all space-y-3.5">
-                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                                            <div className="flex items-center gap-2.5">
-                                                <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-                                                    <Utensils size={18} />
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "18px", padding: "20px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px", marginBottom: "14px" }}>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                                <div style={{ width: "32px", height: "32px", borderRadius: "8px", backgroundColor: "#fffbeb", color: "#d97706", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <Utensils size={16} />
                                                 </div>
-                                                <span className="text-xs font-black uppercase tracking-wider text-slate-800">
+                                                <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#0f172a" }}>
                                                     Dietary Protocol
                                                 </span>
                                             </div>
                                             {progressTasks.items.diet ? (
-                                                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 flex items-center gap-1">
-                                                    <Check size={13} /> Completed Today
+                                                <span style={{ backgroundColor: "#ecfdf5", color: "#047857", border: "1px solid #a7f3d0", fontSize: "11px", fontWeight: "700", padding: "2px 8px", borderRadius: "6px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                                    <Check size={12} /> Completed Today
                                                 </span>
                                             ) : (
-                                                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/60">
+                                                <span style={{ backgroundColor: "#f8fafc", color: "#64748b", border: "1px solid #cbd5e1", fontSize: "11px", fontWeight: "600", padding: "2px 8px", borderRadius: "6px" }}>
                                                     Pending
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-sm font-semibold text-slate-700 m-0 leading-relaxed pt-1">
+                                        <p style={{ fontSize: "13px", fontWeight: "600", color: "#334155", margin: 0, lineHeight: 1.5 }}>
                                             {carePlan.diet || "Low glycemic index, high fiber, controlled carbohydrates and reduced sodium intake."}
                                         </p>
                                     </div>
 
                                     {/* EXERCISE CARD */}
-                                    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all space-y-3.5">
-                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                                            <div className="flex items-center gap-2.5">
-                                                <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
-                                                    <Dumbbell size={18} />
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "18px", padding: "20px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px", marginBottom: "14px" }}>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                                <div style={{ width: "32px", height: "32px", borderRadius: "8px", backgroundColor: "#eff6ff", color: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <Dumbbell size={16} />
                                                 </div>
-                                                <span className="text-xs font-black uppercase tracking-wider text-slate-800">
+                                                <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#0f172a" }}>
                                                     Exercise & Activity
                                                 </span>
                                             </div>
                                             {progressTasks.items.exercise ? (
-                                                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 flex items-center gap-1">
-                                                    <Check size={13} /> Completed Today
+                                                <span style={{ backgroundColor: "#ecfdf5", color: "#047857", border: "1px solid #a7f3d0", fontSize: "11px", fontWeight: "700", padding: "2px 8px", borderRadius: "6px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                                    <Check size={12} /> Completed Today
                                                 </span>
                                             ) : (
-                                                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/60">
+                                                <span style={{ backgroundColor: "#f8fafc", color: "#64748b", border: "1px solid #cbd5e1", fontSize: "11px", fontWeight: "600", padding: "2px 8px", borderRadius: "6px" }}>
                                                     Pending
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-sm font-semibold text-slate-700 m-0 leading-relaxed pt-1">
+                                        <p style={{ fontSize: "13px", fontWeight: "600", color: "#334155", margin: 0, lineHeight: 1.5 }}>
                                             {carePlan.exercise || "30 minutes brisk walking or supervised physical exercise 5 days/week."}
                                         </p>
                                     </div>
 
                                     {/* SLEEP CARD */}
-                                    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all space-y-3.5">
-                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                                            <div className="flex items-center gap-2.5">
-                                                <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
-                                                    <Moon size={18} />
+                                    <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "18px", padding: "20px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px", marginBottom: "14px" }}>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                                <div style={{ width: "32px", height: "32px", borderRadius: "8px", backgroundColor: "#e0e7ff", color: "#4f46e5", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <Moon size={16} />
                                                 </div>
-                                                <span className="text-xs font-black uppercase tracking-wider text-slate-800">
+                                                <span style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#0f172a" }}>
                                                     Sleep & Recovery
                                                 </span>
                                             </div>
                                             {progressTasks.items.sleep ? (
-                                                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 flex items-center gap-1">
-                                                    <Check size={13} /> Completed Today
+                                                <span style={{ backgroundColor: "#ecfdf5", color: "#047857", border: "1px solid #a7f3d0", fontSize: "11px", fontWeight: "700", padding: "2px 8px", borderRadius: "6px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                                    <Check size={12} /> Completed Today
                                                 </span>
                                             ) : (
-                                                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/60">
+                                                <span style={{ backgroundColor: "#f8fafc", color: "#64748b", border: "1px solid #cbd5e1", fontSize: "11px", fontWeight: "600", padding: "2px 8px", borderRadius: "6px" }}>
                                                     Pending
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-sm font-semibold text-slate-700 m-0 leading-relaxed pt-1">
+                                        <p style={{ fontSize: "13px", fontWeight: "600", color: "#334155", margin: 0, lineHeight: 1.5 }}>
                                             {carePlan.sleep || "7-8 hours quality sleep per night; maintain consistent bedtime schedule."}
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* READ-ONLY CLINICAL NOTES CARD */}
-                                <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-3">
-                                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                                        <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-2 m-0">
-                                            <FileText size={18} className="text-indigo-600" />
+                                <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "24px", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)" }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px", marginBottom: "14px" }}>
+                                        <h3 style={{ fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "#0f172a", display: "flex", alignItems: "center", gap: "6px", margin: 0 }}>
+                                            <FileText size={18} style={{ color: "#4f46e5" }} />
                                             Physician Review Notes & Clinical Remarks
                                         </h3>
-                                        <span className="text-[11px] font-bold text-slate-500 bg-slate-100 border border-slate-200/70 px-2.5 py-0.5 rounded-lg">Doctor Remarks</span>
+                                        <span style={{ fontSize: "11px", fontWeight: "700", color: "#475569", backgroundColor: "#f1f5f9", border: "1px solid #cbd5e1", padding: "2px 10px", borderRadius: "8px" }}>Doctor Remarks</span>
                                     </div>
 
-                                    <div className="bg-slate-50/80 border border-slate-200/60 rounded-xl p-5 text-xs sm:text-sm font-medium text-slate-700 leading-relaxed">
+                                    <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "18px", fontSize: "13px", fontWeight: "600", color: "#334155", lineHeight: 1.5 }}>
                                         {carePlan.doctorNotes || carePlan.notes || "Care plan reviewed by attending physician. Patient compliance monitored regularly."}
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className="bg-white border border-slate-200/80 rounded-2xl p-16 text-center space-y-3 shadow-sm">
-                                <div className="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
-                                    <FileHeart size={30} />
+                            <div style={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "20px", padding: "60px 24px", textAlign: "center", boxShadow: "0 4px 16px rgba(15, 23, 42, 0.04)", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+                                <div style={{ width: "56px", height: "56px", borderRadius: "50%", backgroundColor: "#f1f5f9", color: "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <FileHeart size={28} />
                                 </div>
-                                <h3 className="text-base font-extrabold text-slate-800 m-0">No Active Care Plan</h3>
-                                <p className="text-xs text-slate-500 font-medium max-w-sm mx-auto m-0 leading-relaxed">
-                                    No active care plan progress recorded for Patient <strong className="text-slate-700">{selectedPatientId}</strong>. Care plan generation and physician approvals are managed by attending doctors.
+                                <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", margin: 0 }}>No Active Care Plan</h3>
+                                <p style={{ fontSize: "12px", color: "#64748b", fontWeight: "500", maxWidth: "380px", margin: 0, lineHeight: 1.5 }}>
+                                    No active care plan progress recorded for Patient <strong style={{ color: "#0f172a" }}>{selectedPatientId}</strong>. Care plan generation and physician approvals are managed by attending doctors.
                                 </p>
                             </div>
                         )}
